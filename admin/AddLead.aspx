@@ -1,4 +1,4 @@
-<%@ Page Language="C#" MasterPageFile="MasterPage.master" AutoEventWireup="true" CodeFile="AddLead.aspx.cs" Inherits="AddLead" %>
+﻿<%@ Page Language="C#" MasterPageFile="MasterPage.master" AutoEventWireup="true" CodeFile="AddLead.aspx.cs" Inherits="AddLead" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <title>Add Lead | New Journey Holidays CRM</title>
@@ -104,55 +104,37 @@
                 </div>
             </div>
 
-            <!-- Section 3: Lead Attribution & Ownership -->
+            <!-- Section 3: Lead Attribution & Assignment -->
             <div class="card mb-3">
                 <div class="card-header bg-white">
-                    <h6><i class="bi bi-award text-success"></i> 3. Lead Attribution & Ownership</h6>
+                    <h6><i class="bi bi-award text-success"></i> 3. Lead Attribution & Assignment</h6>
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-4">
                             <label class="form-label">Lead Source <span class="text-danger">*</span></label>
-                            <select class="form-select" id="ddlLeadSource" required="required">
-                                <option value="Google / Internet">Google / Internet (Website, SEO, Ads)</option>
-                                <option value="Field Visit">Field Visit (Direct meeting / Local promotion)</option>
-                                <option value="Sales">Sales (Inbound counter inquiry)</option>
-                                <option value="Admin Entry">Admin Entry (Direct director referral)</option>
-                                <option value="Referral">Referral (Existing client recommendation)</option>
-                                <option value="Other">Other (Social Media, WhatsApp, B2B agent)</option>
-                            </select>
+                            <asp:DropDownList ID="ddlLeadSource" runat="server" CssClass="form-select">
+                                <asp:ListItem Value="Google / Internet">Google / Internet (Website, SEO, Ads)</asp:ListItem>
+                                <asp:ListItem Value="Field Visit">Field Visit (Direct meeting / Local promotion)</asp:ListItem>
+                                <asp:ListItem Value="Sales">Sales (Inbound counter inquiry)</asp:ListItem>
+                                <asp:ListItem Value="Admin Entry">Admin Entry (Direct director referral)</asp:ListItem>
+                                <asp:ListItem Value="Referral">Referral (Existing client recommendation)</asp:ListItem>
+                                <asp:ListItem Value="Other">Other (Social Media, WhatsApp, B2B agent)</asp:ListItem>
+                            </asp:DropDownList>
                         </div>
 
-                        <div class="col-12 col-md-6">
-                            <label class="form-label">Lead Owner (Receives Credit) <span class="text-danger">*</span></label>
-                            <select class="form-select border-success" id="ddlLeadOwner" required="required">
-                                <option value="Admin">Admin (Direct Agency Lead)</option>
-                                <option value="Priya Sharma">Priya Sharma (Sales)</option>
-                                <option value="Rakesh Yadav">Rakesh Yadav (Field)</option>
-                                <option value="Pooja Srivastava">Pooja Srivastava (Calling)</option>
-                                <option value="Manoj Tiwari">Manoj Tiwari (Sales)</option>
-                                <option value="Vikas Dubey">Vikas Dubey (Field)</option>
-                            </select>
-                            <div class="form-text text-success"><i class="bi bi-check-circle"></i> This person permanently retains sales credit.</div>
+                        <div class="col-12 col-md-4">
+                            <label class="form-label">Assigned Employee</label>
+                            <asp:DropDownList ID="ddlAssignedEmployee" runat="server" CssClass="form-select">
+                                <asp:ListItem Value="">-- Unassigned (Assign Later) --</asp:ListItem>
+                            </asp:DropDownList>
+                            <div class="form-text">Active staff member or leave unassigned</div>
                         </div>
 
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-4">
                             <label class="form-label">Added By</label>
-                            <input type="text" class="form-control bg-light" value="Admin Portal (Administrator)" readonly="readonly" />
-                            <div class="form-text">System tracks who entered the record.</div>
-                        </div>
-
-                        <div class="col-12 col-md-6">
-                            <label class="form-label">Assigned Employee (Optional)</label>
-                            <select class="form-select" id="ddlAssignedEmployee">
-                                <option value="">-- Unassigned (Assign Later) --</option>
-                                <option value="Priya Sharma">Priya Sharma (Sales Team)</option>
-                                <option value="Rakesh Yadav">Rakesh Yadav (Field Team)</option>
-                                <option value="Pooja Srivastava">Pooja Srivastava (Calling Desk)</option>
-                                <option value="Manoj Tiwari">Manoj Tiwari (Sales Team)</option>
-                                <option value="Ankita Verma">Ankita Verma (Calling Desk)</option>
-                            </select>
-                            <div class="form-text">Person responsible for making first contact & follow-ups.</div>
+                            <asp:TextBox ID="txtAddedBy" runat="server" CssClass="form-control bg-light" ReadOnly="true"></asp:TextBox>
+                            <div class="form-text">Logged-in Administrator</div>
                         </div>
                     </div>
                 </div>

@@ -8,8 +8,8 @@
     <!-- Page Header -->
     <div class="nj-page-header">
         <div>
-            <h2 class="nj-page-title">Record New Travel Inquiry</h2>
-            <p class="nj-page-subtitle">Add a customer inquiry. Leads added by you are accredited to your personal sales performance.</p>
+            <h2 class="nj-page-title">Add Travel Lead</h2>
+            <p class="nj-page-subtitle">Register a holiday inquiry. Sales employees capture field visits; Calling employees log self-found or inbound leads.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
             <a href="MyLeads.aspx" class="btn btn-nj-outline btn-sm">
@@ -18,21 +18,21 @@
         </div>
     </div>
 
-    <!-- Attribution Info Alert -->
+    <!-- Attribution Principle Notice -->
     <div class="alert alert-light border py-2 px-3 mb-4 small d-flex align-items-center gap-2">
-        <i class="bi bi-check-circle-fill text-success fs-5"></i>
+        <i class="bi bi-shield-check text-success fs-5"></i>
         <div>
-            <strong>Sales Credit Guarantee:</strong> As the creator, you (<strong>Priya Sharma</strong>) will be assigned as the permanent <em>Lead Owner</em> for this inquiry.
+            <strong>Business Workflow Rule:</strong> <em>Lead Owner</em> receives credit for sourcing the inquiry. <em>Added By</em> tracks who entered the record. If you found this customer (via field visit, phone or internet), you are accredited as the Lead Owner.
         </div>
     </div>
 
     <div class="row g-4">
         <!-- Main Form Column -->
         <div class="col-12 col-lg-8">
-            <!-- 1. Customer Details Card -->
+            <!-- 1. Customer Information Card -->
             <div class="card mb-3">
                 <div class="card-header bg-white">
-                    <h6><i class="bi bi-person text-success"></i> 1. Customer Contact Information</h6>
+                    <h6><i class="bi bi-person text-success"></i> 1. Customer Information</h6>
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
@@ -48,12 +48,15 @@
                             </div>
                         </div>
                         <div class="col-12 col-md-6">
-                            <label class="form-label">Customer Location / City <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="txtLocation" placeholder="e.g. Gorakhpur (Medical Road / Golghar)" required="required" />
+                            <label class="form-label">Alternate Mobile (Optional)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">+91</span>
+                                <input type="tel" class="form-control" id="txtAltMobile" placeholder="94521 00000" />
+                            </div>
                         </div>
                         <div class="col-12 col-md-6">
-                            <label class="form-label">Email Address (Optional)</label>
-                            <input type="email" class="form-control" id="txtEmail" placeholder="client@example.com" />
+                            <label class="form-label">Customer Location / City <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="txtLocation" placeholder="e.g. Gorakhpur (Golghar / Medical Road / Civil Lines)" required="required" />
                         </div>
                     </div>
                 </div>
@@ -62,16 +65,16 @@
             <!-- 2. Tour Requirements Card -->
             <div class="card mb-3">
                 <div class="card-header bg-white">
-                    <h6><i class="bi bi-geo-alt text-success"></i> 2. Tour Requirements & Preferences</h6>
+                    <h6><i class="bi bi-geo-alt text-success"></i> 2. Travel Requirements & Budget</h6>
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-12 col-md-6">
-                            <label class="form-label">Travel Destination <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="txtDestination" placeholder="e.g. Kashmir, Dubai, Goa, Thailand, Kerala..." required="required" />
+                            <label class="form-label">Destination <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="txtDestination" placeholder="e.g. Kashmir, Dubai, Goa, Thailand, Kerala, Char Dham..." required="required" />
                         </div>
                         <div class="col-12 col-md-6">
-                            <label class="form-label">Travel Date (Tentative)</label>
+                            <label class="form-label">Tentative Travel Date</label>
                             <input type="date" class="form-control" id="txtTravelDate" />
                         </div>
                         <div class="col-12 col-md-6">
@@ -82,58 +85,79 @@
                             </div>
                         </div>
                         <div class="col-12 col-md-6">
-                            <label class="form-label">Estimated Budget</label>
+                            <label class="form-label">Estimated Budget (₹)</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light">₹</span>
-                                <input type="text" class="form-control" id="txtBudget" placeholder="e.g. 80,000" />
+                                <input type="text" class="form-control" id="txtBudget" placeholder="e.g. 95,000" />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 3. Lead Source & Ownership Card -->
+            <!-- 3. Lead Source, Ownership & Classification Card -->
             <div class="card mb-3">
                 <div class="card-header bg-white">
-                    <h6><i class="bi bi-award text-success"></i> 3. Lead Source & Status Details</h6>
+                    <h6><i class="bi bi-award text-success"></i> 3. Lead Source, Ownership & Classification</h6>
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
+                        <!-- Lead Source (Exactly as specified: Field Visit, Google, Internet, Referral, Walk-in, Admin/Office, Other) -->
                         <div class="col-12 col-md-6">
                             <label class="form-label">Lead Source <span class="text-danger">*</span></label>
                             <select class="form-select" id="ddlLeadSource" required="required">
-                                <option value="Google">Google / Internet Inquiry</option>
-                                <option value="Field Visit">Field Visit / Counter Meeting</option>
-                                <option value="Walk-in">Walk-in Client (Gorakhpur Office)</option>
-                                <option value="Referral">Referral / Past Client</option>
-                                <option value="Other">Other (Social Media / WhatsApp)</option>
+                                <option value="Field Visit" selected="selected">Field Visit (On-ground Sales / Client Meeting)</option>
+                                <option value="Google">Google (Search Engine Inquiry)</option>
+                                <option value="Internet">Internet (Social Media / Website Inquiry)</option>
+                                <option value="Referral">Referral (Past Customer Recommendation)</option>
+                                <option value="Walk-in">Walk-in (Counter Inquiry at Gorakhpur Office)</option>
+                                <option value="Admin/Office">Admin/Office (Directly Assigned Lead)</option>
+                                <option value="Other">Other</option>
                             </select>
+                            <div class="form-text">Where the customer inquiry originated.</div>
                         </div>
+
+                        <!-- Lead Owner (The person who found/acquired the customer) -->
                         <div class="col-12 col-md-6">
-                            <label class="form-label">Lead Owner (Sales Credit)</label>
-                            <input type="text" class="form-control bg-light" value="Priya Sharma (You)" readonly="readonly" />
-                            <div class="form-text text-success"><i class="bi bi-shield-check"></i> Permanent owner credit for this lead.</div>
+                            <label class="form-label">Lead Owner (Acquired Credit) <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control border-success" id="txtLeadOwner" value="Priya Sharma (Current Employee)" />
+                            <div class="form-text text-success"><i class="bi bi-shield-check"></i> Receives permanent sales credit for this lead.</div>
                         </div>
+
+                        <!-- Added By (Track who is creating the entry) -->
                         <div class="col-12 col-md-6">
-                            <label class="form-label">Lead Priority <span class="text-danger">*</span></label>
+                            <label class="form-label">Added By</label>
+                            <input type="text" class="form-control bg-light" value="Priya Sharma (Logged-in Staff)" readonly="readonly" />
+                            <div class="form-text">System record of who entered this lead.</div>
+                        </div>
+
+                        <!-- Priority: Hot / Warm / Cold -->
+                        <div class="col-12 col-md-3">
+                            <label class="form-label">Priority (Urgency) <span class="text-danger">*</span></label>
                             <select class="form-select" id="ddlPriority">
-                                <option value="Hot" selected="selected">Hot (Immediate / High Urgency)</option>
-                                <option value="Warm">Warm (Planning within 1-2 months)</option>
-                                <option value="Cold">Cold (Tentative / Exploring rates)</option>
+                                <option value="Hot" selected="selected" class="text-danger fw-bold">Hot (&lt; 30 Days / Urgent)</option>
+                                <option value="Warm" class="text-warning fw-bold">Warm (1-2 Months)</option>
+                                <option value="Cold" class="text-info fw-bold">Cold (Long-term)</option>
                             </select>
                         </div>
-                        <div class="col-12 col-md-6">
-                            <label class="form-label">Initial Status <span class="text-danger">*</span></label>
+
+                        <!-- Lead Status: New, Interested, Pending, Confirmed, Not Interested, Closed -->
+                        <div class="col-12 col-md-3">
+                            <label class="form-label">Lead Status <span class="text-danger">*</span></label>
                             <select class="form-select" id="ddlStatus">
                                 <option value="New" selected="selected">New</option>
                                 <option value="Interested">Interested</option>
                                 <option value="Pending">Pending</option>
                                 <option value="Confirmed">Confirmed</option>
+                                <option value="Not Interested">Not Interested</option>
+                                <option value="Closed">Closed</option>
                             </select>
                         </div>
+
+                        <!-- Remarks -->
                         <div class="col-12">
-                            <label class="form-label">Special Requirements / Notes</label>
-                            <textarea class="form-control" id="txtRemarks" rows="3" placeholder="Hotel preferences, flight from Gorakhpur, sightseeing requests, meal preference (Veg/Jain)..."></textarea>
+                            <label class="form-label">Remarks / Initial Notes</label>
+                            <textarea class="form-control" id="txtRemarks" rows="3" placeholder="Hotel rating preference, flight requirements from Gorakhpur, meal preference, sightseeing specifics..."></textarea>
                         </div>
                     </div>
                 </div>
@@ -141,7 +165,7 @@
 
             <!-- Form Actions -->
             <div class="d-flex align-items-center gap-2 mb-4">
-                <button type="button" class="btn btn-nj-primary px-4" onclick="saveLeadSample();">
+                <button type="button" class="btn btn-nj-primary px-4" onclick="handleSaveLead();">
                     <i class="bi bi-check2-circle"></i> Save Lead
                 </button>
                 <a href="MyLeads.aspx" class="btn btn-outline-secondary">
@@ -154,14 +178,17 @@
         <div class="col-12 col-lg-4">
             <div class="card mb-3">
                 <div class="card-header bg-white">
-                    <h6><i class="bi bi-lightbulb text-warning"></i> Quick Travel Tips</h6>
+                    <h6><i class="bi bi-lightbulb text-warning"></i> Guidelines for Roles</h6>
                 </div>
                 <div class="card-body small text-muted">
-                    <ul class="ps-3 mb-0">
-                        <li class="mb-2"><strong>Confirm Pax Early:</strong> Knowing exact adult/child count helps calculate flight and extra-bed charges accurately.</li>
-                        <li class="mb-2"><strong>Domestic vs International:</strong> Check passport validity (6+ months) for Dubai, Thailand and Maldives inquiries.</li>
-                        <li class="mb-2"><strong>First Follow-up:</strong> Setting a next-day follow-up increases package closure probability by over 40%.</li>
-                    </ul>
+                    <div class="mb-3">
+                        <span class="badge badge-cat-sales d-inline-block mb-1">For Sales Employees (Field)</span>
+                        <p class="mb-0">When meeting clients on field visits in Gorakhpur, Basti, or Deoria, enter their inquiries immediately. You are the permanent <strong>Lead Owner</strong>.</p>
+                    </div>
+                    <div class="mb-0">
+                        <span class="badge badge-cat-calling d-inline-block mb-1">For Calling Employees</span>
+                        <p class="mb-0">When you source your own leads via Google, Social Media or referrals, you will be credited as the <strong>Lead Owner</strong>, just like Sales staff.</p>
+                    </div>
                 </div>
             </div>
 
@@ -173,17 +200,19 @@
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item p-3">
                             <div class="d-flex justify-content-between">
-                                <span class="fw-bold">Dr. Arvind Kumar</span>
+                                <span class="fw-bold">Rohit Verma</span>
                                 <span class="badge badge-priority-hot">Hot</span>
                             </div>
-                            <div class="text-muted">Char Dham Yatra &bull; 4 Pax</div>
+                            <div class="text-muted">Kashmir 5N/6D &bull; Gorakhpur</div>
+                            <div class="text-success small"><i class="bi bi-award"></i> Lead Owner: Rakesh (Sales)</div>
                         </li>
                         <li class="list-group-item p-3">
                             <div class="d-flex justify-content-between">
                                 <span class="fw-bold">Ananya Mishra</span>
                                 <span class="badge badge-status-confirmed">Confirmed</span>
                             </div>
-                            <div class="text-muted">Dubai Tour &bull; 2 Pax</div>
+                            <div class="text-muted">Dubai Luxury Tour &bull; Deoria</div>
+                            <div class="text-success small"><i class="bi bi-award"></i> Lead Owner: Priya (Sales)</div>
                         </li>
                     </ul>
                 </div>
@@ -199,9 +228,9 @@
                     <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
                 </div>
                 <h6 class="fw-bold mb-1">Lead Saved Successfully!</h6>
-                <p class="text-muted small mb-3">Customer inquiry has been registered under your account. You can track it in My Leads.</p>
+                <p class="text-muted small mb-3">The customer lead has been registered in the CRM with full sales credit attribution.</p>
                 <div class="d-grid gap-2">
-                    <a href="MyLeads.aspx" class="btn btn-nj-primary btn-sm">Go to My Leads</a>
+                    <a href="MyLeads.aspx" class="btn btn-nj-primary btn-sm">View in My Leads</a>
                     <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Add Another Lead</button>
                 </div>
             </div>
@@ -209,7 +238,7 @@
     </div>
 
     <script>
-        function saveLeadSample() {
+        function handleSaveLead() {
             var name = document.getElementById('txtCustomerName').value.trim();
             var phone = document.getElementById('txtMobileNumber').value.trim();
             if (!name || !phone) {

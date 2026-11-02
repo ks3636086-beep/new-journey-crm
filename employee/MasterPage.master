@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title> Employee Portal | New Journey Holidays CRM</title>
+    <title>Employee Panel | New Journey Holidays CRM</title>
 
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -35,20 +35,33 @@
                         <div class="brand-icon"><i class="bi bi-compass"></i></div>
                         <div>
                             <div class="brand-title">New Journey</div>
-                            <div class="brand-sub">Employee Portal</div>
+                            <div class="brand-sub">Employee Panel</div>
                         </div>
                     </div>
                 </div>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body p-0">
+                <!-- Role / Category Preview in Mobile -->
+                <div class="p-3 border-bottom border-secondary border-opacity-25 bg-black bg-opacity-20">
+                    <div class="text-white-50 small mb-1">Employee Perspective:</div>
+                    <div class="d-flex gap-1">
+                        <button type="button" class="btn btn-sm btn-outline-light flex-grow-1" id="mobSwitchSales" onclick="switchCategoryView('Sales');">
+                            <i class="bi bi-briefcase"></i> Sales
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-light flex-grow-1" id="mobSwitchCalling" onclick="switchCategoryView('Calling');">
+                            <i class="bi bi-headset"></i> Calling
+                        </button>
+                    </div>
+                </div>
+
                 <div class="nj-nav-category">Main Menu</div>
                 <ul class="nj-nav-list">
                     <li class="nj-nav-item"><a href="Dashboard.aspx" class="nj-nav-link" id="mob-nav-dashboard"><i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></a></li>
                     <li class="nj-nav-item"><a href="MyLeads.aspx" class="nj-nav-link" id="mob-nav-myleads"><i class="bi bi-person-lines-fill"></i><span>My Leads</span></a></li>
                     <li class="nj-nav-item"><a href="AddLead.aspx" class="nj-nav-link" id="mob-nav-addlead"><i class="bi bi-person-plus-fill"></i><span>Add Lead</span></a></li>
                 </ul>
-                <div class="nj-nav-category">Client Engagement</div>
+                <div class="nj-nav-category">Communications</div>
                 <ul class="nj-nav-list">
                     <li class="nj-nav-item"><a href="FollowUps.aspx" class="nj-nav-link" id="mob-nav-followups"><i class="bi bi-calendar-check-fill"></i><span>Follow-ups</span></a></li>
                     <li class="nj-nav-item"><a href="CallHistory.aspx" class="nj-nav-link" id="mob-nav-calls"><i class="bi bi-telephone-outbound-fill"></i><span>Call History</span></a></li>
@@ -60,10 +73,10 @@
             </div>
             <div class="p-3 border-top border-secondary border-opacity-25">
                 <div class="d-flex align-items-center gap-2">
-                    <div class="nj-avatar bg-primary">PS</div>
+                    <div class="nj-avatar bg-primary" id="mobAvatar">PS</div>
                     <div>
-                        <div class="text-white small fw-bold">Priya Sharma</div>
-                        <div class="text-muted" style="font-size: 0.7rem;">Sales &bull; Gorakhpur HQ</div>
+                        <div class="text-white small fw-bold" id="mobEmpName">Priya Sharma</div>
+                        <div class="text-muted" style="font-size: 0.7rem;" id="mobEmpRole">Sales &bull; Field Operations</div>
                     </div>
                 </div>
             </div>
@@ -77,11 +90,21 @@
                 </div>
                 <div>
                     <div class="brand-title">New Journey</div>
-                    <div class="brand-sub">Employee Portal</div>
+                    <div class="brand-sub">Employee Panel</div>
                 </div>
             </a>
 
-            <div class="nj-nav-category">My Desk</div>
+            <!-- Role Badge in Sidebar -->
+            <div class="px-3 pt-3 pb-1">
+                <div class="p-2 rounded bg-black bg-opacity-25 border border-white border-opacity-10 text-center">
+                    <div class="text-white-50" style="font-size: 0.7rem;">LOGGED IN CATEGORY</div>
+                    <div class="fw-bold text-white small" id="sidebarCategoryName">
+                        <i class="bi bi-briefcase-fill text-success me-1"></i> Sales (Field Work)
+                    </div>
+                </div>
+            </div>
+
+            <div class="nj-nav-category">My Workspace</div>
             <ul class="nj-nav-list">
                 <li class="nj-nav-item">
                     <a href="Dashboard.aspx" class="nj-nav-link" id="nav-dashboard">
@@ -103,7 +126,7 @@
                 </li>
             </ul>
 
-            <div class="nj-nav-category">Communications</div>
+            <div class="nj-nav-category">Customer Outreach</div>
             <ul class="nj-nav-list">
                 <li class="nj-nav-item">
                     <a href="FollowUps.aspx" class="nj-nav-link" id="nav-followups">
@@ -135,8 +158,8 @@
                     <span class="nj-agency-badge"><i class="bi bi-geo-alt-fill"></i> Gorakhpur HQ</span>
                 </div>
                 <div class="text-white-50" style="font-size: 0.7rem; line-height: 1.3;">
-                    Unified Employee Portal<br />
-                    New Journey Holidays CRM
+                    Unified Employee Panel<br />
+                    Sales & Calling Operations
                 </div>
             </div>
         </aside>
@@ -153,7 +176,18 @@
                         <h1 class="nj-topbar-title">
                             <span>New Journey Holidays</span>
                         </h1>
-                        <span class="nj-location-badge d-none d-sm-inline-block">Employee Desk</span>
+                        <span class="nj-location-badge d-none d-sm-inline-block">Gorakhpur HQ</span>
+                    </div>
+
+                    <!-- Category Switcher Pill (Sales / Calling Demonstration) -->
+                    <div class="d-none d-md-flex align-items-center ms-3 gap-1 bg-light p-1 rounded-pill border">
+                        <span class="text-muted small px-2" style="font-size: 0.75rem;">Viewing As:</span>
+                        <button type="button" class="role-switch-btn active" id="btnRoleSales" onclick="switchCategoryView('Sales');" title="Simulate Sales Employee logged in">
+                            <i class="bi bi-briefcase"></i> Sales (Field)
+                        </button>
+                        <button type="button" class="role-switch-btn" id="btnRoleCalling" onclick="switchCategoryView('Calling');" title="Simulate Calling Employee logged in">
+                            <i class="bi bi-headset"></i> Calling (Back Office)
+                        </button>
                     </div>
                 </div>
 
@@ -170,7 +204,7 @@
                             <i class="bi bi-bell"></i>
                             <span class="badge-dot"></span>
                         </button>
-                        <div class="dropdown-menu dropdown-menu-end shadow-sm border p-0" style="width: 310px; font-size: 0.85rem;" aria-labelledby="notifDropdown">
+                        <div class="dropdown-menu dropdown-menu-end shadow-sm border p-0" style="width: 320px; font-size: 0.85rem;" aria-labelledby="notifDropdown">
                             <div class="p-3 border-bottom d-flex justify-content-between align-items-center bg-light">
                                 <span class="fw-bold text-dark">Notifications (2 Reminders)</span>
                                 <span class="badge bg-success">Today</span>
@@ -179,20 +213,22 @@
                                 <a href="FollowUps.aspx" class="list-group-item list-group-item-action p-2 px-3 border-0 border-bottom">
                                     <div class="d-flex align-items-center gap-2 mb-1">
                                         <span class="badge bg-danger-subtle text-danger">Due in 30m</span>
+                                        <span class="text-muted small">02:30 PM</span>
                                     </div>
-                                    <div class="fw-semibold text-dark">Dr. Arvind Kumar - Char Dham</div>
-                                    <div class="text-muted small">Follow-up call scheduled at 02:30 PM</div>
+                                    <div class="fw-semibold text-dark">Dr. Arvind Kumar - Char Dham Heli</div>
+                                    <div class="text-muted small">Follow-up call scheduled today</div>
                                 </a>
                                 <a href="MyLeads.aspx" class="list-group-item list-group-item-action p-2 px-3 border-0">
                                     <div class="d-flex align-items-center gap-2 mb-1">
-                                        <span class="badge bg-primary-subtle text-primary">New Assigned Lead</span>
+                                        <span class="badge bg-primary-subtle text-primary">Assigned Lead</span>
+                                        <span class="text-muted small">Today</span>
                                     </div>
                                     <div class="fw-semibold text-dark">Rohit Verma - Kashmir 5N/6D</div>
                                     <div class="text-muted small">Assigned by Admin for calling</div>
                                 </a>
                             </div>
                             <div class="p-2 text-center border-top bg-light">
-                                <a href="FollowUps.aspx" class="text-decoration-none small text-success fw-bold">View Today's Calls</a>
+                                <a href="FollowUps.aspx" class="text-decoration-none small text-success fw-bold">View Today's Follow-ups</a>
                             </div>
                         </div>
                     </div>
@@ -200,17 +236,19 @@
                     <!-- Employee Profile Dropdown -->
                     <div class="dropdown">
                         <a href="#" class="nj-user-profile dropdown-toggle" id="empProfileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <div class="nj-avatar bg-primary">PS</div>
+                            <div class="nj-avatar bg-primary" id="headerAvatar">PS</div>
                             <div class="nj-user-info d-none d-sm-flex">
-                                <span class="nj-user-name">Priya Sharma</span>
-                                <span class="nj-user-role">Sales Executive (#EMP-01)</span>
+                                <span class="nj-user-name" id="headerEmpName">Priya Sharma</span>
+                                <span class="nj-user-role" id="headerEmpCategory">Sales Employee (Field)</span>
                             </div>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow-sm border" aria-labelledby="empProfileDropdown">
                             <li class="px-3 py-2 border-bottom">
-                                <div class="fw-bold">Priya Sharma</div>
-                                <div class="text-muted small">priya@newjourneyholidays.com</div>
-                                <span class="badge bg-primary-subtle text-primary mt-1">Sales Department</span>
+                                <div class="fw-bold" id="menuEmpName">Priya Sharma</div>
+                                <div class="text-muted small" id="menuEmpEmail">priya@newjourneyholidays.com</div>
+                                <div class="mt-1">
+                                    <span class="badge badge-cat-sales" id="menuCatBadge">Category: Sales (Field)</span>
+                                </div>
                             </li>
                             <li><a class="dropdown-item py-2" href="Dashboard.aspx"><i class="bi bi-grid-1x2 me-2 text-success"></i>My Dashboard</a></li>
                             <li><a class="dropdown-item py-2" href="MyLeads.aspx"><i class="bi bi-person-lines-fill me-2 text-success"></i>My Leads Directory</a></li>
@@ -232,13 +270,13 @@
                 </asp:ContentPlaceHolder>
             </main>
 
-            <!-- Simple Footer -->
+            <!-- Footer -->
             <footer class="nj-footer">
                 <div>
-                    <strong>New Journey Holidays CRM</strong> &bull; Employee Portal &bull; Gorakhpur, Uttar Pradesh
+                    <strong>New Journey Holidays CRM</strong> &bull; Employee Panel &bull; Gorakhpur, Uttar Pradesh
                 </div>
                 <div>
-                    <span>Unified Travel Staff Workspace &bull; 2026</span>
+                    <span>Unified Panel: Sales & Calling Team &bull; 2026</span>
                 </div>
             </footer>
         </div>
@@ -252,7 +290,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body text-muted small pt-2">
-                        Are you sure you want to end your session? Any unsaved form drafts will be discarded.
+                        Are you sure you want to exit your session? Any unsaved form drafts will be discarded.
                     </div>
                     <div class="modal-footer border-0 pt-0">
                         <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -267,9 +305,67 @@
     <!-- Bootstrap 5.3.3 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Active Menu Highlight Script -->
+    <!-- Active Menu & Role Switcher Script -->
     <script>
+        // Category switching function to demonstrate both Sales and Calling perspectives in the same panel
+        function switchCategoryView(category) {
+            localStorage.setItem('nj_employee_category', category);
+            updateHeaderCategoryUI(category);
+            
+            // Trigger custom event if page wants to react
+            var event = new CustomEvent('njCategoryChanged', { detail: { category: category } });
+            window.dispatchEvent(event);
+        }
+
+        function updateHeaderCategoryUI(category) {
+            var btnSales = document.getElementById('btnRoleSales');
+            var btnCalling = document.getElementById('btnRoleCalling');
+            var sidebarBadge = document.getElementById('sidebarCategoryName');
+            var headerRole = document.getElementById('headerEmpCategory');
+            var headerName = document.getElementById('headerEmpName');
+            var headerAvatar = document.getElementById('headerAvatar');
+            var menuName = document.getElementById('menuEmpName');
+            var menuEmail = document.getElementById('menuEmpEmail');
+            var menuBadge = document.getElementById('menuCatBadge');
+            var mobName = document.getElementById('mobEmpName');
+            var mobRole = document.getElementById('mobEmpRole');
+            var mobAvatar = document.getElementById('mobAvatar');
+
+            if (category === 'Calling') {
+                if (btnSales) btnSales.classList.remove('active');
+                if (btnCalling) btnCalling.classList.add('active');
+                if (sidebarBadge) sidebarBadge.innerHTML = '<i class="bi bi-headset text-info me-1"></i> Calling (Back Office)';
+                if (headerRole) headerRole.textContent = 'Calling Employee (Back Office)';
+                if (headerName) headerName.textContent = 'Pooja Srivastava';
+                if (headerAvatar) { headerAvatar.textContent = 'PS'; headerAvatar.className = 'nj-avatar bg-info'; }
+                if (menuName) menuName.textContent = 'Pooja Srivastava';
+                if (menuEmail) menuEmail.textContent = 'pooja@newjourneyholidays.com';
+                if (menuBadge) { menuBadge.className = 'badge badge-cat-calling'; menuBadge.textContent = 'Category: Calling (Back Office)'; }
+                if (mobName) mobName.textContent = 'Pooja Srivastava';
+                if (mobRole) mobRole.textContent = 'Calling • Back Office Desk';
+                if (mobAvatar) { mobAvatar.textContent = 'PS'; mobAvatar.className = 'nj-avatar bg-info'; }
+            } else {
+                if (btnSales) btnSales.classList.add('active');
+                if (btnCalling) btnCalling.classList.remove('active');
+                if (sidebarBadge) sidebarBadge.innerHTML = '<i class="bi bi-briefcase-fill text-success me-1"></i> Sales (Field Work)';
+                if (headerRole) headerRole.textContent = 'Sales Employee (Field)';
+                if (headerName) headerName.textContent = 'Priya Sharma';
+                if (headerAvatar) { headerAvatar.textContent = 'PS'; headerAvatar.className = 'nj-avatar bg-primary'; }
+                if (menuName) menuName.textContent = 'Priya Sharma';
+                if (menuEmail) menuEmail.textContent = 'priya@newjourneyholidays.com';
+                if (menuBadge) { menuBadge.className = 'badge badge-cat-sales'; menuBadge.textContent = 'Category: Sales (Field)'; }
+                if (mobName) mobName.textContent = 'Priya Sharma';
+                if (mobRole) mobRole.textContent = 'Sales • Field Operations';
+                if (mobAvatar) { mobAvatar.textContent = 'PS'; mobAvatar.className = 'nj-avatar bg-primary'; }
+            }
+        }
+
+        // Initialize state on load
         (function () {
+            var savedCat = localStorage.getItem('nj_employee_category') || 'Sales';
+            updateHeaderCategoryUI(savedCat);
+
+            // Active menu link highlight
             var path = window.location.pathname.toLowerCase();
             var links = document.querySelectorAll('.nj-nav-link');
             var matched = false;
@@ -282,7 +378,6 @@
                 }
             });
 
-            // Default to Dashboard if root or index
             if (!matched) {
                 var dLink = document.getElementById('nav-dashboard');
                 if (dLink) dLink.classList.add('active');

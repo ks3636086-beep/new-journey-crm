@@ -1,7 +1,7 @@
 <%@ Page Language="C#" MasterPageFile="MasterPage.master" AutoEventWireup="true" CodeFile="LeadDetails.aspx.cs" Inherits="LeadDetails" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <title>Lead Details | New Journey Holidays CRM</title>
+    <title>Lead Details & History | New Journey Holidays CRM</title>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -14,7 +14,7 @@
         </ol>
     </nav>
 
-    <!-- Page Header & Actions -->
+    <!-- Page Header & Action Buttons -->
     <div class="nj-page-header">
         <div>
             <div class="d-flex align-items-center gap-2 mb-1">
@@ -25,21 +25,30 @@
             <h2 class="nj-page-title" id="lblCustomerName">Rohit Verma</h2>
             <p class="nj-page-subtitle" id="lblSubtitle">Kashmir 5N/6D Deluxe Tour &bull; Inquired for 4 Pax &bull; Gorakhpur</p>
         </div>
-        <div class="d-flex align-items-center gap-2">
-            <button type="button" class="btn btn-nj-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addFollowUpModal">
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            <button type="button" class="btn btn-nj-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalAddCall">
+                <i class="bi bi-telephone-plus"></i> Add Call Record
+            </button>
+            <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#modalAddFollowUp">
                 <i class="bi bi-calendar-plus"></i> Add Follow-up
             </button>
-            <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#logCallModal">
-                <i class="bi bi-telephone-plus"></i> Log Call
-            </button>
-            <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#editLeadModal">
+            <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditLead">
                 <i class="bi bi-pencil"></i> Edit Lead
             </button>
         </div>
     </div>
 
+    <!-- Core Attribution Alert -->
+    <div class="alert alert-light border py-2 px-3 mb-4 small d-flex align-items-center justify-content-between flex-wrap gap-2">
+        <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-award-fill text-success fs-5"></i>
+            <span><strong>Attribution Tracking:</strong> Lead Owner = <strong id="alertOwnerName">Rakesh Yadav (Sales)</strong> &bull; Added By = <strong id="alertAddedBy">Rakesh Yadav</strong> &bull; Assigned Employee = <strong id="alertAssignedName" class="text-primary">Priya Sharma</strong>.</span>
+        </div>
+        <span class="badge bg-success-subtle text-success">Credit Protected</span>
+    </div>
+
     <div class="row g-4">
-        <!-- Main Details (col-lg-8) -->
+        <!-- Main Column (col-lg-8) -->
         <div class="col-12 col-lg-8">
             <!-- 1. Customer Information Card -->
             <div class="card mb-3">
@@ -61,7 +70,7 @@
                             <span class="text-muted" id="txtDAltPhone">+91 94521 00000</span>
                         </div>
                         <div class="col-6 col-md-4">
-                            <span class="text-muted small d-block">Location / City</span>
+                            <span class="text-muted small d-block">Customer Location / City</span>
                             <span class="fw-semibold text-dark" id="txtDCity">Gorakhpur (Golghar)</span>
                         </div>
                         <div class="col-6 col-md-4">
@@ -69,17 +78,17 @@
                             <span class="text-muted" id="txtDEmail">rohit.verma@example.com</span>
                         </div>
                         <div class="col-6 col-md-4">
-                            <span class="text-muted small d-block">Inquiry Received</span>
+                            <span class="text-muted small d-block">Inquiry Date</span>
                             <span class="text-muted">Today, 09:15 AM</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 2. Tour Requirements Card -->
+            <!-- 2. Travel Requirements Card -->
             <div class="card mb-3">
                 <div class="card-header bg-white">
-                    <h6><i class="bi bi-geo-alt text-success"></i> Tour Requirements & Package Details</h6>
+                    <h6><i class="bi bi-geo-alt text-success"></i> Travel Requirements & Preferences</h6>
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
@@ -96,8 +105,8 @@
                             <span class="fw-semibold text-dark" id="txtDPax">4 Pax (2 Adults, 2 Children)</span>
                         </div>
                         <div class="col-6 col-md-4">
-                            <span class="text-muted small d-block">Package Preference</span>
-                            <span class="fw-semibold text-dark">Deluxe (4-Star Hotels + 1 Night Dal Lake Houseboat)</span>
+                            <span class="text-muted small d-block">Package Rating</span>
+                            <span class="fw-semibold text-dark">4-Star Deluxe + 1 Night Houseboat</span>
                         </div>
                         <div class="col-6 col-md-4">
                             <span class="text-muted small d-block">Estimated Budget</span>
@@ -105,150 +114,185 @@
                         </div>
                         <div class="col-6 col-md-4">
                             <span class="text-muted small d-block">Lead Source</span>
-                            <span class="badge bg-light text-dark border" id="txtDSource">Google / Internet Inquiry</span>
+                            <span class="badge bg-light text-dark border" id="txtDSource">Google</span>
                         </div>
                     </div>
 
                     <hr class="my-3 text-muted" />
 
                     <div>
-                        <span class="text-muted small d-block mb-1">Customer Notes / Special Requests</span>
+                        <span class="text-muted small d-block mb-1">Customer Remarks & Specific Requests</span>
                         <div class="p-3 bg-light rounded text-dark small" id="txtDNotes">
-                            "Client requested a private non-stop Innova Crysta for all 6 days. Wants snow sledging in Gulmarg Phase-1 and Sonmarg Zero Point if weather permits. Flight tickets needed from Lucknow or Delhi."
+                            "Client requested private non-stop Innova Crysta for all 6 days. Wants snow sledging in Gulmarg Phase-1 and Sonmarg Zero Point. Flight tickets needed from Lucknow or Delhi."
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 3. Activity & Communications Timeline -->
-            <div class="card">
+            <!-- 3. Dedicated Call History Timeline -->
+            <div class="card mb-3">
                 <div class="card-header bg-white d-flex justify-content-between align-items-center">
                     <div>
-                        <h6 class="mb-0"><i class="bi bi-clock-history text-success"></i> Activity & Follow-up Timeline</h6>
-                        <small class="text-muted">Previous interactions and notes for this client</small>
+                        <h6 class="mb-0"><i class="bi bi-telephone-outbound text-primary"></i> Call History Timeline</h6>
+                        <small class="text-muted">Chronological audit of calls made to this customer</small>
                     </div>
-                    <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#logCallModal">
-                        <i class="bi bi-plus"></i> Add Note
+                    <button type="button" class="btn btn-nj-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalAddCall">
+                        <i class="bi bi-plus-lg"></i> Log New Call
                     </button>
                 </div>
                 <div class="card-body">
-                    <ul class="timeline mb-0">
-                        <!-- Timeline Item 1 -->
+                    <ul class="timeline mb-0" id="callTimelineList">
+                        <!-- Call 1 -->
                         <li class="timeline-item">
                             <div class="d-flex justify-content-between align-items-center mb-1">
-                                <span class="fw-bold text-dark">Scheduled Follow-up Call</span>
-                                <span class="badge bg-danger-subtle text-danger">Today, 05:15 PM</span>
-                            </div>
-                            <p class="small text-muted mb-1">Upcoming phone call to finalize flight options and review houseboat booking contract.</p>
-                            <span class="badge bg-light text-dark border small">Assigned: Priya Sharma</span>
-                        </li>
-
-                        <!-- Timeline Item 2 -->
-                        <li class="timeline-item">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <span class="fw-bold text-dark">Call Connected & Itinerary Shared</span>
+                                <div>
+                                    <span class="fw-bold text-dark">Call by Priya Sharma (Sales)</span>
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle ms-2">
+                                        <i class="bi bi-check-circle me-1"></i> Connected
+                                    </span>
+                                </div>
                                 <span class="text-muted small">Today, 11:45 AM</span>
                             </div>
-                            <p class="small text-muted mb-1">Spoke with Mr. Rohit. Sent WhatsApp PDF of 5N/6D itinerary with 4-star options. Customer very positive, discussing with family.</p>
-                            <span class="badge bg-success-subtle text-success small"><i class="bi bi-check-circle me-1"></i>Connected (8 mins)</span>
+                            <p class="small text-muted mb-1">
+                                <strong>Remarks:</strong> Spoke with Mr. Rohit. Sent WhatsApp PDF of 5N/6D Kashmir itinerary with 4-star options. Customer very positive about Dal Lake houseboat.
+                            </p>
+                            <div class="d-flex align-items-center gap-2 small">
+                                <span class="badge bg-light text-dark border">
+                                    <i class="bi bi-calendar-event me-1"></i> Next Follow-up: Today, 05:15 PM
+                                </span>
+                                <span class="text-muted">Duration: 7 mins 30 secs</span>
+                            </div>
                         </li>
 
-                        <!-- Timeline Item 3 -->
+                        <!-- Call 2 -->
                         <li class="timeline-item">
                             <div class="d-flex justify-content-between align-items-center mb-1">
-                                <span class="fw-bold text-dark">Lead Assigned to Priya Sharma</span>
-                                <span class="text-muted small">Today, 10:00 AM</span>
+                                <div>
+                                    <span class="fw-bold text-dark">Call by Pooja Srivastava (Calling Desk)</span>
+                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle ms-2">
+                                        <i class="bi bi-star-fill me-1"></i> Interested
+                                    </span>
+                                </div>
+                                <span class="text-muted small">Today, 10:15 AM</span>
                             </div>
-                            <p class="small text-muted mb-0">Admin assigned follow-up to Priya Sharma for fast sales conversion. Original owner Rakesh Yadav preserved.</p>
+                            <p class="small text-muted mb-1">
+                                <strong>Remarks:</strong> Initial qualification call. Verified travel dates (15 Nov) and 4 family members. Handed over to Priya Sharma for custom pricing.
+                            </p>
+                            <div class="small">
+                                <span class="badge bg-light text-dark border">
+                                    <i class="bi bi-calendar-event me-1"></i> Next Follow-up: Today, 11:30 AM
+                                </span>
+                            </div>
                         </li>
 
-                        <!-- Timeline Item 4 -->
+                        <!-- Call 3 -->
                         <li class="timeline-item mb-0">
                             <div class="d-flex justify-content-between align-items-center mb-1">
-                                <span class="fw-bold text-dark">Lead Created</span>
-                                <span class="text-muted small">Today, 09:15 AM</span>
+                                <div>
+                                    <span class="fw-bold text-dark">Call by Pooja Srivastava (Calling Desk)</span>
+                                    <span class="badge bg-warning-subtle text-dark border border-warning-subtle ms-2">
+                                        <i class="bi bi-clock-history me-1"></i> Call Back Later
+                                    </span>
+                                </div>
+                                <span class="text-muted small">Today, 09:30 AM</span>
                             </div>
-                            <p class="small text-muted mb-0">Inquiry captured via Google Ads campaign. Tagged as Hot Priority.</p>
+                            <p class="small text-muted mb-1">
+                                <strong>Remarks:</strong> Customer was at office meeting; asked to call back in 45 minutes for Kashmir holiday details.
+                            </p>
+                            <div class="small">
+                                <span class="badge bg-light text-dark border">
+                                    <i class="bi bi-calendar-event me-1"></i> Next Follow-up: Today, 10:15 AM
+                                </span>
+                            </div>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
 
-        <!-- Sidebar Details (col-lg-4) -->
+        <!-- Sidebar Actions Column (col-lg-4) -->
         <div class="col-12 col-lg-4">
-            <!-- Attribution & Assignment Card -->
+            <!-- Lead Attribution Card -->
             <div class="card mb-3">
                 <div class="card-header bg-white">
-                    <h6><i class="bi bi-shield-check text-success"></i> Sales Attribution</h6>
+                    <h6><i class="bi bi-award text-success"></i> Lead Attribution</h6>
                 </div>
                 <div class="card-body">
                     <div class="mb-3 p-2 bg-success-subtle rounded border border-success-subtle">
                         <small class="text-success fw-bold d-block">Lead Owner (Sales Credit)</small>
-                        <span class="fw-bold text-dark" id="txtDOwner">Rakesh Yadav (Field Team)</span>
-                        <div class="text-muted" style="font-size: 0.725rem;">Original finder retains permanent sales credit.</div>
+                        <span class="fw-bold text-dark" id="sideLeadOwner">Rakesh Yadav (Sales)</span>
+                        <div class="text-muted" style="font-size: 0.725rem;">Originally acquired the customer lead.</div>
                     </div>
 
                     <div class="mb-3 p-2 bg-light rounded border">
-                        <small class="text-muted d-block">Currently Assigned To</small>
-                        <span class="fw-bold text-primary" id="txtDAssigned">Priya Sharma (You)</span>
-                        <div class="text-muted" style="font-size: 0.725rem;">Handling active calls and conversion.</div>
+                        <small class="text-muted d-block">Added By (Created In CRM)</small>
+                        <span class="fw-semibold text-dark" id="sideAddedBy">Rakesh Yadav</span>
+                        <div class="text-muted" style="font-size: 0.725rem;">Captured through Field Visit.</div>
+                    </div>
+
+                    <div class="mb-3 p-2 bg-primary-subtle rounded border border-primary-subtle">
+                        <small class="text-primary fw-bold d-block">Assigned Employee (Current Follow-up)</small>
+                        <span class="fw-bold text-dark" id="sideAssignedEmp">Priya Sharma (Sales)</span>
+                        <div class="text-muted" style="font-size: 0.725rem;">Handling active calling & bookings.</div>
                     </div>
 
                     <div>
-                        <small class="text-muted d-block">Branch Responsibility</small>
-                        <span class="fw-semibold text-dark">Gorakhpur HQ Desk</span>
+                        <small class="text-muted d-block">Lead Source</small>
+                        <span class="badge bg-light text-dark border" id="sideLeadSource">Google</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Quick Status Updater Card -->
+            <!-- Update Lead Status & Priority Card -->
             <div class="card mb-3">
                 <div class="card-header bg-white">
-                    <h6><i class="bi bi-arrow-repeat text-primary"></i> Update Status</h6>
+                    <h6><i class="bi bi-arrow-repeat text-primary"></i> Update Status & Priority</h6>
                 </div>
                 <div class="card-body">
+                    <!-- Update Status -->
                     <div class="mb-3">
-                        <label class="form-label small">Change Lead Status</label>
-                        <select class="form-select form-select-sm" id="ddlQuickStatus">
+                        <label class="form-label small fw-bold">Update Lead Status</label>
+                        <select class="form-select form-select-sm" id="ddlUpdateStatus">
                             <option value="New">New</option>
                             <option value="Interested" selected="selected">Interested</option>
-                            <option value="Pending">Pending Decision</option>
+                            <option value="Pending">Pending</option>
                             <option value="Confirmed">Confirmed (Booking Won)</option>
                             <option value="Not Interested">Not Interested</option>
+                            <option value="Closed">Closed</option>
                         </select>
                     </div>
 
+                    <!-- Update Priority: Hot / Warm / Cold -->
                     <div class="mb-3">
-                        <label class="form-label small">Change Priority</label>
-                        <select class="form-select form-select-sm" id="ddlQuickPriority">
-                            <option value="Hot" selected="selected">Hot</option>
-                            <option value="Warm">Warm</option>
-                            <option value="Cold">Cold</option>
+                        <label class="form-label small fw-bold">Update Priority (Urgency)</label>
+                        <select class="form-select form-select-sm" id="ddlUpdatePriority">
+                            <option value="Hot" selected="selected" class="text-danger fw-bold">Hot (&lt; 30 Days)</option>
+                            <option value="Warm" class="text-warning fw-bold">Warm (1-2 Months)</option>
+                            <option value="Cold" class="text-info fw-bold">Cold (Long-term)</option>
                         </select>
                     </div>
 
-                    <button type="button" class="btn btn-nj-primary btn-sm w-100" onclick="alert('Status updated successfully (UI sample).');">
-                        Save Status Update
+                    <button type="button" class="btn btn-nj-primary btn-sm w-100" onclick="alert('Status and Priority updated successfully (UI sample).');">
+                        <i class="bi bi-save me-1"></i> Save Status & Priority
                     </button>
                 </div>
             </div>
 
-            <!-- Quick Communication Actions -->
+            <!-- Direct Outreach Buttons -->
             <div class="card">
                 <div class="card-header bg-white">
-                    <h6><i class="bi bi-chat-dots text-success"></i> Quick Reach</h6>
+                    <h6><i class="bi bi-chat-dots text-success"></i> Customer Outreach</h6>
                 </div>
                 <div class="card-body">
                     <div class="d-grid gap-2">
-                        <a href="tel:+919876543210" class="btn btn-outline-success btn-sm text-start">
+                        <a href="tel:+919876543210" class="btn btn-outline-success btn-sm text-start" id="btnCallCustomer">
                             <i class="bi bi-telephone-outbound me-2"></i> Call: +91 98765 43210
                         </a>
-                        <a href="https://wa.me/919876543210" target="_blank" class="btn btn-outline-primary btn-sm text-start">
+                        <a href="https://wa.me/919876543210" target="_blank" class="btn btn-outline-primary btn-sm text-start" id="btnWhatsAppCustomer">
                             <i class="bi bi-whatsapp me-2"></i> WhatsApp Customer
                         </a>
-                        <button type="button" class="btn btn-outline-secondary btn-sm text-start" data-bs-toggle="modal" data-bs-target="#logCallModal">
-                            <i class="bi bi-journal-plus me-2"></i> Log Call Outcome
+                        <button type="button" class="btn btn-outline-secondary btn-sm text-start" data-bs-toggle="modal" data-bs-target="#modalAddFollowUp">
+                            <i class="bi bi-clock-history me-2"></i> Schedule Follow-up
                         </button>
                     </div>
                 </div>
@@ -256,184 +300,223 @@
         </div>
     </div>
 
-    <!-- Modal: Add Follow-up -->
-    <div class="modal fade" id="addFollowUpModal" tabindex="-1" aria-hidden="true">
+    <!-- Modal: Add Call Record -->
+    <div class="modal fade" id="modalAddCall" tabindex="-1" aria-labelledby="modalAddCallTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header border-bottom">
-                    <h6 class="modal-title fw-bold"><i class="bi bi-calendar-plus text-success me-1"></i> Add Follow-up Reminder</h6>
+                    <h6 class="modal-title fw-bold" id="modalAddCallTitle">
+                        <i class="bi bi-telephone-plus text-success me-1"></i> Add Call Record
+                    </h6>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Customer</label>
-                        <input type="text" class="form-control" value="Rohit Verma (#NJ-10301)" readonly="readonly" />
+                    <div class="mb-3 p-2 bg-light rounded">
+                        <div class="fw-bold text-dark" id="modalCallCustName">Rohit Verma (#NJ-10301)</div>
+                        <div class="text-muted small" id="modalCallCustPhone">+91 98765 43210 &bull; Kashmir 5N/6D</div>
                     </div>
                     <div class="row g-2 mb-3">
                         <div class="col-6">
-                            <label class="form-label">Follow-up Date</label>
-                            <input type="date" class="form-control" />
+                            <label class="form-label">Call Date & Time <span class="text-danger">*</span></label>
+                            <input type="datetime-local" class="form-control form-control-sm" />
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Time Slot</label>
-                            <input type="time" class="form-control" value="16:00" />
+                            <label class="form-label">Call Outcome <span class="text-danger">*</span></label>
+                            <select class="form-select form-select-sm" id="ddlModalOutcome">
+                                <option value="Connected">Connected</option>
+                                <option value="Interested">Interested</option>
+                                <option value="Call Back Later">Call Back Later</option>
+                                <option value="Busy">Busy</option>
+                                <option value="No Answer">No Answer</option>
+                                <option value="Not Interested">Not Interested</option>
+                            </select>
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Follow-up Goal / Agenda</label>
-                        <input type="text" class="form-control" placeholder="e.g. Call to finalize flight quotes and take advance" />
+                        <label class="form-label">Call Remarks <span class="text-danger">*</span></label>
+                        <textarea class="form-control form-control-sm" rows="3" placeholder="Key points discussed during the phone conversation..."></textarea>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Next Follow-up Date & Time (Optional)</label>
+                        <input type="datetime-local" class="form-control form-control-sm" />
                     </div>
                 </div>
                 <div class="modal-footer border-top">
                     <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-sm btn-nj-primary" onclick="alert('Follow-up scheduled (UI sample)!');" data-bs-dismiss="modal">Save Follow-up</button>
+                    <button type="button" class="btn btn-sm btn-nj-primary" onclick="alert('Call record logged to timeline (UI sample)!');" data-bs-dismiss="modal">Save Call Record</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal: Log Call -->
-    <div class="modal fade" id="logCallModal" tabindex="-1" aria-hidden="true">
+    <!-- Modal: Add Follow-up -->
+    <div class="modal fade" id="modalAddFollowUp" tabindex="-1" aria-labelledby="modalAddFupTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header border-bottom">
-                    <h6 class="modal-title fw-bold"><i class="bi bi-telephone-outbound text-success me-1"></i> Log Client Call</h6>
+                    <h6 class="modal-title fw-bold" id="modalAddFupTitle">
+                        <i class="bi bi-calendar-plus text-success me-1"></i> Add Follow-up Reminder
+                    </h6>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Call Outcome <span class="text-danger">*</span></label>
-                        <select class="form-select">
-                            <option value="Connected">Connected (Discussion held)</option>
-                            <option value="Interested">Interested (Agreed on itinerary)</option>
-                            <option value="Call Back Later">Call Back Later</option>
-                            <option value="Busy">Busy</option>
-                            <option value="No Answer">No Answer</option>
-                            <option value="Not Interested">Not Interested</option>
-                        </select>
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="form-label">Follow-up Date <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control form-control-sm" />
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Time Slot <span class="text-danger">*</span></label>
+                            <input type="time" class="form-control form-control-sm" value="17:15" />
+                        </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Discussion Summary</label>
-                        <textarea class="form-control" rows="3" placeholder="Key points discussed with customer..."></textarea>
+                        <label class="form-label">Agenda / Follow-up Goal <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-sm" placeholder="e.g. Call to finalize flight quotes and confirm advance payment" />
                     </div>
                     <div class="mb-2">
-                        <label class="form-label">Next Action Date</label>
-                        <input type="datetime-local" class="form-control" />
+                        <label class="form-label">Priority</label>
+                        <select class="form-select form-select-sm">
+                            <option value="Hot">Hot (Urgent)</option>
+                            <option value="Warm">Warm (Standard)</option>
+                            <option value="Cold">Cold</option>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer border-top">
                     <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-sm btn-nj-primary" onclick="alert('Call record logged (UI sample)!');" data-bs-dismiss="modal">Record Call</button>
+                    <button type="button" class="btn btn-sm btn-nj-primary" onclick="alert('Follow-up reminder scheduled (UI sample)!');" data-bs-dismiss="modal">Save Follow-up</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Modal: Edit Lead -->
-    <div class="modal fade" id="editLeadModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="modalEditLead" tabindex="-1" aria-labelledby="modalEditLeadTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header border-bottom">
-                    <h6 class="modal-title fw-bold"><i class="bi bi-pencil-square text-success me-1"></i> Edit Lead Information</h6>
+                    <h6 class="modal-title fw-bold" id="modalEditLeadTitle">
+                        <i class="bi bi-pencil-square text-success me-1"></i> Edit Customer & Tour Info
+                    </h6>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
+                    <div class="mb-2">
                         <label class="form-label">Customer Name</label>
-                        <input type="text" class="form-control" value="Rohit Verma" />
+                        <input type="text" class="form-control form-control-sm" id="editCustName" value="Rohit Verma" />
                     </div>
-                    <div class="row g-2 mb-3">
+                    <div class="row g-2 mb-2">
                         <div class="col-6">
                             <label class="form-label">Mobile</label>
-                            <input type="tel" class="form-control" value="+91 98765 43210" />
+                            <input type="tel" class="form-control form-control-sm" id="editCustPhone" value="+91 98765 43210" />
                         </div>
                         <div class="col-6">
                             <label class="form-label">Location</label>
-                            <input type="text" class="form-control" value="Gorakhpur (Golghar)" />
+                            <input type="text" class="form-control form-control-sm" id="editCustCity" value="Gorakhpur (Golghar)" />
                         </div>
                     </div>
-                    <div class="row g-2 mb-3">
+                    <div class="row g-2 mb-2">
                         <div class="col-6">
                             <label class="form-label">Destination</label>
-                            <input type="text" class="form-control" value="Kashmir 5N/6D Deluxe" />
+                            <input type="text" class="form-control form-control-sm" id="editCustDest" value="Kashmir 5N/6D Deluxe" />
                         </div>
                         <div class="col-6">
                             <label class="form-label">Pax Count</label>
-                            <input type="number" class="form-control" value="4" />
+                            <input type="number" class="form-control form-control-sm" id="editCustPax" value="4" />
                         </div>
                     </div>
                     <div class="mb-2">
                         <label class="form-label">Budget</label>
-                        <input type="text" class="form-control" value="₹1,15,000" />
+                        <input type="text" class="form-control form-control-sm" id="editCustBudget" value="₹1,15,000" />
                     </div>
                 </div>
                 <div class="modal-footer border-top">
                     <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-sm btn-nj-primary" onclick="alert('Lead updated (UI sample)!');" data-bs-dismiss="modal">Save Changes</button>
+                    <button type="button" class="btn btn-sm btn-nj-primary" onclick="alert('Lead details updated (UI sample)!');" data-bs-dismiss="modal">Update Lead</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Script to customize preview by Query String ?id=... -->
+    <!-- Script to dynamically load customer details from Query String ?id=... -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var params = new URLSearchParams(window.location.search);
             var leadId = params.get('id');
 
-            var leadsData = {
+            var leadsDatabase = {
                 'NJ-10302': {
                     name: 'Ananya Mishra',
                     phone: '+91 94521 88321',
+                    altPhone: '+91 94150 11000',
                     city: 'Deoria',
+                    email: 'ananya.mishra@example.com',
                     dest: 'Dubai Luxury Tour (5N/6D)',
                     date: '20 Dec 2026',
                     pax: '2 Pax (Couple)',
                     budget: '₹1,85,000',
-                    source: 'Walk-in (Counter)',
-                    owner: 'Priya Sharma (You)',
-                    assigned: 'Priya Sharma (You)',
+                    source: 'Walk-in',
+                    owner: 'Priya Sharma (Sales)',
+                    addedBy: 'Priya Sharma',
+                    assigned: 'Priya Sharma',
                     status: 'Confirmed',
                     statusClass: 'badge-status-confirmed',
                     priority: 'Hot',
-                    notes: 'Advance booking deposit received ₹50,000. 5-Star Dubai Marina hotel confirmed. Desert Safari and Burj Khalifa tickets booked.'
+                    notes: 'Advance booking deposit received ₹50,000. 5-Star Dubai Marina hotel confirmed. Desert Safari and Burj Khalifa tickets booked.',
+                    calls: [
+                        { employee: 'Priya Sharma (Sales)', outcome: 'Connected', badge: 'bg-success-subtle text-success', time: 'Today, 11:30 AM', remarks: 'Advance payment received. Shared payment receipt and passport verification forms.', next: 'Completed' },
+                        { employee: 'Priya Sharma (Sales)', outcome: 'Interested', badge: 'bg-primary-subtle text-primary', time: 'Yesterday, 04:00 PM', remarks: 'Discussed luxury hotel options and flight timings from Lucknow. Client agreed on final package price.', next: 'Today, 11:30 AM' }
+                    ]
                 },
                 'NJ-10306': {
                     name: 'Dr. Arvind Kumar',
                     phone: '+91 98390 12345',
+                    altPhone: '+91 94500 22334',
                     city: 'Gorakhpur (Medical College)',
+                    email: 'dr.arvind@example.com',
                     dest: 'Char Dham Yatra by Helicopter',
                     date: '05 May 2027',
                     pax: '4 Pax (Senior Citizens)',
                     budget: '₹4,50,000',
-                    source: 'Walk-in (Client Consultation)',
-                    owner: 'Priya Sharma (You)',
-                    assigned: 'Priya Sharma (You)',
+                    source: 'Field Visit',
+                    owner: 'Priya Sharma (Sales)',
+                    addedBy: 'Priya Sharma',
+                    assigned: 'Priya Sharma',
                     status: 'New',
                     statusClass: 'badge-status-new',
                     priority: 'Hot',
-                    notes: 'High-budget pilgrimage VIP helicopter booking inquiry from Dehradun. Medical fitness forms requested.'
+                    notes: 'High-budget pilgrimage VIP helicopter booking inquiry from Dehradun. Senior citizens require wheelchair assistance.',
+                    calls: [
+                        { employee: 'Priya Sharma (Sales)', outcome: 'Interested', badge: 'bg-primary-subtle text-primary', time: 'Today, 10:15 AM', remarks: 'Client verified pilgrimage intent. Requested helicopter VIP pricing for 4 senior family members.', next: 'Today, 02:30 PM' }
+                    ]
                 },
-                'NJ-10308': {
-                    name: 'Kavita Gupta',
-                    phone: '+91 98399 44332',
-                    city: 'Kushinagar',
-                    dest: 'Maldives Overwater Villa (4N/5D)',
-                    date: '12 Jan 2027',
-                    pax: '2 Pax (Honeymoon)',
-                    budget: '₹2,40,000',
-                    source: 'Client Referral',
-                    owner: 'Admin',
-                    assigned: 'Priya Sharma (You)',
-                    status: 'Confirmed',
-                    statusClass: 'badge-status-confirmed',
-                    priority: 'Hot',
-                    notes: 'All-inclusive resort package confirmed with speedboat transfers and complimentary candle-light beach dinner.'
+                'NJ-10314': {
+                    name: 'Preeti Agrawal',
+                    phone: '+91 99180 88990',
+                    altPhone: '+91 98390 44556',
+                    city: 'Basti',
+                    email: 'preeti.agrawal@example.com',
+                    dest: 'Dubai 5N Luxury Package',
+                    date: '25 Nov 2026',
+                    pax: '5 Pax (Family)',
+                    budget: '₹2,60,000',
+                    source: 'Google',
+                    owner: 'Priya Sharma (Sales)',
+                    addedBy: 'Priya Sharma',
+                    assigned: 'Priya Sharma',
+                    status: 'Pending',
+                    statusClass: 'badge-status-pending',
+                    priority: 'Warm',
+                    notes: 'Family trip. Requested family connecting rooms in Bur Dubai or Downtown.',
+                    calls: [
+                        { employee: 'Priya Sharma (Sales)', outcome: 'Call Back Later', badge: 'bg-warning-subtle text-dark', time: 'Today, 09:30 AM', remarks: 'Customer was at clinic; asked to call back after 06:00 PM for Dubai hotel comparison.', next: 'Today, 06:00 PM' }
+                    ]
                 }
             };
 
-            if (leadId && leadsData[leadId]) {
-                var d = leadsData[leadId];
+            if (leadId && leadsDatabase[leadId]) {
+                var d = leadsDatabase[leadId];
                 document.getElementById('lblLeadId').textContent = '#' + leadId;
                 document.getElementById('leadBreadcrumbId').textContent = '#' + leadId + ' Details';
                 document.getElementById('lblCustomerName').textContent = d.name;
@@ -441,19 +524,48 @@
                 document.getElementById('txtDName').textContent = d.name;
                 document.getElementById('txtDPhone').textContent = d.phone;
                 document.getElementById('txtDPhone').href = 'tel:' + d.phone;
+                document.getElementById('txtDAltPhone').textContent = d.altPhone;
                 document.getElementById('txtDCity').textContent = d.city;
+                document.getElementById('txtDEmail').textContent = d.email;
                 document.getElementById('txtDDest').textContent = d.dest;
                 document.getElementById('txtDDate').textContent = d.date;
                 document.getElementById('txtDPax').textContent = d.pax;
                 document.getElementById('txtDBudget').textContent = d.budget;
                 document.getElementById('txtDSource').textContent = d.source;
-                document.getElementById('txtDOwner').textContent = d.owner;
-                document.getElementById('txtDAssigned').textContent = d.assigned;
                 document.getElementById('txtDNotes').textContent = d.notes;
+
+                document.getElementById('alertOwnerName').textContent = d.owner;
+                document.getElementById('alertAddedBy').textContent = d.addedBy;
+                document.getElementById('alertAssignedName').textContent = d.assigned;
+
+                document.getElementById('sideLeadOwner').textContent = d.owner;
+                document.getElementById('sideAddedBy').textContent = d.addedBy;
+                document.getElementById('sideAssignedEmp').textContent = d.assigned;
+                document.getElementById('sideLeadSource').textContent = d.source;
 
                 var statusEl = document.getElementById('lblLeadStatus');
                 statusEl.textContent = d.status;
                 statusEl.className = 'badge ' + d.statusClass;
+
+                var pEl = document.getElementById('lblLeadPriority');
+                pEl.className = 'badge badge-priority-' + d.priority.toLowerCase();
+                pEl.innerHTML = (d.priority === 'Hot' ? '<i class="bi bi-fire me-1"></i>' : '') + d.priority + ' Priority';
+
+                // Edit inputs
+                document.getElementById('editCustName').value = d.name;
+                document.getElementById('editCustPhone').value = d.phone;
+                document.getElementById('editCustCity').value = d.city;
+                document.getElementById('editCustDest').value = d.dest;
+                document.getElementById('editCustBudget').value = d.budget;
+                document.getElementById('modalCallCustName').textContent = d.name + ' (#' + leadId + ')';
+                document.getElementById('modalCallCustPhone').textContent = d.phone + ' • ' + d.dest;
+
+                // Quick dial
+                var callBtn = document.getElementById('btnCallCustomer');
+                if (callBtn) {
+                    callBtn.href = 'tel:' + d.phone;
+                    callBtn.innerHTML = '<i class="bi bi-telephone-outbound me-2"></i> Call: ' + d.phone;
+                }
             }
         });
     </script>

@@ -1,4 +1,4 @@
-<%@ Page Language="C#" MasterPageFile="MasterPage.master" AutoEventWireup="true" CodeFile="Employees.aspx.cs" Inherits="Employees" %>
+﻿<%@ Page Language="C#" MasterPageFile="MasterPage.master" AutoEventWireup="true" CodeFile="Employees.aspx.cs" Inherits="Employees" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <title>Employees | New Journey Holidays CRM</title>
@@ -13,10 +13,11 @@
         </div>
         <div class="d-flex align-items-center gap-2">
             <button type="button" class="btn btn-nj-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addEmployeeModal">
-                <i class="bi bi-person-plus-fill"></i> Add Employee
+                <i class="bi bi-person-plus-fill"></i>Add Employee
+           
             </button>
             <a href="EmployeeCategories.aspx" class="btn btn-nj-outline btn-sm">
-                <i class="bi bi-tags"></i> Manage Categories
+                <i class="bi bi-tags"></i>Manage Categories
             </a>
         </div>
     </div>
@@ -113,11 +114,12 @@
     <div class="card">
         <div class="card-header bg-white">
             <div>
-                <h6 class="mb-0"><i class="bi bi-people"></i> Staff Directory</h6>
-                <small class="text-muted">All categories login to the same unified Employee Panel</small>
+                <h6 class="mb-0"><i class="bi bi-people"></i>Staff Directory</h6>
+                <%--<small class="text-muted">All categories login to the same unified Employee Panel</small>--%>
             </div>
             <button type="button" class="btn btn-outline-secondary btn-sm" onclick="alert('Exporting staff roster...');">
-                <i class="bi bi-download"></i> Export Roster
+                <i class="bi bi-download"></i>Export Roster
+           
             </button>
         </div>
         <div class="card-body p-0">
@@ -125,205 +127,58 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead>
                         <tr>
-                            <th>Employee ID</th>
-                            <th>Staff Member</th>
+                            
+                            <th>Employee Code</th>
+                            <th>Staff Name</th>
                             <th>Mobile</th>
-                            <th>Email & Username</th>
+                            <th>Email</th>
+                            <th>Username</th>
                             <th>Category</th>
-                            <th class="text-center">Total Leads</th>
                             <th>Status</th>
                             <th class="text-end">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Staff 1 -->
-                        <tr>
-                            <td><span class="fw-bold text-success">#EMP-01</span></td>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="nj-avatar bg-primary" style="width: 32px; height: 32px; font-size: 0.8rem;">PS</div>
-                                    <div>
-                                        <div class="fw-bold">Priya Sharma</div>
-                                        <small class="text-muted">Senior Sales Executive</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><a href="tel:+919839088771" class="text-decoration-none text-dark">+91 98390 88771</a></td>
-                            <td>
-                                <div>priya@newjourneyholidays.com</div>
-                                <small class="text-muted">User: <code>priya_nj</code></small>
-                            </td>
-                            <td><span class="badge bg-primary-subtle text-primary">Sales</span></td>
-                            <td class="text-center"><span class="badge bg-light text-dark border fw-bold">68 Leads</span></td>
-                            <td><span class="badge bg-success-subtle text-success"><i class="bi bi-dot"></i> Active</span></td>
-                            <td class="text-end">
-                                <button type="button" class="btn btn-nj-outline btn-sm" onclick="editEmployee('EMP-01', 'Priya Sharma', '+91 98390 88771', 'priya@newjourneyholidays.com', 'priya_nj', 'Sales', 'Active');" title="Edit Staff">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                            </td>
-                        </tr>
-
-                        <!-- Staff 2 -->
-                        <tr>
-                            <td><span class="fw-bold text-success">#EMP-02</span></td>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="nj-avatar bg-warning text-dark" style="width: 32px; height: 32px; font-size: 0.8rem;">RY</div>
-                                    <div>
-                                        <div class="fw-bold">Rakesh Yadav</div>
-                                        <small class="text-muted">Field Sales Lead (Eastern UP)</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><a href="tel:+919415033442" class="text-decoration-none text-dark">+91 94150 33442</a></td>
-                            <td>
-                                <div>rakesh@newjourneyholidays.com</div>
-                                <small class="text-muted">User: <code>rakesh_field</code></small>
-                            </td>
-                            <td><span class="badge bg-warning-subtle text-warning">Field</span></td>
-                            <td class="text-center"><span class="badge bg-light text-dark border fw-bold">84 Leads</span></td>
-                            <td><span class="badge bg-success-subtle text-success"><i class="bi bi-dot"></i> Active</span></td>
-                            <td class="text-end">
-                                <button type="button" class="btn btn-nj-outline btn-sm" onclick="editEmployee('EMP-02', 'Rakesh Yadav', '+91 94150 33442', 'rakesh@newjourneyholidays.com', 'rakesh_field', 'Field', 'Active');" title="Edit Staff">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                            </td>
-                        </tr>
-
-                        <!-- Staff 3 -->
-                        <tr>
-                            <td><span class="fw-bold text-success">#EMP-03</span></td>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="nj-avatar bg-info" style="width: 32px; height: 32px; font-size: 0.8rem;">PS</div>
-                                    <div>
-                                        <div class="fw-bold">Pooja Srivastava</div>
-                                        <small class="text-muted">Telecalling Team Lead</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><a href="tel:+919792011225" class="text-decoration-none text-dark">+91 97920 11225</a></td>
-                            <td>
-                                <div>pooja@newjourneyholidays.com</div>
-                                <small class="text-muted">User: <code>pooja_call</code></small>
-                            </td>
-                            <td><span class="badge bg-info-subtle text-info">Calling</span></td>
-                            <td class="text-center"><span class="badge bg-light text-dark border fw-bold">92 Leads</span></td>
-                            <td><span class="badge bg-success-subtle text-success"><i class="bi bi-dot"></i> Active</span></td>
-                            <td class="text-end">
-                                <button type="button" class="btn btn-nj-outline btn-sm" onclick="editEmployee('EMP-03', 'Pooja Srivastava', '+91 97920 11225', 'pooja@newjourneyholidays.com', 'pooja_call', 'Calling', 'Active');" title="Edit Staff">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                            </td>
-                        </tr>
-
-                        <!-- Staff 4 -->
-                        <tr>
-                            <td><span class="fw-bold text-success">#EMP-04</span></td>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="nj-avatar bg-primary" style="width: 32px; height: 32px; font-size: 0.8rem;">MT</div>
-                                    <div>
-                                        <div class="fw-bold">Manoj Tiwari</div>
-                                        <small class="text-muted">Direct Sales Consultant</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><a href="tel:+919839955443" class="text-decoration-none text-dark">+91 98399 55443</a></td>
-                            <td>
-                                <div>manoj@newjourneyholidays.com</div>
-                                <small class="text-muted">User: <code>manoj_sales</code></small>
-                            </td>
-                            <td><span class="badge bg-primary-subtle text-primary">Sales</span></td>
-                            <td class="text-center"><span class="badge bg-light text-dark border fw-bold">45 Leads</span></td>
-                            <td><span class="badge bg-success-subtle text-success"><i class="bi bi-dot"></i> Active</span></td>
-                            <td class="text-end">
-                                <button type="button" class="btn btn-nj-outline btn-sm" onclick="editEmployee('EMP-04', 'Manoj Tiwari', '+91 98399 55443', 'manoj@newjourneyholidays.com', 'manoj_sales', 'Sales', 'Active');" title="Edit Staff">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                            </td>
-                        </tr>
-
-                        <!-- Staff 5 -->
-                        <tr>
-                            <td><span class="fw-bold text-success">#EMP-05</span></td>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="nj-avatar bg-info" style="width: 32px; height: 32px; font-size: 0.8rem;">AV</div>
-                                    <div>
-                                        <div class="fw-bold">Ankita Verma</div>
-                                        <small class="text-muted">Inbound Calling Executive</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><a href="tel:+919451122334" class="text-decoration-none text-dark">+91 94511 22334</a></td>
-                            <td>
-                                <div>ankita@newjourneyholidays.com</div>
-                                <small class="text-muted">User: <code>ankita_call</code></small>
-                            </td>
-                            <td><span class="badge bg-info-subtle text-info">Calling</span></td>
-                            <td class="text-center"><span class="badge bg-light text-dark border fw-bold">38 Leads</span></td>
-                            <td><span class="badge bg-success-subtle text-success"><i class="bi bi-dot"></i> Active</span></td>
-                            <td class="text-end">
-                                <button type="button" class="btn btn-nj-outline btn-sm" onclick="editEmployee('EMP-05', 'Ankita Verma', '+91 94511 22334', 'ankita@newjourneyholidays.com', 'ankita_call', 'Calling', 'Active');" title="Edit Staff">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                            </td>
-                        </tr>
-
-                        <!-- Staff 6 -->
-                        <tr>
-                            <td><span class="fw-bold text-success">#EMP-06</span></td>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="nj-avatar bg-secondary" style="width: 32px; height: 32px; font-size: 0.8rem;">SM</div>
-                                    <div>
-                                        <div class="fw-bold">Sunil Mishra</div>
-                                        <small class="text-muted">Package & Tariff Specialist</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><a href="tel:+919838166554" class="text-decoration-none text-dark">+91 98381 66554</a></td>
-                            <td>
-                                <div>sunil@newjourneyholidays.com</div>
-                                <small class="text-muted">User: <code>sunil_data</code></small>
-                            </td>
-                            <td><span class="badge bg-secondary-subtle text-secondary">Data Entry</span></td>
-                            <td class="text-center"><span class="badge bg-light text-dark border fw-bold">12 Leads</span></td>
-                            <td><span class="badge bg-success-subtle text-success"><i class="bi bi-dot"></i> Active</span></td>
-                            <td class="text-end">
-                                <button type="button" class="btn btn-nj-outline btn-sm" onclick="editEmployee('EMP-06', 'Sunil Mishra', '+91 98381 66554', 'sunil@newjourneyholidays.com', 'sunil_data', 'Data Entry', 'Active');" title="Edit Staff">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                            </td>
-                        </tr>
-
-                        <!-- Staff 7 -->
-                        <tr>
-                            <td><span class="fw-bold text-success">#EMP-07</span></td>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="nj-avatar bg-warning text-dark" style="width: 32px; height: 32px; font-size: 0.8rem;">VD</div>
-                                    <div>
-                                        <div class="fw-bold">Vikas Dubey</div>
-                                        <small class="text-muted">Field Agent (Deoria & Kushinagar)</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><a href="tel:+919793044112" class="text-decoration-none text-dark">+91 97930 44112</a></td>
-                            <td>
-                                <div>vikas@newjourneyholidays.com</div>
-                                <small class="text-muted">User: <code>vikas_field</code></small>
-                            </td>
-                            <td><span class="badge bg-warning-subtle text-warning">Field</span></td>
-                            <td class="text-center"><span class="badge bg-light text-dark border fw-bold">31 Leads</span></td>
-                            <td><span class="badge bg-danger-subtle text-danger"><i class="bi bi-dot"></i> Inactive</span></td>
-                            <td class="text-end">
-                                <button type="button" class="btn btn-nj-outline btn-sm" onclick="editEmployee('EMP-07', 'Vikas Dubey', '+91 97930 44112', 'vikas@newjourneyholidays.com', 'vikas_field', 'Field', 'Inactive');" title="Edit Staff">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                            </td>
-                        </tr>
+                        <asp:Repeater ID="rptEmployees" runat="server">
+                            <ItemTemplate>
+                                <tr>
+                                    <td><span class="fw-bold text-success">-<%# Eval("employee_code") %></span></td>
+                                    <td>
+                                        <div class="fw-semibold text-dark"><%# Eval("employee_name") %></div>
+                                    </td>
+                                    <td>
+                                        <a href='tel:+91<%# Eval("employee_mobile") %>' class="text-decoration-none text-dark">
+                                            <i class="bi bi-telephone text-muted me-1 small"></i><%# Eval("employee_mobile") %>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span class="text-secondary">
+                                            <i class="bi bi-envelope text-muted me-1 small"></i><%# Eval("employee_email") %>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-light text-dark border fw-normal px-2 py-1">
+                                            @<%# Eval("employee_username") %>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary-subtle text-primary px-2 py-1">
+                                            <%# Eval("employee_category") %>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class='badge <%# Eval("employee_status") != null && Eval("employee_status").ToString().ToLower() == "active" ? "bg-success-subtle text-success" : "bg-danger-subtle text-danger" %> px-2 py-1'>
+                                            <i class="bi bi-dot"></i><%# Eval("employee_status") %>
+                                        </span>
+                                    </td>
+                                    <td class="text-end">
+                                        <button type="button" class="btn btn-nj-outline btn-sm" onclick="editEmployee('<%# Eval("employee_id") %>', '<%# Eval("employee_name") %>', '<%# Eval("employee_mobile") %>', '<%# Eval("employee_email") %>', '<%# Eval("employee_username") %>', '<%# Eval("employee_category") %>', '<%# Eval("employee_status") %>');" title="Edit Staff">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </ItemTemplate>
+                        </asp:Repeater>
                     </tbody>
                 </table>
             </div>
@@ -336,67 +191,92 @@
             <div class="modal-content">
                 <div class="modal-header border-bottom">
                     <h6 class="modal-title fw-bold" id="addEmpTitle">
-                        <i class="bi bi-person-plus text-success me-1"></i> Add New Employee
+                        <i class="bi bi-person-plus text-success me-1"></i>Add New Employee
                     </h6>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+
                     <div class="mb-3">
                         <label class="form-label">Full Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="add_name" placeholder="e.g. Alok Nath Pandey" required="required" />
+                        <asp:TextBox ID="txtName" runat="server" CssClass="form-control"
+                            placeholder="e.g. Alok Nath Pandey" required="required"></asp:TextBox>
                     </div>
+
                     <div class="row g-2 mb-3">
                         <div class="col-6">
                             <label class="form-label">Mobile <span class="text-danger">*</span></label>
-                            <input type="tel" class="form-control" id="add_mobile" placeholder="98765 00000" required="required" />
+                            <asp:TextBox ID="txtMobile" runat="server" TextMode="Phone"
+                                CssClass="form-control" placeholder="98765 00000"
+                                required="required"></asp:TextBox>
                         </div>
+
                         <div class="col-6">
                             <label class="form-label">Email <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control" id="add_email" placeholder="name@domain.com" required="required" />
+                            <asp:TextBox ID="txtEmail" runat="server" TextMode="Email"
+                                CssClass="form-control" placeholder="name@domain.com"
+                                required="required"></asp:TextBox>
                         </div>
                     </div>
+
                     <div class="row g-2 mb-3">
                         <div class="col-6">
                             <label class="form-label">Username <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="add_username" placeholder="e.g. alok_sales" required="required" />
+                            <asp:TextBox ID="txtUsername" runat="server"
+                                CssClass="form-control" placeholder="e.g. alok_sales"
+                                required="required"></asp:TextBox>
                         </div>
+
                         <div class="col-6">
                             <label class="form-label">Password <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <input type="password" class="form-control" id="add_password" placeholder="••••••••" />
-                                <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('add_password');">
+                                <asp:TextBox ID="txtPassword" runat="server" TextMode="Password"
+                                    CssClass="form-control" placeholder="••••••••"
+                                    required="required"></asp:TextBox>
+
+                                <button type="button" class="btn btn-outline-secondary"
+                                    onclick="togglePassword('<%= txtPassword.ClientID %>');">
                                     <i class="bi bi-eye"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
+
                     <div class="row g-2 mb-3">
                         <div class="col-6">
                             <label class="form-label">Employee Category <span class="text-danger">*</span></label>
-                            <select class="form-select" id="add_category">
-                                <option value="Sales">Sales (Desk & Direct)</option>
-                                <option value="Field">Field (Market Agent)</option>
-                                <option value="Calling">Calling (Telecaller)</option>
-                                <option value="Data Entry">Data Entry (Operations)</option>
-                            </select>
+                            <asp:DropDownList ID="ddlCategory" runat="server" CssClass="form-select">
+                                <asp:ListItem Value="Sales">Sales (Desk & Direct)</asp:ListItem>
+                                <asp:ListItem Value="Field">Field (Market Agent)</asp:ListItem>
+                                <asp:ListItem Value="Calling">Calling (Telecaller)</asp:ListItem>
+                                <asp:ListItem Value="Data Entry">Data Entry (Operations)</asp:ListItem>
+                            </asp:DropDownList>
                         </div>
+
                         <div class="col-6">
                             <label class="form-label">Account Status</label>
-                            <select class="form-select" id="add_status">
-                                <option value="Active" selected="selected">Active</option>
-                                <option value="Inactive">Inactive</option>
-                            </select>
+                            <asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-select">
+                                <asp:ListItem Value="Active" Selected="True">Active</asp:ListItem>
+                                <asp:ListItem Value="Inactive">Inactive</asp:ListItem>
+                            </asp:DropDownList>
                         </div>
                     </div>
+
                     <div class="alert alert-light border small text-muted mb-0">
-                        <i class="bi bi-info-circle me-1"></i> All categories access the single shared Employee Panel. Sales employees can also make calls, and employees can register their own leads.
+                        <i class="bi bi-info-circle me-1"></i>
+                        All categories access the single shared Employee Panel. Sales employees can also make calls, and employees can register their own leads.
                     </div>
+
                 </div>
                 <div class="modal-footer border-top">
-                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-sm btn-nj-primary" onclick="alert('Employee profile created (UI sample)!');" data-bs-dismiss="modal">
-                        <i class="bi bi-check-lg"></i> Create Employee
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">
+                        Cancel
                     </button>
+
+                    <asp:Button ID="btnCreateEmployee" runat="server"
+                        Text="Create Employee"
+                        CssClass="btn btn-sm btn-nj-primary"
+                         OnClick="btnCreateEmployee_Click" />
                 </div>
             </div>
         </div>
@@ -408,11 +288,12 @@
             <div class="modal-content">
                 <div class="modal-header border-bottom">
                     <h6 class="modal-title fw-bold" id="editEmpTitle">
-                        <i class="bi bi-pencil-square text-success me-1"></i> Edit Employee Profile
+                        <i class="bi bi-pencil-square text-success me-1"></i>Edit Employee Profile
                     </h6>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <asp:Label ID="lblMessage" runat="server"></asp:Label>
                     <input type="hidden" id="edit_id" />
                     <div class="mb-3">
                         <label class="form-label">Full Name</label>
@@ -461,6 +342,7 @@
                     <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-sm btn-nj-primary" onclick="alert('Employee profile updated (UI sample)!');" data-bs-dismiss="modal">
                         Save Changes
+                   
                     </button>
                 </div>
             </div>
