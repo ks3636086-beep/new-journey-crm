@@ -1,74 +1,55 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
+using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
 public partial class AddLead : System.Web.UI.Page
 {
     Master ob = new Master();
-
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
-        {
-            SetAddedBy();
-            LoadActiveEmployees();
-        }
+
     }
 
-    private void SetAddedBy()
-    {
-        string adminName = "Admin";
-        if (Session["backend_name"] != null && !string.IsNullOrEmpty(Session["backend_name"].ToString()))
-        {
-            adminName = Session["backend_name"].ToString();
-        }
-        else if (Session["backend_email"] != null && !string.IsNullOrEmpty(Session["backend_email"].ToString()))
-        {
-            adminName = Session["backend_email"].ToString();
-        }
-
-        txtAddedBy.Text = adminName + " (Administrator)";
-    }
-
-    private void LoadActiveEmployees()
+    protected void btnSaveLead_Click(object sender, EventArgs e)
     {
         try
         {
-            string query = @"SELECT employee_id, 
-                                    (employee_name + ' (' + employee_category + ')') AS emp_display 
-                             FROM tbl_employees 
-                             WHERE LOWER(employee_status) = 'active' 
-                             ORDER BY employee_name ASC";
+            Page.Validate();
 
-            using (SqlCommand cmd = new SqlCommand(query, ob.con))
+            if (!Page.IsValid)
             {
-                if (ob.con.State == ConnectionState.Closed)
-                {
-                    ob.con.Open();
-                }
-
-                using (SqlDataReader dr = cmd.ExecuteReader())
-                {
-                    ddlAssignedEmployee.Items.Clear();
-                    ddlAssignedEmployee.Items.Add(new ListItem("-- Unassigned (Assign Later) --", ""));
-
-                    while (dr.Read())
-                    {
-                        string id = dr["employee_id"].ToString();
-                        string name = dr["emp_display"].ToString();
-                        ddlAssignedEmployee.Items.Add(new ListItem(name, id));
-                    }
-                }
+                return;
             }
+
+            ob.con.Open();
+
+            ob.insert_lead(
+                txtClientName.Text.Trim(),
+                txtMobile.Text.Trim(),
+                string.IsNullOrWhiteSpace(txtAltMobile.Text) ? null : txtAltMobile.Text.Trim(),
+                txtCity.Text.Trim(),
+                txtDestination.Text.Trim(),
+                string.IsNullOrWhiteSpace(txtTravelDate.Text) ? (object)DBNull.Value : Convert.ToDateTime(txtTravelDate.Text),
+                ddlLeadStatus.SelectedValue,
+                ddlLeadPriority.SelectedValue,
+                string.IsNullOrWhiteSpace(txtFollowUpDate.Text) ? (object)DBNull.Value : Convert.ToDateTime(txtFollowUpDate.Text),
+                string.IsNullOrWhiteSpace(txtRemarks.Text) ? null : txtRemarks.Text.Trim(),
+                "Admin",
+                null
+            );
+
+            ClientScript.RegisterStartupScript(this.GetType(), "success",
+                "alert('Lead added successfully!');", true);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            if (ddlAssignedEmployee.Items.Count == 0)
-            {
-                ddlAssignedEmployee.Items.Add(new ListItem("-- Unassigned (Assign Later) --", ""));
-            }
+            ClientScript.RegisterStartupScript(this.GetType(), "error",
+                "alert('" + System.Web.HttpUtility.JavaScriptStringEncode(ex.Message) + "');", true);
         }
         finally
         {
@@ -78,4 +59,6 @@ public partial class AddLead : System.Web.UI.Page
             }
         }
     }
+
+    
 }

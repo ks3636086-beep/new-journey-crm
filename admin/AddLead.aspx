@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" MasterPageFile="MasterPage.master" AutoEventWireup="true" CodeFile="AddLead.aspx.cs" Inherits="AddLead" %>
+<%@ Page Language="C#" MasterPageFile="MasterPage.master" AutoEventWireup="true" CodeFile="AddLead.aspx.cs" Inherits="AddLead" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <title>Add Lead | New Journey Holidays CRM</title>
@@ -9,173 +9,104 @@
     <div class="nj-page-header">
         <div>
             <h2 class="nj-page-title">Add New Travel Lead</h2>
-            <p class="nj-page-subtitle">Record a new travel inquiry with proper sales attribution and assignment.</p>
+            <p class="nj-page-subtitle">Record a new travel inquiry and client details.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
             <a href="AllLeads.aspx" class="btn btn-nj-outline btn-sm">
-                <i class="bi bi-arrow-left"></i> Back to Leads
+                <i class="bi bi-arrow-left"></i>Back to Leads
             </a>
         </div>
     </div>
 
-    <!-- UI Alert on Attribution -->
-    <div class="alert alert-light border py-2 px-3 mb-4 small d-flex align-items-center gap-2">
-        <i class="bi bi-info-circle-fill text-success fs-5"></i>
-        <div>
-            <strong>Attribution Guideline:</strong> <em>Lead Owner</em> receives credit for sourcing the inquiry. <em>Assigned Employee</em> can be any team member assigned for calling and day-to-day conversion.
-        </div>
-    </div>
-
-    <div class="row g-4">
-        <!-- Main Form Column -->
-        <div class="col-12 col-lg-8">
-            <!-- Section 1: Client Information -->
-            <div class="card mb-3">
-                <div class="card-header bg-white">
-                    <h6><i class="bi bi-person text-success"></i> 1. Client Contact Details</h6>
+    <!-- Main Full Width Form Container -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4 shadow-sm border">
+                <div class="card-header bg-white py-3">
+                    <h6 class="mb-0 fw-bold text-dark">
+                        <i class="bi bi-person text-success me-1"></i>1. Client Contact Details
+                    </h6>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-4">
                     <div class="row g-3">
+                        <!-- Client Contact Details -->
                         <div class="col-12 col-md-6">
                             <label class="form-label">Client Full Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="txtClientName" placeholder="e.g. Ramesh Chandra Verma" required="required" />
+                            <asp:TextBox ID="txtClientName" runat="server" CssClass="form-control" placeholder="e.g. Ramesh Chandra Verma"></asp:TextBox>
+                            <asp:RequiredFieldValidator ID="rfvClientName" runat="server" ControlToValidate="txtClientName" ErrorMessage="Client name is required." CssClass="text-danger small" Display="Dynamic" />
                         </div>
+
                         <div class="col-12 col-md-6">
                             <label class="form-label">Mobile Number <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light">+91</span>
-                                <input type="tel" class="form-control" id="txtMobile" placeholder="98765 43210" required="required" />
+                                <asp:TextBox ID="txtMobile" runat="server" CssClass="form-control" TextMode="Phone" MaxLength="10" placeholder="98765 43210"></asp:TextBox>
                             </div>
+                            <asp:RequiredFieldValidator ID="rfvMobile" runat="server" ControlToValidate="txtMobile" ErrorMessage="Mobile number is required." CssClass="text-danger small" Display="Dynamic" />
+                            <asp:RegularExpressionValidator ID="revMobile" runat="server" ControlToValidate="txtMobile" ValidationExpression="^[6-9][0-9]{9}$" ErrorMessage="Enter a valid 10-digit mobile number." CssClass="text-danger small" Display="Dynamic" />
                         </div>
+
                         <div class="col-12 col-md-6">
                             <label class="form-label">Alternate Mobile (Optional)</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light">+91</span>
-                                <input type="tel" class="form-control" id="txtAltMobile" placeholder="94521 00000" />
+                                <asp:TextBox ID="txtAltMobile" runat="server" CssClass="form-control" TextMode="Phone" MaxLength="10" placeholder="94521 00000"></asp:TextBox>
                             </div>
+                            <asp:RegularExpressionValidator ID="revAltMobile" runat="server" ControlToValidate="txtAltMobile" ValidationExpression="^$|^[6-9][0-9]{9}$" ErrorMessage="Enter a valid 10-digit mobile number." CssClass="text-danger small" Display="Dynamic" />
                         </div>
+
                         <div class="col-12 col-md-6">
                             <label class="form-label">Client Location / City <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="txtCity" placeholder="e.g. Gorakhpur (Golghar / Civil Lines)" required="required" />
+                            <asp:TextBox ID="txtCity" runat="server" CssClass="form-control" placeholder="e.g. Gorakhpur (Golghar / Civil Lines)"></asp:TextBox>
+                            <asp:RequiredFieldValidator ID="rfvCity" runat="server" ControlToValidate="txtCity" ErrorMessage="Client city is required." CssClass="text-danger small" Display="Dynamic" />
                         </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Section 2: Travel Requirements -->
-            <div class="card mb-3">
-                <div class="card-header bg-white">
-                    <h6><i class="bi bi-geo-alt text-success"></i> 2. Travel & Package Requirements</h6>
-                </div>
-                <div class="card-body">
-                    <div class="row g-3">
+                        <!-- Travel Details -->
                         <div class="col-12 col-md-6">
                             <label class="form-label">Travel Destination <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="txtDestination" placeholder="e.g. Kashmir, Dubai, Goa, Thailand..." required="required" />
+                            <asp:TextBox ID="txtDestination" runat="server" CssClass="form-control" placeholder="e.g. Kashmir, Dubai, Goa, Thailand..."></asp:TextBox>
+                            <asp:RequiredFieldValidator ID="rfvDestination" runat="server" ControlToValidate="txtDestination" ErrorMessage="Travel destination is required." CssClass="text-danger small" Display="Dynamic" />
                         </div>
+
                         <div class="col-12 col-md-6">
                             <label class="form-label">Tentative Travel Date (Optional)</label>
-                            <input type="date" class="form-control" id="txtTravelDate" />
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <label class="form-label">Package Interest <span class="text-danger">*</span></label>
-                            <select class="form-select" id="ddlPackageInterest">
-                                <option value="Domestic Holiday Package">Domestic Holiday Package (Kashmir, Himachal, Kerala, Goa)</option>
-                                <option value="International Tour">International Tour (Dubai, Thailand, Singapore, Bali, Maldives)</option>
-                                <option value="Honeymoon Special">Honeymoon Special Package</option>
-                                <option value="Family Holiday Package">Family Holiday Package</option>
-                                <option value="Pilgrimage / Spiritual">Pilgrimage (Char Dham, Ayodhya-Varanasi, Vaishno Devi)</option>
-                                <option value="Corporate / Group Tour">Corporate / Group Tour</option>
-                                <option value="Custom Itinerary / Flight + Hotel">Custom Itinerary / Flight + Hotel</option>
-                            </select>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <label class="form-label">Number of Travelers / Budget Range</label>
-                            <div class="row g-2">
-                                <div class="col-6">
-                                    <input type="number" class="form-control" placeholder="Pax (e.g. 4)" min="1" />
-                                </div>
-                                <div class="col-6">
-                                    <input type="text" class="form-control" placeholder="Budget (₹)" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Section 3: Lead Attribution & Assignment -->
-            <div class="card mb-3">
-                <div class="card-header bg-white">
-                    <h6><i class="bi bi-award text-success"></i> 3. Lead Attribution & Assignment</h6>
-                </div>
-                <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-12 col-md-4">
-                            <label class="form-label">Lead Source <span class="text-danger">*</span></label>
-                            <asp:DropDownList ID="ddlLeadSource" runat="server" CssClass="form-select">
-                                <asp:ListItem Value="Google / Internet">Google / Internet (Website, SEO, Ads)</asp:ListItem>
-                                <asp:ListItem Value="Field Visit">Field Visit (Direct meeting / Local promotion)</asp:ListItem>
-                                <asp:ListItem Value="Sales">Sales (Inbound counter inquiry)</asp:ListItem>
-                                <asp:ListItem Value="Admin Entry">Admin Entry (Direct director referral)</asp:ListItem>
-                                <asp:ListItem Value="Referral">Referral (Existing client recommendation)</asp:ListItem>
-                                <asp:ListItem Value="Other">Other (Social Media, WhatsApp, B2B agent)</asp:ListItem>
-                            </asp:DropDownList>
+                            <asp:TextBox ID="txtTravelDate" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
                         </div>
 
-                        <div class="col-12 col-md-4">
-                            <label class="form-label">Assigned Employee</label>
-                            <asp:DropDownList ID="ddlAssignedEmployee" runat="server" CssClass="form-select">
-                                <asp:ListItem Value="">-- Unassigned (Assign Later) --</asp:ListItem>
-                            </asp:DropDownList>
-                            <div class="form-text">Active staff member or leave unassigned</div>
-                        </div>
-
-                        <div class="col-12 col-md-4">
-                            <label class="form-label">Added By</label>
-                            <asp:TextBox ID="txtAddedBy" runat="server" CssClass="form-control bg-light" ReadOnly="true"></asp:TextBox>
-                            <div class="form-text">Logged-in Administrator</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Section 4: Status, Priority & Follow-up -->
-            <div class="card mb-3">
-                <div class="card-header bg-white">
-                    <h6><i class="bi bi-flag text-success"></i> 4. Status, Priority & Next Step</h6>
-                </div>
-                <div class="card-body">
-                    <div class="row g-3">
+                        <!-- Status, Priority & Follow-up -->
                         <div class="col-12 col-md-4">
                             <label class="form-label">Lead Status <span class="text-danger">*</span></label>
-                            <select class="form-select" id="ddlLeadStatus">
-                                <option value="New" selected="selected">New</option>
-                                <option value="Interested">Interested</option>
-                                <option value="Pending">Pending</option>
-                                <option value="Confirmed">Confirmed</option>
-                                <option value="Not Interested">Not Interested</option>
-                                <option value="Closed">Closed</option>
-                            </select>
+                            <asp:DropDownList ID="ddlLeadStatus" runat="server" CssClass="form-select">
+                                <asp:ListItem Value="">-- Select Status --</asp:ListItem>
+                                <asp:ListItem Value="New">New</asp:ListItem>
+                                <asp:ListItem Value="Interested">Interested</asp:ListItem>
+                                <asp:ListItem Value="Pending">Pending</asp:ListItem>
+                                <asp:ListItem Value="Confirmed">Confirmed</asp:ListItem>
+                                <asp:ListItem Value="Not Interested">Not Interested</asp:ListItem>
+                                <asp:ListItem Value="Closed">Closed</asp:ListItem>
+                            </asp:DropDownList>
+                            <asp:RequiredFieldValidator ID="rfvLeadStatus" runat="server" ControlToValidate="ddlLeadStatus" InitialValue="" ErrorMessage="Please select lead status." CssClass="text-danger small" Display="Dynamic" />
                         </div>
 
                         <div class="col-12 col-md-4">
                             <label class="form-label">Lead Priority <span class="text-danger">*</span></label>
-                            <select class="form-select" id="ddlLeadPriority">
-                                <option value="Hot" class="text-danger fw-bold">Hot (High conversion potential)</option>
-                                <option value="Warm" selected="selected" class="text-warning fw-bold">Warm (Standard inquiry)</option>
-                                <option value="Cold" class="text-info fw-bold">Cold (Low urgency / Long term)</option>
-                            </select>
+                            <asp:DropDownList ID="ddlLeadPriority" runat="server" CssClass="form-select">
+                                <asp:ListItem Value="">-- Select Priority --</asp:ListItem>
+                                <asp:ListItem Value="Hot">Hot (High conversion potential)</asp:ListItem>
+                                <asp:ListItem Value="Warm">Warm (Standard inquiry)</asp:ListItem>
+                                <asp:ListItem Value="Cold">Cold (Low urgency / Long term)</asp:ListItem>
+                            </asp:DropDownList>
+                            <asp:RequiredFieldValidator ID="rfvLeadPriority" runat="server" ControlToValidate="ddlLeadPriority" InitialValue="" ErrorMessage="Please select lead priority." CssClass="text-danger small" Display="Dynamic" />
                         </div>
-
                         <div class="col-12 col-md-4">
                             <label class="form-label">Next Follow-up Date & Time</label>
-                            <input type="datetime-local" class="form-control" id="txtFollowUpDate" />
+                            <asp:TextBox ID="txtFollowUpDate" runat="server" CssClass="form-control" TextMode="DateTimeLocal"></asp:TextBox>
                         </div>
 
+                        <!-- Remarks / Client Notes -->
                         <div class="col-12">
                             <label class="form-label">Remarks / Client Notes</label>
-                            <textarea class="form-control" id="txtRemarks" rows="3" placeholder="Enter special requests, flight requirements, hotel star rating, meal preferences..."></textarea>
+                            <asp:TextBox ID="txtRemarks" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3" placeholder="Enter special requests, flight requirements, hotel star rating, meal preferences..."></asp:TextBox>
                         </div>
                     </div>
                 </div>
@@ -183,66 +114,8 @@
 
             <!-- Form Actions -->
             <div class="d-flex align-items-center gap-2 mb-4">
-                <button type="button" class="btn btn-nj-primary px-4" onclick="handleSaveLead();">
-                    <i class="bi bi-check2-circle"></i> Save Lead
-                </button>
-                <a href="AllLeads.aspx" class="btn btn-outline-secondary">
-                    Cancel
-                </a>
-            </div>
-        </div>
-
-        <!-- Right Helper Column -->
-        <div class="col-12 col-lg-4">
-            <!-- Guidelines Card -->
-            <div class="card mb-3">
-                <div class="card-header bg-white">
-                    <h6><i class="bi bi-lightbulb text-warning"></i> Travel Lead Qualification</h6>
-                </div>
-                <div class="card-body small">
-                    <p class="text-muted mb-2">Follow these quick qualification checks when recording client inquiries for New Journey Holidays:</p>
-                    <ul class="ps-3 mb-0 text-muted">
-                        <li class="mb-2"><strong>Destinations:</strong> Capture whether travel is domestic or international to assign the right specialist.</li>
-                        <li class="mb-2"><strong>Hot Priority:</strong> Tag as <em>Hot</em> if travel date is within 30 days or budget is confirmed.</li>
-                        <li class="mb-2"><strong>Lead Ownership:</strong> Always select the team member who generated the inquiry to ensure fair sales commission.</li>
-                        <li class="mb-0"><strong>Follow-up Time:</strong> Set immediate next-day follow-up for maximum conversion.</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Summary Preview Box -->
-            <div class="card">
-                <div class="card-header bg-white">
-                    <h6><i class="bi bi-clock-history text-success"></i> Recently Added (Gorakhpur)</h6>
-                </div>
-                <div class="card-body p-0 small">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item p-3">
-                            <div class="d-flex justify-content-between">
-                                <span class="fw-bold">Rohit Verma</span>
-                                <span class="badge badge-priority-hot">Hot</span>
-                            </div>
-                            <div class="text-muted">Kashmir 5N/6D &bull; Gorakhpur</div>
-                            <div class="text-success small">Owner: Rakesh Yadav</div>
-                        </li>
-                        <li class="list-group-item p-3">
-                            <div class="d-flex justify-content-between">
-                                <span class="fw-bold">Ananya Mishra</span>
-                                <span class="badge badge-status-confirmed">Confirmed</span>
-                            </div>
-                            <div class="text-muted">Dubai Tour &bull; Deoria</div>
-                            <div class="text-success small">Owner: Priya Sharma</div>
-                        </li>
-                        <li class="list-group-item p-3">
-                            <div class="d-flex justify-content-between">
-                                <span class="fw-bold">Dr. Arvind Kumar</span>
-                                <span class="badge badge-status-new">New</span>
-                            </div>
-                            <div class="text-muted">Char Dham Yatra &bull; Gorakhpur</div>
-                            <div class="text-success small">Owner: Priya Sharma</div>
-                        </li>
-                    </ul>
-                </div>
+                <asp:Button ID="btnSaveLead" runat="server" Text="Save Lead" CssClass="btn btn-nj-primary px-4" OnClick="btnSaveLead_Click" />
+                <a href="AllLeads.aspx" class="btn btn-outline-secondary">Cancel</a>
             </div>
         </div>
     </div>

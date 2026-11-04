@@ -125,11 +125,11 @@
         </div>
     </div>
 
-    <!-- Dashboard Main Grid: Recent Leads & Performance -->
+    <!-- Dashboard Main Grid: Recent Leads -->
     <div class="row g-3 mb-4">
-        <!-- Recent Leads Table (col-lg-8) -->
-        <div class="col-12 col-lg-8">
-            <div class="card h-100">
+        <!-- Recent Leads Table -->
+        <div class="col-12">
+            <div class="card">
                 <div class="card-header">
                     <div>
                         <h6 class="mb-0"><i class="bi bi-clock-history"></i> Recent Leads</h6>
@@ -242,85 +242,6 @@
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Employee Performance Overview (col-lg-4) -->
-        <div class="col-12 col-lg-4">
-            <div class="card h-100">
-                <div class="card-header">
-                    <div>
-                        <h6 class="mb-0"><i class="bi bi-trophy"></i> Team Performance</h6>
-                        <small class="text-muted">Top performers by conversion</small>
-                    </div>
-                    <a href="Employees.aspx" class="btn btn-nj-outline btn-sm">All Staff</a>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Employee</th>
-                                    <th>Category</th>
-                                    <th class="text-center">Total</th>
-                                    <th class="text-end">Confirmed</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="fw-semibold">Priya Sharma</div>
-                                        <div class="text-muted small">Gorakhpur HQ</div>
-                                    </td>
-                                    <td><span class="badge bg-primary-subtle text-primary">Sales</span></td>
-                                    <td class="text-center fw-bold">68</td>
-                                    <td class="text-end text-success fw-bold">
-                                        24 <span class="badge bg-success-subtle text-success small">35%</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="fw-semibold">Rakesh Yadav</div>
-                                        <div class="text-muted small">Eastern UP Field</div>
-                                    </td>
-                                    <td><span class="badge bg-warning-subtle text-warning">Field</span></td>
-                                    <td class="text-center fw-bold">84</td>
-                                    <td class="text-end text-success fw-bold">
-                                        18 <span class="badge bg-success-subtle text-success small">21%</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="fw-semibold">Pooja Srivastava</div>
-                                        <div class="text-muted small">Telecalling Desk</div>
-                                    </td>
-                                    <td><span class="badge bg-info-subtle text-info">Calling</span></td>
-                                    <td class="text-center fw-bold">92</td>
-                                    <td class="text-end text-success fw-bold">
-                                        14 <span class="badge bg-success-subtle text-success small">15%</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="fw-semibold">Manoj Tiwari</div>
-                                        <div class="text-muted small">Direct Sales</div>
-                                    </td>
-                                    <td><span class="badge bg-primary-subtle text-primary">Sales</span></td>
-                                    <td class="text-center fw-bold">45</td>
-                                    <td class="text-end text-success fw-bold">
-                                        9 <span class="badge bg-success-subtle text-success small">20%</span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="p-3 bg-light border-top">
-                    <div class="d-flex justify-content-between align-items-center small">
-                        <span class="text-muted">Total Active Team</span>
-                        <span class="fw-semibold text-dark">12 Team Members</span>
                     </div>
                 </div>
             </div>

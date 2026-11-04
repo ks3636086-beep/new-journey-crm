@@ -17,7 +17,7 @@
     --nj-text: #26352D;
     --nj-text-muted: #5e7367;
     --nj-border: #E3EAE4;
-    --nj-sidebar-width: 260px;
+    --nj-sidebar-width: 285px;
     --nj-font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
@@ -65,9 +65,20 @@ body {
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.85rem;
     text-decoration: none;
     color: #ffffff;
+}
+
+.nj-sidebar-brand .brand-logo-img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    background: #ffffff;
+    border-radius: 50%;
+    padding: 2px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    flex-shrink: 0;
 }
 
 .nj-sidebar-brand .brand-icon {
