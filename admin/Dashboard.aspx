@@ -31,7 +31,7 @@
             <div class="nj-stat-card">
                 <div>
                     <div class="stat-label">Total Leads</div>
-                    <div class="stat-value">300</div>
+                    <asp:Label ID="lblTotalLeads" runat="server" CssClass="stat-value d-block" Text="0" />
                     <div class="stat-meta text-success">
                         <i class="bi bi-arrow-up-short fs-6"></i>
                         <span>+18% this month</span>
@@ -48,9 +48,9 @@
             <div class="nj-stat-card">
                 <div>
                     <div class="stat-label">Confirmed</div>
-                    <div class="stat-value text-success">65</div>
+                    <asp:Label ID="lblConfirmedLeads" runat="server" CssClass="stat-value text-success d-block" Text="0" />
                     <div class="stat-meta text-muted">
-                        <span class="badge bg-success-subtle text-success">21.7% Conv.</span>
+                        <asp:Label ID="lblConversion" runat="server" CssClass="badge bg-success-subtle text-success" Text="0% Conv." />
                     </div>
                 </div>
                 <div class="nj-stat-icon green">
@@ -64,7 +64,7 @@
             <div class="nj-stat-card">
                 <div>
                     <div class="stat-label">Pending Leads</div>
-                    <div class="stat-value text-warning">180</div>
+                    <asp:Label ID="lblPendingLeads" runat="server" CssClass="stat-value text-warning d-block" Text="0" />
                     <div class="stat-meta text-muted">
                         <span>Follow-up queue</span>
                     </div>
@@ -80,7 +80,7 @@
             <div class="nj-stat-card">
                 <div>
                     <div class="stat-label">Hot Leads</div>
-                    <div class="stat-value text-danger">55</div>
+                    <asp:Label ID="lblHotLeads" runat="server" CssClass="stat-value text-danger d-block" Text="0" />
                     <div class="stat-meta text-danger">
                         <i class="bi bi-fire fs-6"></i>
                         <span>High Priority</span>
@@ -97,9 +97,9 @@
             <div class="nj-stat-card">
                 <div>
                     <div class="stat-label">Total Staff</div>
-                    <div class="stat-value text-primary">12</div>
+                    <asp:Label ID="lblTotalEmployees" runat="server" CssClass="stat-value text-primary d-block" Text="0" />
                     <div class="stat-meta text-muted">
-                        <span>4 Categories</span>
+                        <span>Active Team</span>
                     </div>
                 </div>
                 <div class="nj-stat-icon blue">
@@ -113,9 +113,9 @@
             <div class="nj-stat-card">
                 <div>
                     <div class="stat-label">Today Follow-ups</div>
-                    <div class="stat-value text-teal">24</div>
+                    <asp:Label ID="lblTodayFollowups" runat="server" CssClass="stat-value text-teal d-block" Text="0" />
                     <div class="stat-meta text-muted">
-                        <span class="badge bg-danger-subtle text-danger">8 Pending</span>
+                        <asp:Label ID="lblPendingFollowups" runat="server" CssClass="badge bg-danger-subtle text-danger" Text="0 Pending" />
                     </div>
                 </div>
                 <div class="nj-stat-icon teal">
@@ -144,102 +144,78 @@
                         <table class="table table-hover align-middle mb-0">
                             <thead>
                                 <tr>
+                                    <th>Lead ID</th>
                                     <th>Client Name</th>
                                     <th>Mobile</th>
-                                    <th>Location</th>
+                                    <th>City / Destination</th>
                                     <th>Lead Source</th>
-                                    <th>Added By</th>
-                                    <th>Lead Status</th>
+                                    <th>Created By</th>
+                                    <th>Assigned Employee</th>
+                                    <th>Status</th>
                                     <th>Priority</th>
-                                    <th class="text-end">Action</th>
+                                    <th>Next Follow-up</th>
+                                    <th class="text-end">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="fw-semibold">Rohit Verma</div>
-                                        <div class="text-muted small">Kashmir 5N/6D (Family)</div>
-                                    </td>
-                                    <td><a href="tel:+919876543210" class="text-decoration-none text-dark">+91 98765 43210</a></td>
-                                    <td>Gorakhpur</td>
-                                    <td><span class="badge bg-light text-dark border">Google / Internet</span></td>
-                                    <td>Rakesh (Field)</td>
-                                    <td><span class="badge badge-status-interested">Interested</span></td>
-                                    <td><span class="badge badge-priority-hot"><i class="bi bi-fire me-1"></i>Hot</span></td>
-                                    <td class="text-end">
-                                        <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#viewLeadModal" data-name="Rohit Verma" data-phone="+91 98765 43210" data-dest="Kashmir 5N/6D" data-owner="Rakesh Yadav" data-assigned="Priya Sharma" data-status="Interested" data-priority="Hot">
-                                            <i class="bi bi-eye"></i> View
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="fw-semibold">Ananya Mishra</div>
-                                        <div class="text-muted small">Dubai Luxury Tour (Couple)</div>
-                                    </td>
-                                    <td><a href="tel:+919452188321" class="text-decoration-none text-dark">+91 94521 88321</a></td>
-                                    <td>Deoria</td>
-                                    <td><span class="badge bg-light text-dark border">Sales</span></td>
-                                    <td>Priya (Sales)</td>
-                                    <td><span class="badge badge-status-confirmed"><i class="bi bi-check2-circle me-1"></i>Confirmed</span></td>
-                                    <td><span class="badge badge-priority-hot"><i class="bi bi-fire me-1"></i>Hot</span></td>
-                                    <td class="text-end">
-                                        <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#viewLeadModal" data-name="Ananya Mishra" data-phone="+91 94521 88321" data-dest="Dubai Luxury Tour" data-owner="Priya Sharma" data-assigned="Priya Sharma" data-status="Confirmed" data-priority="Hot">
-                                            <i class="bi bi-eye"></i> View
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="fw-semibold">Amit Pandey</div>
-                                        <div class="text-muted small">Goa Honeymoon Special</div>
-                                    </td>
-                                    <td><a href="tel:+918876511234" class="text-decoration-none text-dark">+91 88765 11234</a></td>
-                                    <td>Basti</td>
-                                    <td><span class="badge bg-light text-dark border">Referral</span></td>
-                                    <td>Admin Entry</td>
-                                    <td><span class="badge badge-status-pending">Pending</span></td>
-                                    <td><span class="badge badge-priority-warm">Warm</span></td>
-                                    <td class="text-end">
-                                        <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#viewLeadModal" data-name="Amit Pandey" data-phone="+91 88765 11234" data-dest="Goa Honeymoon Special" data-owner="Admin" data-assigned="Manoj Tiwari" data-status="Pending" data-priority="Warm">
-                                            <i class="bi bi-eye"></i> View
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="fw-semibold">Sunita Singh</div>
-                                        <div class="text-muted small">Himachal Adventure (4 Pax)</div>
-                                    </td>
-                                    <td><a href="tel:+919123456789" class="text-decoration-none text-dark">+91 91234 56789</a></td>
-                                    <td>Gorakhpur</td>
-                                    <td><span class="badge bg-light text-dark border">Field Visit</span></td>
-                                    <td>Rakesh (Field)</td>
-                                    <td><span class="badge badge-status-interested">Interested</span></td>
-                                    <td><span class="badge badge-priority-hot"><i class="bi bi-fire me-1"></i>Hot</span></td>
-                                    <td class="text-end">
-                                        <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#viewLeadModal" data-name="Sunita Singh" data-phone="+91 91234 56789" data-dest="Himachal Adventure" data-owner="Rakesh Yadav" data-assigned="Pooja Srivastava" data-status="Interested" data-priority="Hot">
-                                            <i class="bi bi-eye"></i> View
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="fw-semibold">Vikram Chauhan</div>
-                                        <div class="text-muted small">Thailand 4N/5D Pattaya-BKK</div>
-                                    </td>
-                                    <td><a href="tel:+919798123456" class="text-decoration-none text-dark">+91 97981 23456</a></td>
-                                    <td>Maharajganj</td>
-                                    <td><span class="badge bg-light text-dark border">Google / Internet</span></td>
-                                    <td>Admin Entry</td>
-                                    <td><span class="badge badge-status-pending">Pending</span></td>
-                                    <td><span class="badge badge-priority-warm">Warm</span></td>
-                                    <td class="text-end">
-                                        <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#viewLeadModal" data-name="Vikram Chauhan" data-phone="+91 97981 23456" data-dest="Thailand 4N/5D" data-owner="Admin" data-assigned="Pooja Srivastava" data-status="Pending" data-priority="Warm">
-                                            <i class="bi bi-eye"></i> View
-                                        </button>
-                                    </td>
-                                </tr>
+                                <asp:Repeater ID="rptRecentLeads" runat="server">
+                                    <ItemTemplate>
+                                        <tr>
+                                            <td>
+                                                <span class="fw-bold text-success">#<%# Eval("lead_code") %></span>
+                                            </td>
+                                            <td>
+                                                <div class="fw-semibold text-dark"><%# Eval("client_name") %></div>
+                                            </td>
+                                            <td>
+                                                <a href='tel:+91<%# Eval("mobile") %>' class="text-decoration-none text-dark">
+                                                    <i class="bi bi-telephone text-muted me-1 small"></i><%# Eval("mobile") %>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <div><%# Eval("city") %></div>
+                                                <small class="text-muted"><%# Eval("destination") %></small>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-light text-dark border"><%# ((System.Data.DataRowView)Container.DataItem).Row.Table.Columns.Contains("lead_source") ? Eval("lead_source") : "Direct" %></span>
+                                            </td>
+                                            <td>
+                                                <%# Eval("created_by") %>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-primary-subtle text-primary">
+                                                    <%# Eval("assigned_employee_id") == DBNull.Value || string.IsNullOrEmpty(Eval("assigned_employee_id").ToString()) ? "Not Assigned" : Eval("assigned_employee_id") %>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class='badge <%# Eval("lead_status") != null && Eval("lead_status").ToString().ToLower() == "confirmed" ? "bg-success-subtle text-success" : (Eval("lead_status") != null && Eval("lead_status").ToString().ToLower() == "interested" ? "bg-info-subtle text-info" : "bg-warning-subtle text-warning") %>'>
+                                                    <%# Eval("lead_status") %>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class='badge <%# Eval("lead_priority") != null && Eval("lead_priority").ToString().ToLower() == "hot" ? "badge-priority-hot" : (Eval("lead_priority") != null && Eval("lead_priority").ToString().ToLower() == "warm" ? "badge-priority-warm" : "badge-priority-cold") %>'>
+                                                    <%# Eval("lead_priority") %>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <small class="text-muted"><%# Eval("followup_date") == DBNull.Value || Eval("followup_date") == null ? "-" : Eval("followup_date") %></small>
+                                            </td>
+                                            <td class="text-end">
+                                                <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#viewLeadModal" 
+                                                        data-name='<%# Eval("client_name") %>' 
+                                                        data-phone='<%# Eval("mobile") %>' 
+                                                        data-dest='<%# Eval("destination") %>' 
+                                                        data-owner='<%# Eval("created_by") %>' 
+                                                        data-assigned='<%# Eval("assigned_employee_id") %>' 
+                                                        data-status='<%# Eval("lead_status") %>' 
+                                                        data-priority='<%# Eval("lead_priority") %>' 
+                                                        title="View Details">
+                                                    <i class="bi bi-eye"></i> View
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </ItemTemplate>
+                                </asp:Repeater>
                             </tbody>
                         </table>
                     </div>
@@ -276,70 +252,58 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="fw-semibold">Dr. Arvind Kumar</div>
-                                        <div class="text-muted small">Gorakhpur Medical College</div>
-                                    </td>
-                                    <td>+91 98390 12345</td>
-                                    <td>Char Dham Yatra by Helicopter (4 Pax)</td>
-                                    <td><span class="badge bg-primary-subtle text-primary">Priya Sharma</span></td>
-                                    <td><span class="fw-semibold text-danger">Today, 02:30 PM</span></td>
-                                    <td><span class="badge badge-status-pending">Pending Call</span></td>
-                                    <td class="text-end">
-                                        <button type="button" class="btn btn-nj-primary btn-sm" onclick="alert('Call logged for Dr. Arvind Kumar.');">
-                                            <i class="bi bi-telephone-outbound"></i> Call
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="fw-semibold">Meera Rastogi</div>
-                                        <div class="text-muted small">Civil Lines, Gorakhpur</div>
-                                    </td>
-                                    <td>+91 94150 98765</td>
-                                    <td>Kerala 6N/7D Munnar & Houseboat</td>
-                                    <td><span class="badge bg-warning-subtle text-warning">Rakesh Yadav</span></td>
-                                    <td><span class="fw-semibold text-dark">Today, 04:00 PM</span></td>
-                                    <td><span class="badge badge-status-interested">Itinerary Sent</span></td>
-                                    <td class="text-end">
-                                        <button type="button" class="btn btn-nj-primary btn-sm" onclick="alert('Call logged for Meera Rastogi.');">
-                                            <i class="bi bi-telephone-outbound"></i> Call
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="fw-semibold">Rajesh Gupta</div>
-                                        <div class="text-muted small">Padrauna</div>
-                                    </td>
-                                    <td>+91 97210 54321</td>
-                                    <td>Vietnam & Cambodia 8D Tour</td>
-                                    <td><span class="badge bg-info-subtle text-info">Pooja Srivastava</span></td>
-                                    <td><span class="fw-semibold text-muted">Tomorrow, 11:00 AM</span></td>
-                                    <td><span class="badge bg-light text-dark border">Scheduled</span></td>
-                                    <td class="text-end">
-                                        <button type="button" class="btn btn-nj-outline btn-sm" onclick="alert('Rescheduled reminder note.');">
-                                            <i class="bi bi-clock"></i> Reschedule
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="fw-semibold">Sanjay Tripathi</div>
-                                        <div class="text-muted small">Rustampur, Gorakhpur</div>
-                                    </td>
-                                    <td>+91 99351 77665</td>
-                                    <td>Andaman Islands 5N Honeymoon</td>
-                                    <td><span class="badge bg-primary-subtle text-primary">Manoj Tiwari</span></td>
-                                    <td><span class="fw-semibold text-muted">Tomorrow, 03:00 PM</span></td>
-                                    <td><span class="badge badge-status-interested">Hot Lead</span></td>
-                                    <td class="text-end">
-                                        <button type="button" class="btn btn-nj-outline btn-sm" onclick="alert('Rescheduled reminder note.');">
-                                            <i class="bi bi-clock"></i> Reschedule
-                                        </button>
-                                    </td>
-                                </tr>
+                                <asp:Repeater ID="rptUpcomingFollowups" runat="server">
+                                    <ItemTemplate>
+                                        <tr>
+                                            <td>
+                                                <div class="fw-semibold"><%# Eval("client_name") %></div>
+                                                <div class="text-muted small"><%# Eval("city") %></div>
+                                            </td>
+
+                                            <td>
+                                                <a href='tel:+91<%# Eval("mobile") %>' class="text-decoration-none text-dark">
+                                                    <%# Eval("mobile") %>
+                                                </a>
+                                            </td>
+
+                                            <td><%# Eval("destination") %></td>
+
+                                            <td>
+                                                <span class="badge bg-primary-subtle text-primary">
+                                                    <%# Eval("assigned_employee_id") == DBNull.Value || string.IsNullOrEmpty(Eval("assigned_employee_id").ToString()) ? "Not Assigned" : Eval("assigned_employee_id") %>
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                <span class="fw-semibold text-dark">
+                                                    <%# Convert.ToDateTime(Eval("followup_date")).ToString("dd MMM yyyy, hh:mm tt") %>
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                <span class='badge <%# Eval("lead_status").ToString().ToLower() == "confirmed" ? "bg-success-subtle text-success" : (Eval("lead_status").ToString().ToLower() == "interested" ? "badge-status-interested" : "badge-status-pending") %>'>
+                                                    <%# Eval("lead_status") %>
+                                                </span>
+                                            </td>
+
+                                            <td class="text-end">
+                                                <div class="d-inline-flex gap-1 justify-content-end">
+                                                    <a href='tel:+91<%# Eval("mobile") %>' class="btn btn-nj-primary btn-sm text-nowrap" title="Call Client">
+                                                        <i class="bi bi-telephone-outbound me-1"></i>Call
+                                                    </a>
+                                                    <asp:LinkButton ID="btnUpdateCall" runat="server"
+                                                        CssClass="btn btn-nj-outline btn-sm text-nowrap"
+                                                        CommandArgument='<%# Eval("lead_code") %>'
+                                                        OnClick="btnUpdateCall_Click"
+                                                        CausesValidation="false"
+                                                        title="Update Call Details">
+                                                        <i class="bi bi-telephone-forward me-1"></i>Update Call
+                                                    </asp:LinkButton>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </ItemTemplate>
+                                </asp:Repeater>
                             </tbody>
                         </table>
                     </div>
@@ -354,7 +318,7 @@
             <div class="modal-content">
                 <div class="modal-header border-bottom">
                     <h6 class="modal-title fw-bold" id="viewLeadModalLabel">
-                        <i class="bi bi-person-badge text-success me-1"></i> Lead Quick Preview
+                        <i class="bi bi-person-badge text-success me-1"></i>Lead Quick Preview
                     </h6>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -410,7 +374,93 @@
         </div>
     </div>
 
-    <!-- Script to populate Lead View modal -->
+    <!-- Small Modal for Updating Call Details -->
+    <div class="modal fade" id="updateCallModal" tabindex="-1" aria-labelledby="updateCallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+
+                <div class="modal-header border-bottom py-2">
+                    <h6 class="modal-title fw-bold" id="updateCallModalLabel">
+                        <i class="bi bi-telephone-forward text-success me-1"></i>Update Call
+                    </h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <asp:HiddenField ID="hfLeadCode" runat="server" />
+
+                    <div class="mb-3 p-2 bg-light rounded d-flex justify-content-between align-items-center">
+                        <div>
+                            <asp:Label ID="lblModalClientName" runat="server"
+                                Text="Client" CssClass="fw-semibold small d-block" />
+
+                            <asp:Label ID="lblModalClientPhone" runat="server"
+                                Text="+91" CssClass="text-muted small" />
+                        </div>
+                        <span class="badge bg-primary-subtle text-primary">Follow-up</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">
+                            Call Status <span class="text-danger">*</span>
+                        </label>
+
+                        <asp:DropDownList ID="ddlCallStatus" runat="server"
+                            CssClass="form-select form-select-sm">
+                            <asp:ListItem Text="-- Select Status --" Value="" />
+                            <asp:ListItem Text="Answered" Value="Answered" />
+                            <asp:ListItem Text="Not Answered" Value="Not Answered" />
+                            <asp:ListItem Text="Busy" Value="Busy" />
+                            <asp:ListItem Text="Switched Off" Value="Switched Off" />
+                        </asp:DropDownList>
+
+                        <asp:RequiredFieldValidator ID="rfvCallStatus" runat="server"
+                            ControlToValidate="ddlCallStatus"
+                            InitialValue=""
+                            ErrorMessage="Please select call status."
+                            CssClass="text-danger small"
+                            Display="Dynamic"
+                            ValidationGroup="CallUpdate" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Next Follow-up Date & Time</label>
+
+                        <asp:TextBox ID="txtNextFollowUp" runat="server"
+                            TextMode="DateTimeLocal"
+                            CssClass="form-control form-control-sm" />
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label small fw-semibold">Call Remarks</label>
+
+                        <asp:TextBox ID="txtCallRemarks" runat="server"
+                            TextMode="MultiLine"
+                            Rows="3"
+                            CssClass="form-control form-control-sm"
+                            placeholder="Enter conversation details, client response, notes..." />
+                    </div>
+
+                </div>
+
+                <div class="modal-footer border-top py-2">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+
+                    <asp:Button ID="btnSaveCallUpdate" runat="server"
+                        Text="Save"
+                        CssClass="btn btn-nj-primary btn-sm"
+                        ValidationGroup="CallUpdate" 
+                        OnClick="btnSaveCallUpdate_Click" />
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Client-side Scripts -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var viewModal = document.getElementById('viewLeadModal');
@@ -437,5 +487,14 @@
                 });
             }
         });
+
+        // Helper function to open Update Call modal
+        function openUpdateCallModal() {
+            var modalEl = document.getElementById('updateCallModal');
+            if (modalEl) {
+                var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                modal.show();
+            }
+        }
     </script>
 </asp:Content>

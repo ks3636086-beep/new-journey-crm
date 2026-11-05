@@ -17,15 +17,7 @@
             </span>
         </div>
     </div>
-
-    <!-- Attribution Rule Notice -->
-    <div class="alert alert-light border py-2 px-3 mb-3 small d-flex align-items-center gap-2">
-        <i class="bi bi-exclamation-triangle-fill text-success fs-5"></i>
-        <div>
-            <strong>Important Rule:</strong> Assigning a lead transfers the active follow-up responsibility to the selected employee. The original <em>Lead Owner</em> who brought or recorded the lead always retains commission credit.
-        </div>
-    </div>
-
+ 
     <!-- Bulk Assignment Action Bar Card -->
     <div class="card mb-3 border-success border-opacity-25 bg-white">
         <div class="card-body p-3">

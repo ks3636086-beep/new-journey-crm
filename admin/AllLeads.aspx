@@ -1,4 +1,4 @@
-<%@ Page Language="C#" MasterPageFile="MasterPage.master" AutoEventWireup="true" CodeFile="AllLeads.aspx.cs" Inherits="AllLeads" %>
+﻿<%@ Page Language="C#" MasterPageFile="MasterPage.master" AutoEventWireup="true" CodeFile="AllLeads.aspx.cs" Inherits="AllLeads" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <title>All Leads | New Journey Holidays CRM</title>
@@ -13,25 +13,18 @@
         </div>
         <div class="d-flex align-items-center gap-2">
             <a href="AddLead.aspx" class="btn btn-nj-primary btn-sm">
-                <i class="bi bi-plus-circle"></i> Add New Lead
+                <i class="bi bi-plus-circle"></i>Add New Lead
             </a>
             <a href="AssignLeads.aspx" class="btn btn-nj-outline btn-sm">
-                <i class="bi bi-arrow-left-right"></i> Bulk Assign
+                <i class="bi bi-arrow-left-right"></i>Bulk Assign
             </a>
             <button type="button" class="btn btn-nj-outline btn-sm" onclick="alert('Exporting filtered leads to CSV (sample)...');">
-                <i class="bi bi-file-earmark-spreadsheet"></i> Export
+                <i class="bi bi-file-earmark-spreadsheet"></i>Export
+           
             </button>
         </div>
     </div>
 
-    <!-- Attribution Info Alert -->
-    <div class="alert alert-light border py-2 px-3 mb-3 small d-flex align-items-center justify-content-between flex-wrap gap-2">
-        <div class="d-flex align-items-center gap-2">
-            <i class="bi bi-shield-check text-success fs-5"></i>
-            <span><strong>CRM Attribution Rule:</strong> <em>Lead Owner</em> receives permanent sales credit for the lead. <em>Assigned Employee</em> handles active follow-ups.</span>
-        </div>
-        <span class="badge bg-light text-muted border">Total: 300 Leads</span>
-    </div>
 
     <!-- Filters & Search Bar Card -->
     <div class="card mb-3">
@@ -95,7 +88,8 @@
                 <!-- Reset Filter Button -->
                 <div class="col-12 col-md-1 text-md-end">
                     <button type="button" class="btn btn-outline-secondary btn-sm w-100" onclick="document.getElementById('leadSearch').value=''; document.querySelectorAll('select').forEach(s => s.selectedIndex = 0);" title="Reset Filters">
-                        <i class="bi bi-arrow-counterclockwise"></i> Reset
+                        <i class="bi bi-arrow-counterclockwise"></i>Reset
+                   
                     </button>
                 </div>
             </div>
@@ -106,7 +100,7 @@
     <div class="card">
         <div class="card-header">
             <div>
-                <h6 class="mb-0"><i class="bi bi-table"></i> Leads Directory</h6>
+                <h6 class="mb-0"><i class="bi bi-table"></i>Leads Directory</h6>
                 <small class="text-muted">Showing 10 of 300 active travel inquiries</small>
             </div>
             <div class="d-flex align-items-center gap-2">
@@ -121,296 +115,111 @@
                             <th>Lead ID</th>
                             <th>Client Name</th>
                             <th>Mobile</th>
-                            <th>Location / Tour</th>
-                            <th>Lead Source</th>
-                            <th>Added By</th>
-                            <th>Lead Owner</th>
+                            <th>City / Destination</th>
+                            <%--<th>Lead Source</th>--%>
+                            <th>Created By</th>
                             <th>Assigned Employee</th>
                             <th>Status</th>
                             <th>Priority</th>
+                            <th>Next Follow-up</th>
                             <th class="text-end">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Row 1 -->
-                        <tr>
-                            <td><span class="fw-bold text-success">#NJ-10301</span></td>
-                            <td>
-                                <div class="fw-bold">Rohit Verma</div>
-                                <small class="text-muted">Family (4 Pax)</small>
-                            </td>
-                            <td><a href="tel:+919876543210" class="text-decoration-none text-dark">+91 98765 43210</a></td>
-                            <td>
-                                <div>Gorakhpur</div>
-                                <small class="text-muted">Kashmir 5N/6D</small>
-                            </td>
-                            <td><span class="badge bg-light text-dark border">Google / Internet</span></td>
-                            <td>Admin Entry</td>
-                            <td><span class="fw-semibold text-primary">Rakesh Yadav</span></td>
-                            <td><span class="badge bg-primary-subtle text-primary">Priya Sharma</span></td>
-                            <td><span class="badge badge-status-interested">Interested</span></td>
-                            <td><span class="badge badge-priority-hot"><i class="bi bi-fire me-1"></i>Hot</span></td>
-                            <td class="text-end">
-                                <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#leadViewModal" title="View Details" onclick="showLeadDetails('NJ-10301', 'Rohit Verma', '+91 98765 43210', 'Gorakhpur', 'Kashmir 5N/6D', 'Google / Internet', 'Admin Entry', 'Rakesh Yadav', 'Priya Sharma', 'Interested', 'Hot', 'Client asked for 4-star houseboats in Srinagar and Sonmarg day tour.');">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                                <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#leadEditModal" title="Edit Lead">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                            </td>
-                        </tr>
+                        <asp:Repeater ID="rptAllLeads" runat="server">
+                            <ItemTemplate>
+                                <tr>
+                                    <td>
+                                        <span class="fw-bold text-success">#<%# Eval("lead_code") %></span>
+                                    </td>
 
-                        <!-- Row 2 -->
-                        <tr>
-                            <td><span class="fw-bold text-success">#NJ-10302</span></td>
-                            <td>
-                                <div class="fw-bold">Ananya Mishra</div>
-                                <small class="text-muted">Couple</small>
-                            </td>
-                            <td><a href="tel:+919452188321" class="text-decoration-none text-dark">+91 94521 88321</a></td>
-                            <td>
-                                <div>Deoria</div>
-                                <small class="text-muted">Dubai Luxury 5N</small>
-                            </td>
-                            <td><span class="badge bg-light text-dark border">Sales</span></td>
-                            <td>Priya Sharma</td>
-                            <td><span class="fw-semibold text-primary">Priya Sharma</span></td>
-                            <td><span class="badge bg-primary-subtle text-primary">Priya Sharma</span></td>
-                            <td><span class="badge badge-status-confirmed"><i class="bi bi-check2-circle me-1"></i>Confirmed</span></td>
-                            <td><span class="badge badge-priority-hot"><i class="bi bi-fire me-1"></i>Hot</span></td>
-                            <td class="text-end">
-                                <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#leadViewModal" title="View Details" onclick="showLeadDetails('NJ-10302', 'Ananya Mishra', '+91 94521 88321', 'Deoria', 'Dubai Luxury 5N', 'Sales', 'Priya Sharma', 'Priya Sharma', 'Priya Sharma', 'Confirmed', 'Hot', 'Booking advance received ₹50,000. Visa under process.');">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                                <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#leadEditModal" title="Edit Lead">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                            </td>
-                        </tr>
+                                    <td>
+                                        <div class="fw-semibold text-dark"><%# Eval("client_name") %></div>
+                                    </td>
 
-                        <!-- Row 3 -->
-                        <tr>
-                            <td><span class="fw-bold text-success">#NJ-10303</span></td>
-                            <td>
-                                <div class="fw-bold">Amit Pandey</div>
-                                <small class="text-muted">Couple (Honeymoon)</small>
-                            </td>
-                            <td><a href="tel:+918876511234" class="text-decoration-none text-dark">+91 88765 11234</a></td>
-                            <td>
-                                <div>Basti</div>
-                                <small class="text-muted">Goa Beach Villa 4N</small>
-                            </td>
-                            <td><span class="badge bg-light text-dark border">Referral</span></td>
-                            <td>Admin Entry</td>
-                            <td><span class="fw-semibold text-primary">Admin</span></td>
-                            <td><span class="badge bg-primary-subtle text-primary">Manoj Tiwari</span></td>
-                            <td><span class="badge badge-status-pending">Pending</span></td>
-                            <td><span class="badge badge-priority-warm">Warm</span></td>
-                            <td class="text-end">
-                                <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#leadViewModal" title="View Details" onclick="showLeadDetails('NJ-10303', 'Amit Pandey', '+91 88765 11234', 'Basti', 'Goa Beach Villa 4N', 'Referral', 'Admin Entry', 'Admin', 'Manoj Tiwari', 'Pending', 'Warm', 'Sent resort options in Candolim. Awaiting dates confirmation.');">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                                <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#leadEditModal" title="Edit Lead">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                            </td>
-                        </tr>
+                                    <td>
+                                        <a href='tel:+91<%# Eval("mobile") %>' class="text-decoration-none text-dark">
+                                            <i class="bi bi-telephone text-muted me-1 small"></i><%# Eval("mobile") %>
+                                        </a>
+                                    </td>
 
-                        <!-- Row 4 -->
-                        <tr>
-                            <td><span class="fw-bold text-success">#NJ-10304</span></td>
-                            <td>
-                                <div class="fw-bold">Sunita Singh</div>
-                                <small class="text-muted">Group (6 Pax)</small>
-                            </td>
-                            <td><a href="tel:+919123456789" class="text-decoration-none text-dark">+91 91234 56789</a></td>
-                            <td>
-                                <div>Gorakhpur</div>
-                                <small class="text-muted">Himachal Adventure 6N</small>
-                            </td>
-                            <td><span class="badge bg-light text-dark border">Field Visit</span></td>
-                            <td>Rakesh Yadav</td>
-                            <td><span class="fw-semibold text-primary">Rakesh Yadav</span></td>
-                            <td><span class="badge bg-info-subtle text-info">Pooja Srivastava</span></td>
-                            <td><span class="badge badge-status-interested">Interested</span></td>
-                            <td><span class="badge badge-priority-hot"><i class="bi bi-fire me-1"></i>Hot</span></td>
-                            <td class="text-end">
-                                <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#leadViewModal" title="View Details" onclick="showLeadDetails('NJ-10304', 'Sunita Singh', '+91 91234 56789', 'Gorakhpur', 'Himachal Adventure 6N', 'Field Visit', 'Rakesh Yadav', 'Rakesh Yadav', 'Pooja Srivastava', 'Interested', 'Hot', 'Wants tempo traveler from Delhi to Shimla-Manali.');">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                                <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#leadEditModal" title="Edit Lead">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                            </td>
-                        </tr>
+                                    <td>
+                                        <div><%# Eval("city") %></div>
+                                        <small class="text-muted"><%# Eval("destination") %></small>
+                                    </td>
 
-                        <!-- Row 5 -->
-                        <tr>
-                            <td><span class="fw-bold text-success">#NJ-10305</span></td>
-                            <td>
-                                <div class="fw-bold">Vikram Chauhan</div>
-                                <small class="text-muted">Friends (3 Pax)</small>
-                            </td>
-                            <td><a href="tel:+919798123456" class="text-decoration-none text-dark">+91 97981 23456</a></td>
-                            <td>
-                                <div>Maharajganj</div>
-                                <small class="text-muted">Thailand Bangkok-Pattaya</small>
-                            </td>
-                            <td><span class="badge bg-light text-dark border">Google / Internet</span></td>
-                            <td>Admin Entry</td>
-                            <td><span class="fw-semibold text-primary">Admin</span></td>
-                            <td><span class="badge bg-info-subtle text-info">Pooja Srivastava</span></td>
-                            <td><span class="badge badge-status-pending">Pending</span></td>
-                            <td><span class="badge badge-priority-warm">Warm</span></td>
-                            <td class="text-end">
-                                <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#leadViewModal" title="View Details" onclick="showLeadDetails('NJ-10305', 'Vikram Chauhan', '+91 97981 23456', 'Maharajganj', 'Thailand Bangkok-Pattaya', 'Google / Internet', 'Admin Entry', 'Admin', 'Pooja Srivastava', 'Pending', 'Warm', 'Follow-up requested on Monday after flight prices update.');">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                                <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#leadEditModal" title="Edit Lead">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                            </td>
-                        </tr>
+                                    <%--<td>
+                                        <span class="badge bg-light text-dark border"><%# ((System.Data.DataRowView)Container.DataItem).Row.Table.Columns.Contains("lead_source") ? Eval("lead_source") : "Direct" %></span>
+                                    </td>--%>
 
-                        <!-- Row 6 -->
-                        <tr>
-                            <td><span class="fw-bold text-success">#NJ-10306</span></td>
-                            <td>
-                                <div class="fw-bold">Dr. Arvind Kumar</div>
-                                <small class="text-muted">Senior Citizens (4 Pax)</small>
-                            </td>
-                            <td><a href="tel:+919839012345" class="text-decoration-none text-dark">+91 98390 12345</a></td>
-                            <td>
-                                <div>Gorakhpur</div>
-                                <small class="text-muted">Char Dham Yatra Heli</small>
-                            </td>
-                            <td><span class="badge bg-light text-dark border">Sales</span></td>
-                            <td>Priya Sharma</td>
-                            <td><span class="fw-semibold text-primary">Priya Sharma</span></td>
-                            <td><span class="badge bg-primary-subtle text-primary">Priya Sharma</span></td>
-                            <td><span class="badge badge-status-new">New</span></td>
-                            <td><span class="badge badge-priority-hot"><i class="bi bi-fire me-1"></i>Hot</span></td>
-                            <td class="text-end">
-                                <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#leadViewModal" title="View Details" onclick="showLeadDetails('NJ-10306', 'Dr. Arvind Kumar', '+91 98390 12345', 'Gorakhpur', 'Char Dham Yatra Heli', 'Sales', 'Priya Sharma', 'Priya Sharma', 'Priya Sharma', 'New', 'Hot', 'High-budget pilgrimage VIP helicopter booking inquiry.');">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                                <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#leadEditModal" title="Edit Lead">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                            </td>
-                        </tr>
+                                    <td>
+                                        <%# Eval("created_by") %>
+                                    </td>
 
-                        <!-- Row 7 -->
-                        <tr>
-                            <td><span class="fw-bold text-success">#NJ-10307</span></td>
-                            <td>
-                                <div class="fw-bold">Meera Rastogi</div>
-                                <small class="text-muted">Family (5 Pax)</small>
-                            </td>
-                            <td><a href="tel:+919415098765" class="text-decoration-none text-dark">+91 94150 98765</a></td>
-                            <td>
-                                <div>Gorakhpur</div>
-                                <small class="text-muted">Kerala 6N/7D Tour</small>
-                            </td>
-                            <td><span class="badge bg-light text-dark border">Field Visit</span></td>
-                            <td>Rakesh Yadav</td>
-                            <td><span class="fw-semibold text-primary">Rakesh Yadav</span></td>
-                            <td><span class="badge bg-warning-subtle text-warning">Rakesh Yadav</span></td>
-                            <td><span class="badge badge-status-interested">Interested</span></td>
-                            <td><span class="badge badge-priority-warm">Warm</span></td>
-                            <td class="text-end">
-                                <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#leadViewModal" title="View Details" onclick="showLeadDetails('NJ-10307', 'Meera Rastogi', '+91 94150 98765', 'Gorakhpur', 'Kerala 6N/7D Tour', 'Field Visit', 'Rakesh Yadav', 'Rakesh Yadav', 'Rakesh Yadav', 'Interested', 'Warm', 'Requested customized Alleppey houseboat + Munnar tea garden stay.');">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                                <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#leadEditModal" title="Edit Lead">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                            </td>
-                        </tr>
+                                    <td>
+                                        <span class="badge bg-primary-subtle text-primary">
+                                            <%# Eval("assigned_employee_id") == DBNull.Value || string.IsNullOrEmpty(Eval("assigned_employee_id").ToString()) ? "Not Assigned" : Eval("assigned_employee_id") %>
+                                        </span>
+                                    </td>
 
-                        <!-- Row 8 -->
-                        <tr>
-                            <td><span class="fw-bold text-success">#NJ-10308</span></td>
-                            <td>
-                                <div class="fw-bold">Kavita Gupta</div>
-                                <small class="text-muted">Honeymoon (2 Pax)</small>
-                            </td>
-                            <td><a href="tel:+919839944332" class="text-decoration-none text-dark">+91 98399 44332</a></td>
-                            <td>
-                                <div>Kushinagar</div>
-                                <small class="text-muted">Maldives Overwater Villa</small>
-                            </td>
-                            <td><span class="badge bg-light text-dark border">Referral</span></td>
-                            <td>Admin Entry</td>
-                            <td><span class="fw-semibold text-primary">Admin</span></td>
-                            <td><span class="badge bg-primary-subtle text-primary">Priya Sharma</span></td>
-                            <td><span class="badge badge-status-confirmed"><i class="bi bi-check2-circle me-1"></i>Confirmed</span></td>
-                            <td><span class="badge badge-priority-hot"><i class="bi bi-fire me-1"></i>Hot</span></td>
-                            <td class="text-end">
-                                <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#leadViewModal" title="View Details" onclick="showLeadDetails('NJ-10308', 'Kavita Gupta', '+91 98399 44332', 'Kushinagar', 'Maldives Overwater Villa', 'Referral', 'Admin Entry', 'Admin', 'Priya Sharma', 'Confirmed', 'Hot', 'All-inclusive resort package confirmed with speedboat transfers.');">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                                <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#leadEditModal" title="Edit Lead">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                            </td>
-                        </tr>
+                                    <td>
+                                        <span class='badge <%# Eval("lead_status") != null && Eval("lead_status").ToString().ToLower() == "confirmed" ? "bg-success-subtle text-success" : (Eval("lead_status") != null && Eval("lead_status").ToString().ToLower() == "interested" ? "bg-info-subtle text-info" : "bg-warning-subtle text-warning") %>'>
+                                            <%# Eval("lead_status") %>
+                                        </span>
+                                    </td>
 
-                        <!-- Row 9 -->
-                        <tr>
-                            <td><span class="fw-bold text-success">#NJ-10309</span></td>
-                            <td>
-                                <div class="fw-bold">Dharmendra Maurya</div>
-                                <small class="text-muted">Family (3 Pax)</small>
-                            </td>
-                            <td><a href="tel:+919161233445" class="text-decoration-none text-dark">+91 91612 33445</a></td>
-                            <td>
-                                <div>Siddharthnagar</div>
-                                <small class="text-muted">Rajasthan Royal Heritage</small>
-                            </td>
-                            <td><span class="badge bg-light text-dark border">Google / Internet</span></td>
-                            <td>Admin Entry</td>
-                            <td><span class="fw-semibold text-primary">Admin</span></td>
-                            <td><span class="badge bg-primary-subtle text-primary">Manoj Tiwari</span></td>
-                            <td><span class="badge badge-status-notinterested">Not Interested</span></td>
-                            <td><span class="badge badge-priority-cold">Cold</span></td>
-                            <td class="text-end">
-                                <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#leadViewModal" title="View Details" onclick="showLeadDetails('NJ-10309', 'Dharmendra Maurya', '+91 91612 33445', 'Siddharthnagar', 'Rajasthan Royal Heritage', 'Google / Internet', 'Admin Entry', 'Admin', 'Manoj Tiwari', 'Not Interested', 'Cold', 'Customer postponed trip due to exam schedule.');">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                                <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#leadEditModal" title="Edit Lead">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                            </td>
-                        </tr>
+                                    <td>
+                                        <span class='badge <%# Eval("lead_priority") != null && Eval("lead_priority").ToString().ToLower() == "hot" ? "badge-priority-hot" : (Eval("lead_priority") != null && Eval("lead_priority").ToString().ToLower() == "warm" ? "badge-priority-warm" : "badge-priority-cold") %>'>
+                                            <%# Eval("lead_priority") %>
+                                        </span>
+                                    </td>
 
-                        <!-- Row 10 -->
-                        <tr>
-                            <td><span class="fw-bold text-success">#NJ-10310</span></td>
-                            <td>
-                                <div class="fw-bold">Alok Dubey</div>
-                                <small class="text-muted">Couple</small>
-                            </td>
-                            <td><a href="tel:+919793112233" class="text-decoration-none text-dark">+91 97931 12233</a></td>
-                            <td>
-                                <div>Gorakhpur</div>
-                                <small class="text-muted">Singapore & Sentosa 5N</small>
-                            </td>
-                            <td><span class="badge bg-light text-dark border">Other</span></td>
-                            <td>Field Visit</td>
-                            <td><span class="fw-semibold text-primary">Rakesh Yadav</span></td>
-                            <td><span class="badge bg-primary-subtle text-primary">Priya Sharma</span></td>
-                            <td><span class="badge badge-status-closed">Closed</span></td>
-                            <td><span class="badge badge-priority-cold">Cold</span></td>
-                            <td class="text-end">
-                                <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#leadViewModal" title="View Details" onclick="showLeadDetails('NJ-10310', 'Alok Dubey', '+91 97931 12233', 'Gorakhpur', 'Singapore & Sentosa 5N', 'Other', 'Field Visit', 'Rakesh Yadav', 'Priya Sharma', 'Closed', 'Cold', 'Customer booked directly with airlines.');">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                                <button type="button" class="btn btn-nj-outline btn-sm" data-bs-toggle="modal" data-bs-target="#leadEditModal" title="Edit Lead">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                            </td>
-                        </tr>
+                                    <td>
+                                        <small class="text-muted"><%# Eval("followup_date") == DBNull.Value || Eval("followup_date") == null ? "-" : Eval("followup_date") %></small>
+                                    </td>
+
+                                    <td class="text-end">
+                                        <button type="button" class="btn btn-nj-outline btn-sm"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#leadViewModal"
+                                            title="View Details"
+                                            onclick="showLeadDetails(
+                        '<%# Eval("lead_id") %>',
+                        '<%# Eval("client_name") %>',
+                        '<%# Eval("mobile") %>',
+                        '<%# Eval("city") %>',
+                        '<%# Eval("destination") %>',
+                        '<%# Eval("created_by") %>',
+                        '<%# Eval("assigned_employee_id") %>',
+                        '<%# Eval("lead_status") %>',
+                        '<%# Eval("lead_priority") %>',
+                        '<%# Eval("remarks") %>'
+                    );">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+
+                                        <asp:LinkButton ID="btnEditLead" runat="server"
+                                            CssClass="btn btn-nj-outline btn-sm"
+                                            CommandArgument='<%# Eval("lead_code") %>'
+                                            OnClick="btnEditLead_Click"
+                                            CausesValidation="false"
+                                            title="Edit Lead">
+                                            <i class="bi bi-pencil"></i>
+                                        </asp:LinkButton>
+
+                                        <asp:LinkButton ID="btnDeleteLead" runat="server"
+                                            CssClass="btn btn-outline-danger btn-sm"
+                                            CommandArgument='<%# Eval("lead_code") %>'
+                                             OnClick="btnDeleteLead_Click"
+                                            CausesValidation="false"
+                                            OnClientClick="return confirm('Are you sure you want to delete this lead?');"
+                                            title="Delete Lead">
+    <i class="bi bi-trash"></i>
+</asp:LinkButton>
+                                    </td>
+                                </tr>
+                            </ItemTemplate>
+                        </asp:Repeater>
                     </tbody>
                 </table>
             </div>
@@ -420,10 +229,11 @@
         <div class="card-footer bg-white border-top p-3 d-flex flex-wrap align-items-center justify-content-between gap-2">
             <div class="small text-muted">
                 Showing <span class="fw-semibold text-dark">1</span> to <span class="fw-semibold text-dark">10</span> of <span class="fw-semibold text-dark">300</span> entries
+           
             </div>
             <nav aria-label="Page navigation">
                 <ul class="pagination pagination-sm mb-0">
-                    <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-chevron-left"></i> Previous</a></li>
+                    <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-chevron-left"></i>Previous</a></li>
                     <li class="page-item active"><a class="page-link" href="#">1</a></li>
                     <li class="page-item"><a class="page-link" href="#">2</a></li>
                     <li class="page-item"><a class="page-link" href="#">3</a></li>
@@ -443,7 +253,7 @@
             <div class="modal-content">
                 <div class="modal-header border-bottom">
                     <h6 class="modal-title fw-bold" id="leadViewModalTitle">
-                        <i class="bi bi-info-circle text-success me-1"></i> Lead Information Details
+                        <i class="bi bi-info-circle text-success me-1"></i>Lead Information Details
                     </h6>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -503,6 +313,7 @@
                         <label class="form-label text-muted small mb-1">Remarks & Requirements</label>
                         <div class="p-2 bg-light border rounded small" id="v-remarks">
                             Client asked for 4-star houseboats in Srinagar and Sonmarg day tour.
+                       
                         </div>
                     </div>
                 </div>
@@ -514,66 +325,98 @@
         </div>
     </div>
 
-    <!-- Lead Quick Edit Modal (UI only) -->
+    <!-- Lead Quick Edit Modal -->
     <div class="modal fade" id="leadEditModal" tabindex="-1" aria-labelledby="leadEditModalTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
-                <div class="modal-header border-bottom">
+                <div class="modal-header border-bottom py-2">
                     <h6 class="modal-title fw-bold" id="leadEditModalTitle">
-                        <i class="bi bi-pencil-square text-success me-1"></i> Edit Lead Quick Info
+                        <i class="bi bi-pencil-square text-success me-1"></i>Edit Lead Quick Info
                     </h6>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-2">
-                        <label class="form-label">Client Name</label>
-                        <input type="text" class="form-control form-control-sm" value="Rohit Verma" />
-                    </div>
-                    <div class="row g-2 mb-2">
-                        <div class="col-6">
-                            <label class="form-label">Mobile</label>
-                            <input type="text" class="form-control form-control-sm" value="+91 98765 43210" />
+                    <asp:HiddenField ID="hfEditLeadCode" runat="server" />
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-12 col-md-6">
+                            <label class="form-label small fw-semibold">Client Name <span class="text-danger">*</span></label>
+                            <asp:TextBox ID="txtEditClientName" runat="server" CssClass="form-control form-control-sm" placeholder="Client Full Name" />
                         </div>
-                        <div class="col-6">
-                            <label class="form-label">Location</label>
-                            <input type="text" class="form-control form-control-sm" value="Gorakhpur" />
+                        <div class="col-12 col-md-6">
+                            <label class="form-label small fw-semibold">Mobile <span class="text-danger">*</span></label>
+                            <asp:TextBox ID="txtEditMobile" runat="server" CssClass="form-control form-control-sm" placeholder="10-digit Mobile Number" />
                         </div>
                     </div>
-                    <div class="row g-2 mb-2">
-                        <div class="col-6">
-                            <label class="form-label">Lead Status</label>
-                            <select class="form-select form-select-sm">
-                                <option>New</option>
-                                <option selected="selected">Interested</option>
-                                <option>Pending</option>
-                                <option>Confirmed</option>
-                                <option>Not Interested</option>
-                                <option>Closed</option>
-                            </select>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-12 col-md-6">
+                            <label class="form-label small fw-semibold">Alternate Mobile</label>
+                            <asp:TextBox ID="txtEditAltMobile" runat="server" CssClass="form-control form-control-sm" placeholder="Alternate Mobile (Optional)" />
                         </div>
-                        <div class="col-6">
-                            <label class="form-label">Priority</label>
-                            <select class="form-select form-select-sm">
-                                <option selected="selected">Hot</option>
-                                <option>Warm</option>
-                                <option>Cold</option>
-                            </select>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label small fw-semibold">City / Location</label>
+                            <asp:TextBox ID="txtEditCity" runat="server" CssClass="form-control form-control-sm" placeholder="e.g. Gorakhpur" />
                         </div>
                     </div>
-                    <div class="mb-2">
-                        <label class="form-label">Assigned Employee</label>
-                        <select class="form-select form-select-sm">
-                            <option selected="selected">Priya Sharma (Sales)</option>
-                            <option>Rakesh Yadav (Field)</option>
-                            <option>Pooja Srivastava (Calling)</option>
-                            <option>Manoj Tiwari (Sales)</option>
-                        </select>
-                        <div class="form-text">Note: Changing the assigned employee does not alter the original Lead Owner.</div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-12 col-md-6">
+                            <label class="form-label small fw-semibold">Destination</label>
+                            <asp:TextBox ID="txtEditDestination" runat="server" CssClass="form-control form-control-sm" placeholder="e.g. Kashmir, Dubai, Goa..." />
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label small fw-semibold">Travel Date</label>
+                            <asp:TextBox ID="txtEditTravelDate" runat="server" TextMode="Date" CssClass="form-control form-control-sm" />
+                        </div>
                     </div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-12 col-md-6">
+                            <label class="form-label small fw-semibold">Lead Status <span class="text-danger">*</span></label>
+                            <asp:DropDownList ID="ddlEditLeadStatus" runat="server" CssClass="form-select form-select-sm">
+                                <asp:ListItem Text="-- Select Status --" Value="" />
+                                <asp:ListItem Text="New" Value="New" />
+                                <asp:ListItem Text="Interested" Value="Interested" />
+                                <asp:ListItem Text="Pending" Value="Pending" />
+                                <asp:ListItem Text="Confirmed" Value="Confirmed" />
+                                <asp:ListItem Text="Not Interested" Value="Not Interested" />
+                                <asp:ListItem Text="Closed" Value="Closed" />
+                            </asp:DropDownList>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label small fw-semibold">Priority <span class="text-danger">*</span></label>
+                            <asp:DropDownList ID="ddlEditLeadPriority" runat="server" CssClass="form-select form-select-sm">
+                                <asp:ListItem Text="-- Select Priority --" Value="" />
+                                <asp:ListItem Text="Hot" Value="Hot" />
+                                <asp:ListItem Text="Warm" Value="Warm" />
+                                <asp:ListItem Text="Cold" Value="Cold" />
+                            </asp:DropDownList>
+                        </div>
+                    </div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-12 col-md-6">
+                            <label class="form-label small fw-semibold">Next Follow-up Date & Time</label>
+                            <asp:TextBox ID="txtEditFollowUp" runat="server"
+                                TextMode="DateTimeLocal"
+                                CssClass="form-control form-control-sm" />
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label class="form-label small fw-semibold">Remarks</label>
+                            <asp:TextBox ID="txtEditRemarks" runat="server"
+                                TextMode="MultiLine" Rows="3"
+                                CssClass="form-control form-control-sm"
+                                placeholder="Enter conversation details, client requirements, notes..." />
+                        </div>
+                    </div>
+
+
                 </div>
-                <div class="modal-footer border-top">
-                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-sm btn-nj-primary" onclick="alert('Lead details updated successfully (UI sample).');" data-bs-dismiss="modal">Save Changes</button>
+                <div class="modal-footer border-top py-2">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                    <asp:Button ID="btnSaveLeadEdit" runat="server" Text="Save Changes" CssClass="btn btn-nj-primary btn-sm" OnClick="btnSaveLeadEdit_Click1" />
                 </div>
             </div>
         </div>
