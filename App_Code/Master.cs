@@ -352,4 +352,65 @@ public class Master
                 con.Close();
         }
     }
+
+    public void update_employee(
+    int employee_id,
+    string employee_name,
+    string employee_mobile,
+    string employee_email,
+    string employee_username,
+    string employee_password,
+    string employee_category,
+    string employee_status)
+    {
+        string query = @"
+        UPDATE dbo.tbl_employees
+        SET employee_name = @name,
+            employee_mobile = @mobile,
+            employee_email = @email,
+            employee_username = @username,
+            employee_category = @category,
+            employee_status = @status
+        WHERE employee_id = @id";
+
+        if (!string.IsNullOrWhiteSpace(employee_password))
+        {
+            query = @"
+            UPDATE dbo.tbl_employees
+            SET employee_name = @name,
+                employee_mobile = @mobile,
+                employee_email = @email,
+                employee_username = @username,
+                employee_password = @password,
+                employee_category = @category,
+                employee_status = @status
+            WHERE employee_id = @id";
+        }
+
+        SqlCommand cmd = new SqlCommand(query, con);
+
+        cmd.Parameters.AddWithValue("@id", employee_id);
+        cmd.Parameters.AddWithValue("@name", employee_name);
+        cmd.Parameters.AddWithValue("@mobile", employee_mobile);
+        cmd.Parameters.AddWithValue("@email", employee_email);
+        cmd.Parameters.AddWithValue("@username", employee_username);
+        cmd.Parameters.AddWithValue("@category", employee_category);
+        cmd.Parameters.AddWithValue("@status", employee_status);
+
+        if (!string.IsNullOrWhiteSpace(employee_password))
+            cmd.Parameters.AddWithValue("@password", employee_password);
+
+        cmd.ExecuteNonQuery();
+    }
+
+    public void delete_employee(int employee_id)
+    {
+        string query = @"DELETE FROM dbo.tbl_employees
+                     WHERE employee_id = @employee_id";
+
+        SqlCommand cmd = new SqlCommand(query, con);
+        cmd.Parameters.AddWithValue("@employee_id", employee_id);
+        cmd.ExecuteNonQuery();
+    }
+
 }

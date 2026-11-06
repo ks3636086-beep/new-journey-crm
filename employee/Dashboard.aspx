@@ -1,4 +1,4 @@
-<%@ Page Language="C#" MasterPageFile="MasterPage.master" AutoEventWireup="true" CodeFile="Dashboard.aspx.cs" Inherits="Dashboard" %>
+﻿<%@ Page Language="C#" MasterPageFile="MasterPage.master" AutoEventWireup="true" CodeFile="Dashboard.aspx.cs" Inherits="Dashboard" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <title>Employee Dashboard | New Journey Holidays CRM</title>
@@ -10,34 +10,31 @@
         <div class="card-body p-3 p-md-4">
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
                 <div class="d-flex align-items-center gap-3">
-                    <div class="nj-avatar bg-primary" id="dashAvatar" style="width: 52px; height: 52px; font-size: 1.35rem;">PS</div>
+                    <div class="nj-avatar bg-primary"
+                        style="width: 52px; height: 52px; font-size: 1.35rem;">
+                        <asp:Literal ID="litDashAvatar" runat="server" Mode="Encode" />
+                    </div>
+
                     <div>
-                        <div class="d-flex align-items-center gap-2 mb-1">
-                            <h3 class="fw-bold text-dark mb-0 fs-5" id="dashGreetingName">Welcome, Priya Sharma!</h3>
-                            <span class="badge badge-cat-sales" id="dashCategoryBadge">
-                                <i class="bi bi-briefcase-fill me-1"></i> Sales Employee (Field)
+                        <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                            <h3 class="fw-bold text-dark mb-0 fs-5">Welcome,
+                                <asp:Literal ID="litDashName" runat="server" Mode="Encode" />!
+                            </h3>
+
+                            <span class="badge badge-cat-sales">
+                                <i class="bi bi-briefcase-fill me-1"></i>
+                                <asp:Literal ID="litDashCategory" runat="server" Mode="Encode" />
                             </span>
                         </div>
-                        <p class="text-muted small mb-0" id="dashCategoryDescription">
-                            <i class="bi bi-geo-alt-fill text-success me-1"></i> Field sales desk &bull; Client visits across Gorakhpur and Eastern UP &bull; Sourcing and converting travel inquiries.
+
+                        <p class="text-muted small mb-0">
+                            <i class="bi bi-geo-alt-fill text-success me-1"></i>
+                            <asp:Literal ID="litDashDescription" runat="server" Mode="Encode" />
                         </p>
                     </div>
                 </div>
 
-                <!-- Quick Perspective Switcher for Review -->
-                <div class="d-flex align-items-center gap-2 flex-wrap">
-                    <div class="btn-group btn-group-sm" role="group" aria-label="Category Switcher">
-                        <button type="button" class="btn btn-outline-success active" id="btnDashSales" onclick="switchCategoryView('Sales');">
-                            <i class="bi bi-briefcase me-1"></i> Sales View
-                        </button>
-                        <button type="button" class="btn btn-outline-primary" id="btnDashCalling" onclick="switchCategoryView('Calling');">
-                            <i class="bi bi-headset me-1"></i> Calling View
-                        </button>
-                    </div>
-                    <a href="AddLead.aspx" class="btn btn-nj-primary btn-sm">
-                        <i class="bi bi-plus-circle"></i> Add Lead
-                    </a>
-                </div>
+                
             </div>
         </div>
     </div>
@@ -53,9 +50,11 @@
             <div class="nj-stat-card">
                 <div>
                     <div class="stat-label">Total Leads</div>
-                    <div class="stat-value" id="statTotalLeads">40</div>
+                    <asp:Literal ID="litTotalLeads" runat="server" />
+
                     <div class="stat-meta text-success">
-                        <i class="bi bi-arrow-up-short"></i> Active in CRM
+                        <i class="bi bi-arrow-up-short"></i>Active in CRM
+                   
                     </div>
                 </div>
                 <div class="nj-stat-icon green">
@@ -69,9 +68,11 @@
             <div class="nj-stat-card">
                 <div>
                     <div class="stat-label">Hot Leads</div>
-                    <div class="stat-value text-danger" id="statHotLeads">11</div>
+                   <asp:Literal ID="litHotLeads" runat="server" />
+
                     <div class="stat-meta text-danger">
-                        <i class="bi bi-fire"></i> High Priority
+                        <i class="bi bi-fire"></i>High Priority
+                   
                     </div>
                 </div>
                 <div class="nj-stat-icon red">
@@ -85,7 +86,8 @@
             <div class="nj-stat-card">
                 <div>
                     <div class="stat-label">Warm Leads</div>
-                    <div class="stat-value text-warning" id="statWarmLeads">19</div>
+                   <asp:Literal ID="litWarmLeads" runat="server" />
+
                     <div class="stat-meta text-muted">
                         <span>Standard Follow-up</span>
                     </div>
@@ -101,7 +103,8 @@
             <div class="nj-stat-card">
                 <div>
                     <div class="stat-label">Cold Leads</div>
-                    <div class="stat-value text-info" id="statColdLeads">10</div>
+                    <asp:Literal ID="litColdLeads" runat="server" />
+
                     <div class="stat-meta text-muted">
                         <span>Tentative Travel</span>
                     </div>
@@ -119,7 +122,9 @@
                     <div class="stat-label">Today's Calls</div>
                     <div class="stat-value text-primary" id="statTodayCalls">14</div>
                     <div class="stat-meta text-primary">
-                        <i class="bi bi-telephone-outbound"></i> 10 Connected
+                       <asp:Literal ID="litTodayCalls" runat="server" />
+
+                   
                     </div>
                 </div>
                 <div class="nj-stat-icon blue">
@@ -135,7 +140,8 @@
                     <div class="stat-label">Today Follow-ups</div>
                     <div class="stat-value text-danger" id="statTodayFollowups">8</div>
                     <div class="stat-meta text-danger">
-                        <i class="bi bi-clock-history"></i> 3 Pending Calls
+                      <asp:Literal ID="litTodayFollowups" runat="server" />
+                   
                     </div>
                 </div>
                 <div class="nj-stat-icon red">
@@ -146,12 +152,12 @@
     </div>
 
     <!-- 2. Category-Specific Statistics Row (Dynamically changes between Sales and Calling) -->
-    
+
     <!-- Sales Employee Specific Section -->
     <div id="sectionSalesSpecific">
         <div class="mb-2 d-flex align-items-center justify-content-between">
             <span class="text-uppercase fw-bold text-success" style="font-size: 0.725rem; letter-spacing: 0.05em;">
-                <i class="bi bi-briefcase-fill me-1"></i> Sales Employee Specific Metrics (Field Focus)
+                <i class="bi bi-briefcase-fill me-1"></i>Sales Employee Specific Metrics (Field Focus)
             </span>
             <span class="badge bg-success-subtle text-success">Personal Client Generation</span>
         </div>
@@ -162,7 +168,7 @@
                         <div>
                             <span class="text-muted small">My Field Leads</span>
                             <h4 class="fw-bold mb-0 text-dark">28</h4>
-                            <div class="text-success small mt-1"><i class="bi bi-award-fill"></i> You are Lead Owner</div>
+                            <div class="text-success small mt-1"><i class="bi bi-award-fill"></i>You are Lead Owner</div>
                         </div>
                         <span class="badge bg-success-subtle text-success p-2 fs-6"><i class="bi bi-geo-alt"></i></span>
                     </div>
@@ -171,12 +177,12 @@
             </div>
 
             <div class="col-12 col-sm-6 col-xl-3">
-                <div class="card p-3 h-100 border-start border-4 border-primary">
+                <div class="card p-3 h-100 border-start border-4 border-success">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <span class="text-muted small">My Calls (Month)</span>
                             <h4 class="fw-bold mb-0 text-dark">142</h4>
-                            <div class="text-primary small mt-1"><i class="bi bi-telephone-check"></i> High Engagement</div>
+                            <div class="text-primary small mt-1"><i class="bi bi-telephone-check"></i>High Engagement</div>
                         </div>
                         <span class="badge bg-primary-subtle text-primary p-2 fs-6"><i class="bi bi-telephone"></i></span>
                     </div>
@@ -190,7 +196,7 @@
                         <div>
                             <span class="text-muted small">My Follow-ups</span>
                             <h4 class="fw-bold mb-0 text-dark">7 Scheduled</h4>
-                            <div class="text-warning small mt-1"><i class="bi bi-hourglass-split"></i> 2 Urgent Today</div>
+                            <div class="text-warning small mt-1"><i class="bi bi-hourglass-split"></i>2 Urgent Today</div>
                         </div>
                         <span class="badge bg-warning-subtle text-warning p-2 fs-6"><i class="bi bi-calendar-check"></i></span>
                     </div>
@@ -217,21 +223,21 @@
     <!-- Calling Employee Specific Section -->
     <div id="sectionCallingSpecific" class="d-none">
         <div class="mb-2 d-flex align-items-center justify-content-between">
-            <span class="text-uppercase fw-bold text-primary" style="font-size: 0.725rem; letter-spacing: 0.05em;">
-                <i class="bi bi-headset me-1"></i> Calling Employee Specific Metrics (Telecalling Focus)
+            <span class="text-uppercase fw-bold text-success" style="font-size: 0.725rem; letter-spacing: 0.05em;">
+                <i class="bi bi-headset me-1"></i>Calling Employee Specific Metrics (Telecalling Focus)
             </span>
-            <span class="badge bg-primary-subtle text-primary">Office Inbound & Dialing</span>
+            <span class="badge bg-success-subtle text-success">Office Inbound & Dialing</span>
         </div>
         <div class="row g-3 mb-4">
             <div class="col-12 col-sm-6 col-xl-3">
-                <div class="card p-3 h-100 border-start border-4 border-primary">
+                <div class="card p-3 h-100 border-start border-4 border-success">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <span class="text-muted small">Assigned Leads</span>
                             <h4 class="fw-bold mb-0 text-dark">35</h4>
-                            <div class="text-primary small mt-1"><i class="bi bi-inbox-fill"></i> From Admin / Office</div>
+                            <div class="text-success small mt-1"><i class="bi bi-inbox-fill"></i>From Admin / Office</div>
                         </div>
-                        <span class="badge bg-primary-subtle text-primary p-2 fs-6"><i class="bi bi-folder-check"></i></span>
+                        <span class="badge bg-success-subtle text-success p-2 fs-6"><i class="bi bi-folder-check"></i></span>
                     </div>
                     <div class="text-muted small mt-2">Inquiries allocated to you for tele-calling</div>
                 </div>
@@ -243,7 +249,7 @@
                         <div>
                             <span class="text-muted small">Self-Found Leads</span>
                             <h4 class="fw-bold mb-0 text-dark">15</h4>
-                            <div class="text-success small mt-1"><i class="bi bi-award-fill"></i> Google/Internet Sourced</div>
+                            <div class="text-success small mt-1"><i class="bi bi-award-fill"></i>Google/Internet Sourced</div>
                         </div>
                         <span class="badge bg-success-subtle text-success p-2 fs-6"><i class="bi bi-globe"></i></span>
                     </div>
@@ -252,28 +258,28 @@
             </div>
 
             <div class="col-12 col-sm-6 col-xl-3">
-                <div class="card p-3 h-100 border-start border-4 border-info">
+                <div class="card p-3 h-100 border-start border-4 border-success">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <span class="text-muted small">Today's Call Target</span>
                             <h4 class="fw-bold mb-0 text-dark">22 / 30</h4>
-                            <div class="text-info small mt-1"><i class="bi bi-check-circle"></i> 73% Completed</div>
+                            <div class="text-success small mt-1"><i class="bi bi-check-circle"></i>73% Completed</div>
                         </div>
-                        <span class="badge bg-info-subtle text-info p-2 fs-6"><i class="bi bi-telephone-forward"></i></span>
+                        <span class="badge bg-success-subtle text-success p-2 fs-6"><i class="bi bi-telephone-forward"></i></span>
                     </div>
                     <div class="text-muted small mt-2">Daily telecalling outreach quota progress</div>
                 </div>
             </div>
 
             <div class="col-12 col-sm-6 col-xl-3">
-                <div class="card p-3 h-100 border-start border-4 border-danger">
+                <div class="card p-3 h-100 border-start border-4 border-success">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <span class="text-muted small">Pending Follow-ups</span>
-                            <h4 class="fw-bold mb-0 text-danger">5 Calls</h4>
-                            <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle"></i> Action Needed Today</div>
+                            <h4 class="fw-bold mb-0 text-dark">5 Calls</h4>
+                            <div class="text-success small mt-1"><i class="bi bi-exclamation-circle"></i>Action Needed Today</div>
                         </div>
-                        <span class="badge bg-danger-subtle text-danger p-2 fs-6"><i class="bi bi-alarm"></i></span>
+                        <span class="badge bg-success-subtle text-success p-2 fs-6"><i class="bi bi-alarm"></i></span>
                     </div>
                     <div class="text-muted small mt-2">Customers waiting for call back & rates</div>
                 </div>
@@ -288,11 +294,10 @@
             <div class="card h-100">
                 <div class="card-header bg-white">
                     <div>
-                        <h6 class="mb-0"><i class="bi bi-calendar2-day text-success"></i> Today's Follow-ups Queue</h6>
+                        <h6 class="mb-0"><i class="bi bi-calendar2-day text-success"></i>Today's Follow-ups Queue</h6>
                         <small class="text-muted">Calls due today for high-conversion holiday inquiries</small>
                     </div>
-                    <a href="FollowUps.aspx" class="btn btn-nj-outline btn-sm">
-                        View All (8) <i class="bi bi-arrow-right"></i>
+                    <a href="FollowUps.aspx" class="btn btn-nj-outline btn-sm">View All (8) <i class="bi bi-arrow-right"></i>
                     </a>
                 </div>
                 <div class="card-body p-0">
@@ -326,7 +331,8 @@
                                             <i class="bi bi-eye"></i>
                                         </a>
                                         <button type="button" class="btn btn-nj-primary btn-sm" onclick="alert('Initiating call to Dr. Arvind Kumar (+91 98390 12345)...');">
-                                            <i class="bi bi-telephone-outbound"></i> Call
+                                            <i class="bi bi-telephone-outbound"></i>Call
+                                       
                                         </button>
                                     </td>
                                 </tr>
@@ -348,7 +354,8 @@
                                             <i class="bi bi-eye"></i>
                                         </a>
                                         <button type="button" class="btn btn-nj-primary btn-sm" onclick="alert('Initiating call to Rohit Verma (+91 98765 43210)...');">
-                                            <i class="bi bi-telephone-outbound"></i> Call
+                                            <i class="bi bi-telephone-outbound"></i>Call
+                                       
                                         </button>
                                     </td>
                                 </tr>
@@ -370,7 +377,8 @@
                                             <i class="bi bi-eye"></i>
                                         </a>
                                         <button type="button" class="btn btn-nj-primary btn-sm" onclick="alert('Initiating call to Preeti Agrawal (+91 99180 88990)...');">
-                                            <i class="bi bi-telephone-outbound"></i> Call
+                                            <i class="bi bi-telephone-outbound"></i>Call
+                                       
                                         </button>
                                     </td>
                                 </tr>
@@ -381,59 +389,7 @@
             </div>
         </div>
 
-        <!-- Lead Priority Summary (col-lg-4) -->
-        <div class="col-12 col-lg-4">
-            <div class="card h-100">
-                <div class="card-header bg-white">
-                    <div>
-                        <h6 class="mb-0"><i class="bi bi-bar-chart text-success"></i> Lead Priority Summary</h6>
-                        <small class="text-muted">Urgency classification breakdown</small>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <!-- Hot -->
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between small fw-bold mb-1">
-                            <span class="text-danger"><i class="bi bi-fire me-1"></i> Hot Priority (Travel &lt; 30 Days)</span>
-                            <span class="text-danger">11 Leads (27.5%)</span>
-                        </div>
-                        <div class="progress" style="height: 8px;">
-                            <div class="progress-bar bg-danger" role="progressbar" style="width: 27.5%;"></div>
-                        </div>
-                        <div class="text-muted" style="font-size: 0.725rem;">Immediate follow-up required within 2 hours.</div>
-                    </div>
-
-                    <!-- Warm -->
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between small fw-bold mb-1">
-                            <span class="text-warning"><i class="bi bi-thermometer-half me-1"></i> Warm Priority (1-2 Months)</span>
-                            <span class="text-warning">19 Leads (47.5%)</span>
-                        </div>
-                        <div class="progress" style="height: 8px;">
-                            <div class="progress-bar bg-warning" role="progressbar" style="width: 47.5%;"></div>
-                        </div>
-                        <div class="text-muted" style="font-size: 0.725rem;">Quotes shared; regular 48h touchpoint.</div>
-                    </div>
-
-                    <!-- Cold -->
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between small fw-bold mb-1">
-                            <span class="text-info"><i class="bi bi-snow me-1"></i> Cold Priority (Long-term / Exploratory)</span>
-                            <span class="text-info">10 Leads (25.0%)</span>
-                        </div>
-                        <div class="progress" style="height: 8px;">
-                            <div class="progress-bar bg-info" role="progressbar" style="width: 25.0%;"></div>
-                        </div>
-                        <div class="text-muted" style="font-size: 0.725rem;">Tentative inquiries; weekly seasonal newsletters.</div>
-                    </div>
-
-                    <div class="p-2 bg-light rounded border small text-muted">
-                        <i class="bi bi-info-circle text-success me-1"></i>
-                        <strong>CRM Note:</strong> <em>Priority</em> measures purchase urgency; <em>Status</em> tracks the pipeline stage.
-                    </div>
-                </div>
-            </div>
-        </div>
+         
     </div>
 
     <!-- 4. Recent Leads & Recent Call Activity Row -->
@@ -443,11 +399,10 @@
             <div class="card h-100">
                 <div class="card-header bg-white">
                     <div>
-                        <h6 class="mb-0"><i class="bi bi-person-lines-fill text-success"></i> Recent Leads</h6>
+                        <h6 class="mb-0"><i class="bi bi-person-lines-fill text-success"></i>Recent Leads</h6>
                         <small class="text-muted">Inquiries registered in the CRM</small>
                     </div>
-                    <a href="MyLeads.aspx" class="btn btn-nj-outline btn-sm">
-                        All Leads <i class="bi bi-arrow-right"></i>
+                    <a href="MyLeads.aspx" class="btn btn-nj-outline btn-sm">All Leads <i class="bi bi-arrow-right"></i>
                     </a>
                 </div>
                 <div class="card-body p-0">
@@ -533,11 +488,10 @@
             <div class="card h-100">
                 <div class="card-header bg-white">
                     <div>
-                        <h6 class="mb-0"><i class="bi bi-telephone-outbound text-primary"></i> Recent Call Activity</h6>
+                        <h6 class="mb-0"><i class="bi bi-telephone-outbound text-primary"></i>Recent Call Activity</h6>
                         <small class="text-muted">Latest calls logged by the desk</small>
                     </div>
-                    <a href="CallHistory.aspx" class="btn btn-nj-outline btn-sm">
-                        Call Log <i class="bi bi-arrow-right"></i>
+                    <a href="CallHistory.aspx" class="btn btn-nj-outline btn-sm">Call Log <i class="bi bi-arrow-right"></i>
                     </a>
                 </div>
                 <div class="card-body p-0">

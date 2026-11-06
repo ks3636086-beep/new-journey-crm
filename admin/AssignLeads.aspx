@@ -1,4 +1,4 @@
-<%@ Page Language="C#" MasterPageFile="MasterPage.master" AutoEventWireup="true" CodeFile="AssignLeads.aspx.cs" Inherits="AssignLeads" %>
+﻿<%@ Page Language="C#" MasterPageFile="MasterPage.master" AutoEventWireup="true" CodeFile="AssignLeads.aspx.cs" Inherits="AssignLeads" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <title>Assign Leads | New Journey Holidays CRM</title>
@@ -126,191 +126,61 @@
                             </th>
                             <th>Lead ID</th>
                             <th>Client Name</th>
-                            <th>Mobile & City</th>
-                            <th>Travel Destination</th>
-                            <th>Lead Owner (Credit)</th>
-                            <th>Current Assignee</th>
+                            <th>Mobile</th>
+                            <th>City / Destination</th>
+                            <th>Created By</th>
+                            <th>Assigned Employee</th>
                             <th>Status</th>
                             <th>Priority</th>
-                            <th>Added Date</th>
+                            <th>Next Follow-up</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Row 1 -->
-                        <tr class="lead-row">
-                            <td class="text-center">
-                                <input type="checkbox" class="form-check-input lead-chk" value="NJ-10311" data-client="Deepak Singhania" onchange="updateSelectedCount();" />
-                            </td>
-                            <td><span class="fw-bold text-success">#NJ-10311</span></td>
-                            <td>
-                                <div class="fw-bold">Deepak Singhania</div>
-                                <small class="text-muted">Family (4 Pax)</small>
-                            </td>
-                            <td>
-                                <div>+91 94500 11223</div>
-                                <small class="text-muted">Gorakhpur (Golghar)</small>
-                            </td>
-                            <td>Kashmir 6N Deluxe Tour</td>
-                            <td><span class="fw-semibold text-primary">Rakesh Yadav (Field)</span></td>
-                            <td><span class="badge bg-secondary-subtle text-secondary">Unassigned</span></td>
-                            <td><span class="badge badge-status-new">New</span></td>
-                            <td><span class="badge badge-priority-hot"><i class="bi bi-fire me-1"></i>Hot</span></td>
-                            <td class="text-muted small">Today, 09:15 AM</td>
-                        </tr>
-
-                        <!-- Row 2 -->
-                        <tr class="lead-row">
-                            <td class="text-center">
-                                <input type="checkbox" class="form-check-input lead-chk" value="NJ-10312" data-client="Vandana Chaurasia" onchange="updateSelectedCount();" />
-                            </td>
-                            <td><span class="fw-bold text-success">#NJ-10312</span></td>
-                            <td>
-                                <div class="fw-bold">Vandana Chaurasia</div>
-                                <small class="text-muted">Couple (Honeymoon)</small>
-                            </td>
-                            <td>
-                                <div>+91 98380 44556</div>
-                                <small class="text-muted">Deoria</small>
-                            </td>
-                            <td>Maldives 4N Water Villa</td>
-                            <td><span class="fw-semibold text-primary">Admin Entry</span></td>
-                            <td><span class="badge bg-secondary-subtle text-secondary">Unassigned</span></td>
-                            <td><span class="badge badge-status-new">New</span></td>
-                            <td><span class="badge badge-priority-hot"><i class="bi bi-fire me-1"></i>Hot</span></td>
-                            <td class="text-muted small">Today, 10:00 AM</td>
-                        </tr>
-
-                        <!-- Row 3 -->
-                        <tr class="lead-row">
-                            <td class="text-center">
-                                <input type="checkbox" class="form-check-input lead-chk" value="NJ-10313" data-client="Suresh Chandra" onchange="updateSelectedCount();" />
-                            </td>
-                            <td><span class="fw-bold text-success">#NJ-10313</span></td>
-                            <td>
-                                <div class="fw-bold">Suresh Chandra</div>
-                                <small class="text-muted">Group (8 Pax)</small>
-                            </td>
-                            <td>
-                                <div>+91 97920 66778</div>
-                                <small class="text-muted">Kushinagar</small>
-                            </td>
-                            <td>Char Dham Yatra by Coach</td>
-                            <td><span class="fw-semibold text-primary">Rakesh Yadav (Field)</span></td>
-                            <td><span class="badge bg-secondary-subtle text-secondary">Unassigned</span></td>
-                            <td><span class="badge badge-status-interested">Interested</span></td>
-                            <td><span class="badge badge-priority-warm">Warm</span></td>
-                            <td class="text-muted small">Today, 10:45 AM</td>
-                        </tr>
-
-                        <!-- Row 4 -->
-                        <tr class="lead-row">
-                            <td class="text-center">
-                                <input type="checkbox" class="form-check-input lead-chk" value="NJ-10314" data-client="Preeti Agrawal" onchange="updateSelectedCount();" />
-                            </td>
-                            <td><span class="fw-bold text-success">#NJ-10314</span></td>
-                            <td>
-                                <div class="fw-bold">Preeti Agrawal</div>
-                                <small class="text-muted">Family (5 Pax)</small>
-                            </td>
-                            <td>
-                                <div>+91 99180 88990</div>
-                                <small class="text-muted">Basti</small>
-                            </td>
-                            <td>Dubai 5N Luxury Package</td>
-                            <td><span class="fw-semibold text-primary">Priya Sharma (Sales)</span></td>
-                            <td><span class="badge bg-secondary-subtle text-secondary">Unassigned</span></td>
-                            <td><span class="badge badge-status-new">New</span></td>
-                            <td><span class="badge badge-priority-hot"><i class="bi bi-fire me-1"></i>Hot</span></td>
-                            <td class="text-muted small">Yesterday</td>
-                        </tr>
-
-                        <!-- Row 5 -->
-                        <tr class="lead-row">
-                            <td class="text-center">
-                                <input type="checkbox" class="form-check-input lead-chk" value="NJ-10315" data-client="Mohd. Aslam" onchange="updateSelectedCount();" />
-                            </td>
-                            <td><span class="fw-bold text-success">#NJ-10315</span></td>
-                            <td>
-                                <div class="fw-bold">Mohd. Aslam</div>
-                                <small class="text-muted">Friends (3 Pax)</small>
-                            </td>
-                            <td>
-                                <div>+91 94155 33221</div>
-                                <small class="text-muted">Gorakhpur (Basharatpur)</small>
-                            </td>
-                            <td>Goa 4N Party & Beach Tour</td>
-                            <td><span class="fw-semibold text-primary">Admin Entry</span></td>
-                            <td><span class="badge bg-primary-subtle text-primary">Manoj Tiwari</span></td>
-                            <td><span class="badge badge-status-pending">Pending</span></td>
-                            <td><span class="badge badge-priority-warm">Warm</span></td>
-                            <td class="text-muted small">Yesterday</td>
-                        </tr>
-
-                        <!-- Row 6 -->
-                        <tr class="lead-row">
-                            <td class="text-center">
-                                <input type="checkbox" class="form-check-input lead-chk" value="NJ-10316" data-client="Pankaj Jaiswal" onchange="updateSelectedCount();" />
-                            </td>
-                            <td><span class="fw-bold text-success">#NJ-10316</span></td>
-                            <td>
-                                <div class="fw-bold">Pankaj Jaiswal</div>
-                                <small class="text-muted">Couple</small>
-                            </td>
-                            <td>
-                                <div>+91 98391 77889</div>
-                                <small class="text-muted">Maharajganj</small>
-                            </td>
-                            <td>Thailand Bangkok-Pattaya 5N</td>
-                            <td><span class="fw-semibold text-primary">Rakesh Yadav (Field)</span></td>
-                            <td><span class="badge bg-secondary-subtle text-secondary">Unassigned</span></td>
-                            <td><span class="badge badge-status-new">New</span></td>
-                            <td><span class="badge badge-priority-warm">Warm</span></td>
-                            <td class="text-muted small">2 days ago</td>
-                        </tr>
-
-                        <!-- Row 7 -->
-                        <tr class="lead-row">
-                            <td class="text-center">
-                                <input type="checkbox" class="form-check-input lead-chk" value="NJ-10317" data-client="Shruti Srivastava" onchange="updateSelectedCount();" />
-                            </td>
-                            <td><span class="fw-bold text-success">#NJ-10317</span></td>
-                            <td>
-                                <div class="fw-bold">Shruti Srivastava</div>
-                                <small class="text-muted">Family (4 Pax)</small>
-                            </td>
-                            <td>
-                                <div>+91 91610 99887</div>
-                                <small class="text-muted">Gorakhpur (Medical Road)</small>
-                            </td>
-                            <td>Kerala Munnar & Thekkady</td>
-                            <td><span class="fw-semibold text-primary">Admin Entry</span></td>
-                            <td><span class="badge bg-secondary-subtle text-secondary">Unassigned</span></td>
-                            <td><span class="badge badge-status-interested">Interested</span></td>
-                            <td><span class="badge badge-priority-hot"><i class="bi bi-fire me-1"></i>Hot</span></td>
-                            <td class="text-muted small">2 days ago</td>
-                        </tr>
-
-                        <!-- Row 8 -->
-                        <tr class="lead-row">
-                            <td class="text-center">
-                                <input type="checkbox" class="form-check-input lead-chk" value="NJ-10318" data-client="Harsh Vardhan" onchange="updateSelectedCount();" />
-                            </td>
-                            <td><span class="fw-bold text-success">#NJ-10318</span></td>
-                            <td>
-                                <div class="fw-bold">Harsh Vardhan</div>
-                                <small class="text-muted">Group (10 Pax)</small>
-                            </td>
-                            <td>
-                                <div>+91 97930 22334</div>
-                                <small class="text-muted">Siddharthnagar</small>
-                            </td>
-                            <td>Himachal Manali-Kasol Tour</td>
-                            <td><span class="fw-semibold text-primary">Priya Sharma (Sales)</span></td>
-                            <td><span class="badge bg-secondary-subtle text-secondary">Unassigned</span></td>
-                            <td><span class="badge badge-status-new">New</span></td>
-                            <td><span class="badge badge-priority-warm">Warm</span></td>
-                            <td class="text-muted small">3 days ago</td>
-                        </tr>
+                        <asp:Repeater ID="rptAssignableLeads" runat="server">
+                            <ItemTemplate>
+                                <tr class="lead-row">
+                                    <td class="text-center">
+                                        <input type="checkbox" class="form-check-input lead-chk" value='<%# Eval("lead_code") %>' data-client='<%# Eval("client_name") %>' onchange="updateSelectedCount();" />
+                                    </td>
+                                    <td>
+                                        <span class="fw-bold text-success">#<%# Eval("lead_code") %></span>
+                                    </td>
+                                    <td>
+                                        <div class="fw-semibold text-dark"><%# Eval("client_name") %></div>
+                                    </td>
+                                    <td>
+                                        <a href='tel:+91<%# Eval("mobile") %>' class="text-decoration-none text-dark">
+                                            <i class="bi bi-telephone text-muted me-1 small"></i><%# Eval("mobile") %>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <div><%# Eval("city") %></div>
+                                        <small class="text-muted"><%# Eval("destination") %></small>
+                                    </td>
+                                    <td>
+                                        <%# Eval("created_by") %>
+                                    </td>
+                                    <td>
+                                        <span class="badge <%# Eval("assigned_employee_id") == DBNull.Value || string.IsNullOrEmpty(Eval("assigned_employee_id").ToString()) || Eval("assigned_employee_id").ToString().ToLower() == "unassigned" ? "bg-secondary-subtle text-secondary" : "bg-primary-subtle text-primary" %>">
+                                            <%# Eval("assigned_employee_id") == DBNull.Value || string.IsNullOrEmpty(Eval("assigned_employee_id").ToString()) ? "Unassigned" : Eval("assigned_employee_id") %>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class='badge <%# Eval("lead_status") != null && Eval("lead_status").ToString().ToLower() == "confirmed" ? "bg-success-subtle text-success" : (Eval("lead_status") != null && Eval("lead_status").ToString().ToLower() == "interested" ? "bg-info-subtle text-info" : (Eval("lead_status") != null && Eval("lead_status").ToString().ToLower() == "new" ? "badge-status-new" : "bg-warning-subtle text-warning")) %>'>
+                                            <%# Eval("lead_status") %>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class='badge <%# Eval("lead_priority") != null && Eval("lead_priority").ToString().ToLower() == "hot" ? "badge-priority-hot" : (Eval("lead_priority") != null && Eval("lead_priority").ToString().ToLower() == "warm" ? "badge-priority-warm" : "badge-priority-cold") %>'>
+                                            <%# Eval("lead_priority") %>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <small class="text-muted"><%# Eval("followup_date") == DBNull.Value || Eval("followup_date") == null ? "-" : Eval("followup_date") %></small>
+                                    </td>
+                                </tr>
+                            </ItemTemplate>
+                        </asp:Repeater>
                     </tbody>
                 </table>
             </div>

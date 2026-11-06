@@ -1,4 +1,4 @@
-/* ==========================================================================
+﻿/* ==========================================================================
    New Journey Holidays CRM - Employee Panel Stylesheet
    Theme: Professional White & Dark Green
    Location: Gorakhpur, Uttar Pradesh
@@ -17,7 +17,7 @@
     --nj-text: #26352D;
     --nj-text-muted: #5e7367;
     --nj-border: #E3EAE4;
-    --nj-sidebar-width: 250px;
+    --nj-sidebar-width: 285px;
     --nj-font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
@@ -69,6 +69,17 @@ body {
     color: #ffffff;
 }
 
+.nj-sidebar-brand .brand-logo-img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    background: #ffffff;
+    border-radius: 50%;
+    padding: 2px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    flex-shrink: 0;
+}
+
 .nj-sidebar-brand .brand-icon {
     width: 40px;
     height: 40px;
@@ -91,9 +102,17 @@ body {
     line-height: 1.2;
 }
 
+.nj-sidebar-brand .brand-title {
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    line-height: 1.2;
+}
+
 .nj-sidebar-brand .brand-sub {
     font-size: 0.725rem;
-    color: #86efac;
+    color: #ffffff;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     font-weight: 600;
@@ -103,7 +122,7 @@ body {
     font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: rgba(209, 231, 221, 0.5);
+    color: rgb(255 255 255);
     padding: 1rem 1.25rem 0.35rem 1.25rem;
     font-weight: 600;
 }
@@ -122,7 +141,7 @@ body {
     align-items: center;
     gap: 0.75rem;
     padding: 0.625rem 0.85rem;
-    color: #d1e7dd;
+    color: #ffffff;
     text-decoration: none;
     border-radius: 6px;
     font-weight: 500;
@@ -130,13 +149,13 @@ body {
     transition: all 0.15s ease-in-out;
 }
 
-.nj-nav-item .nj-nav-link i {
-    font-size: 1.1rem;
-    color: #86efac;
-    width: 22px;
-    text-align: center;
-    transition: color 0.15s ease-in-out;
-}
+    .nj-nav-item .nj-nav-link i {
+        font-size: 1.1rem;
+        color: #ffffff;
+        width: 22px;
+        text-align: center;
+        transition: color 0.15s ease-in-out;
+    }
 
 .nj-nav-item .nj-nav-link:hover {
     background-color: var(--nj-sidebar-hover);
@@ -163,7 +182,7 @@ body {
 
 .nj-agency-badge {
     font-size: 0.75rem;
-    color: #a3e635;
+    color: #ffffff;
     background: rgba(163, 230, 53, 0.1);
     padding: 0.2rem 0.5rem;
     border-radius: 4px;

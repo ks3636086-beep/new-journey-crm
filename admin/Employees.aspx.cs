@@ -177,5 +177,142 @@ ORDER BY employee_id DESC";
         return empid;
     }
 
+    protected void btnUpdateEmployee_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            int id = 0;
+            if (!string.IsNullOrEmpty(edit_id.Value))
+            {
+                int.TryParse(edit_id.Value, out id);
+            }
+            else if (!string.IsNullOrEmpty(Request.Form["edit_id"]))
+            {
+                int.TryParse(Request.Form["edit_id"], out id);
+            }
+
+            if (id <= 0)
+            {
+                ClientScript.RegisterStartupScript(
+                    this.GetType(),
+                    "UpdateError",
+                    "alert('Please select an employee to edit.');",
+                    true
+                );
+                return;
+            }
+
+            string name = edit_name.Text.Trim();
+            string mobile = edit_mobile.Text.Trim();
+            string email = edit_email.Text.Trim();
+            string username = edit_username.Text.Trim();
+            string password = edit_password.Text.Trim();
+            string category = edit_category.SelectedValue;
+            string status = edit_status.SelectedValue;
+
+            if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(mobile) ||
+                string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(username))
+            {
+                ClientScript.RegisterStartupScript(
+                    this.GetType(),
+                    "UpdateError",
+                    "alert('Please fill all required fields.');",
+                    true
+                );
+                return;
+            }
+
+            // Hash password if admin entered a new password
+            if (!string.IsNullOrWhiteSpace(password))
+            {
+                byte[] salt = new byte[16];
+                using (var rng = RandomNumberGenerator.Create())
+                {
+                    rng.GetBytes(salt);
+                }
+
+                byte[] hash;
+                using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 100000))
+                {
+                    hash = pbkdf2.GetBytes(32);
+                }
+
+                password = Convert.ToBase64String(salt) + ":" + Convert.ToBase64String(hash);
+            }
+
+            if (ob.con.State == ConnectionState.Closed)
+                ob.con.Open();
+
+            ob.update_employee(
+                id, name, mobile, email,
+                username, password, category, status
+            );
+
+            ob.con.Close();
+
+            BindEmployees();
+
+            ClientScript.RegisterStartupScript(
+                this.GetType(),
+                "UpdateSuccess",
+                "alert('Employee updated successfully!');",
+                true
+            );
+        }
+        catch (Exception ex)
+        {
+            if (ob.con.State == ConnectionState.Open)
+                ob.con.Close();
+
+            string error = System.Web.HttpUtility.JavaScriptStringEncode(ex.Message);
+
+            ClientScript.RegisterStartupScript(
+                this.GetType(),
+                "UpdateError",
+                "alert('" + error + "');",
+                true
+            );
+        }
+    }
+
+    protected void btnDeleteEmployee_Click(object sender, EventArgs e)
+    {
+        LinkButton btn = (LinkButton)sender;
+
+        int employeeId = Convert.ToInt32(btn.CommandArgument);
+
+        try
+        {
+            string query = @"DELETE FROM dbo.tbl_employees
+                         WHERE employee_id = @employee_id";
+
+            using (SqlCommand cmd = new SqlCommand(query, ob.con))
+            {
+                cmd.Parameters.AddWithValue("@employee_id", employeeId);
+
+                if (ob.con.State != ConnectionState.Open)
+                    ob.con.Open();
+
+                cmd.ExecuteNonQuery();
+            }
+
+            BindEmployees();
+
+            ClientScript.RegisterStartupScript(
+                this.GetType(), "success",
+                "alert('Employee deleted successfully!');", true);
+        }
+        catch (Exception ex)
+        {
+            ClientScript.RegisterStartupScript(
+                this.GetType(), "error",
+                "alert('" + System.Web.HttpUtility.JavaScriptStringEncode(ex.Message) + "');", true);
+        }
+        finally
+        {
+            if (ob.con.State == ConnectionState.Open)
+                ob.con.Close();
+        }
+    }
 }
 

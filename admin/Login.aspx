@@ -100,6 +100,7 @@
             }
         }
     </style>
+
 </head>
 <body>
     <form id="form1" runat="server">
@@ -214,7 +215,7 @@
                             <asp:Button ID="btnLogin" runat="server"
                                 CssClass="btn btn-nj-primary py-2 fw-semibold"
                                 Text="Sign In"
-                                OnClick="btnLogin_Click" />
+                                OnClick="btnLogin_Click1" />
                         </div>
 
                         <asp:Label ID="lblMessage" runat="server"

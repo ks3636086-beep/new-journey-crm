@@ -14,7 +14,7 @@ public partial class AddLead : System.Web.UI.Page
     {
 
     }
-
+    //admin
     protected void btnSaveLead_Click(object sender, EventArgs e)
     {
         try
@@ -60,5 +60,5 @@ public partial class AddLead : System.Web.UI.Page
         }
     }
 
-    
+
 }
