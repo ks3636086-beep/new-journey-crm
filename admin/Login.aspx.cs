@@ -12,7 +12,7 @@ public partial class Admin_Login : System.Web.UI.Page
     {
     }
 
-    protected void btnLogin_Click(object sender, EventArgs e)
+    protected void btnLogin_Click1(object sender, EventArgs e)
     {
         string login = txtemail.Text.Trim();
         string password = txtpassword.Text;

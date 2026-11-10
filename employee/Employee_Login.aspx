@@ -1,4 +1,4 @@
-<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Employee_Login.aspx.cs" Inherits="Employee_Login" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Employee_Login.aspx.cs" Inherits="Employee_Login" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -115,7 +115,7 @@
                             </div>
                             <div>
                                 <h4 class="fw-bold mb-0 text-white tracking-wide">New Journey Holidays</h4>
-                                <span class="text-white-50 small">Travel CRM &bull; Employee Portal</span>
+                                <span class="text-white-50 small">Travel CRM - Employee Portal</span>
                             </div>
                         </div>
 

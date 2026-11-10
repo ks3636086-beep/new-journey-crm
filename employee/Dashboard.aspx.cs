@@ -19,7 +19,7 @@ public partial class Dashboard : System.Web.UI.Page
         ScriptManager.RegisterStartupScript(this, this.GetType(), System.Guid.NewGuid().ToString(), "ShowMessage('" + Message + "','" + type + "');", true);
     }
 
-    
+    Master ob = new Master();
     protected void Page_Load(object sender, EventArgs e)
     {
         if (Session["employee_id"] == null)
@@ -31,9 +31,36 @@ public partial class Dashboard : System.Web.UI.Page
         if (!IsPostBack)
         {
             BindDashboardProfile();
+            BindSalesMetrics();
         }
     }
 
+    private void BindSalesMetrics()
+    {
+        try
+        {
+            int employeeId = Convert.ToInt32(Session["employee_id"]);
+
+            DataTable dt = ob.get_employee_dashboard_metrics(employeeId);
+
+            if (dt.Rows.Count > 0)
+            {
+                DataRow row = dt.Rows[0];
+
+                lblMyFieldLeads.Text = row["MyFieldLeads"].ToString();
+                lblActiveLeads.Text = row["ActiveLeads"].ToString();
+
+                lblTodayCalls.Text = row["TodayCalls"] + " Calls";
+
+                lblMonthlyTarget.Text =
+                    row["MonthlyCalls"] + " / " + row["MonthlyTarget"];
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine(ex.Message);
+        }
+    }
     private void BindDashboardProfile()
     {
         string name = Convert.ToString(Session["employee_name"]);

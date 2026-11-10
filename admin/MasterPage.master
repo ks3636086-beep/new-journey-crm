@@ -1,4 +1,4 @@
-<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -38,7 +38,7 @@
                         <img src="images/logo.png" alt="New Journey Holidays" class="brand-logo-img" />
                         <div>
                             <div class="brand-title">New Journey</div>
-                            <div class="brand-sub">Holidays CRM • Admin</div>
+                            <div class="brand-sub">Holidays CRM</div>
                         </div>
                     </div>
                 </div>
@@ -122,12 +122,12 @@
                         <span>Employees</span>
                     </a>
                 </li>
-                <li class="nj-nav-item">
+               <%-- <li class="nj-nav-item">
                     <a href="EmployeeCategories.aspx" class="nj-nav-link" id="nav-categories">
                         <i class="bi bi-tags-fill"></i>
                         <span>Employee Categories</span>
                     </a>
-                </li>
+                </li>--%>
                 <li class="nj-nav-item">
                     <a href="FollowUps.aspx" class="nj-nav-link" id="nav-followups">
                         <i class="bi bi-calendar-check-fill"></i>

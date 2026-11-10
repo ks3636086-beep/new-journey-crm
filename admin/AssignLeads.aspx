@@ -13,11 +13,11 @@
         </div>
         <div class="d-flex align-items-center gap-2">
             <span class="badge bg-light text-dark border p-2">
-                <i class="bi bi-person-lines-fill text-success me-1"></i> Unassigned Queue: <strong>48 Leads</strong>
+                <i class="bi bi-person-lines-fill text-success me-1"></i>Unassigned Queue: <strong>48 Leads</strong>
             </span>
         </div>
     </div>
- 
+
     <!-- Bulk Assignment Action Bar Card -->
     <div class="card mb-3 border-success border-opacity-25 bg-white">
         <div class="card-body p-3">
@@ -37,28 +37,27 @@
                 <div class="col-12 col-md-4">
                     <label class="visually-hidden" for="ddlTargetEmployee">Target Employee</label>
                     <div class="input-group input-group-sm">
-                        <span class="input-group-text bg-light text-dark"><i class="bi bi-person-check"></i> Assign To</span>
-                        <select class="form-select form-select-sm" id="ddlTargetEmployee">
-                            <option value="">-- Choose Staff Member --</option>
-                            <option value="Pooja Srivastava (Calling Desk)">Pooja Srivastava &bull; Calling Desk (Active)</option>
-                            <option value="Ankita Verma (Calling Desk)">Ankita Verma &bull; Calling Desk (Active)</option>
-                            <option value="Priya Sharma (Sales Team)">Priya Sharma &bull; Sales Team (Active)</option>
-                            <option value="Manoj Tiwari (Sales Team)">Manoj Tiwari &bull; Sales Team (Active)</option>
-                            <option value="Rakesh Yadav (Field Team)">Rakesh Yadav &bull; Field Team (Active)</option>
-                        </select>
+                        <span class="input-group-text bg-light text-dark"><i class="bi bi-person-check"></i>Assign To</span>
+                        <asp:DropDownList ID="ddlTargetEmployee" runat="server"
+                            CssClass="form-select form-select-sm">
+                            <asp:ListItem Value="">-- Choose Staff Member --</asp:ListItem>
+                        </asp:DropDownList>
                     </div>
                 </div>
 
                 <!-- Instruction note -->
-                <div class="col-12 col-md-3">
+                <%-- <div class="col-12 col-md-3">
                     <input type="text" class="form-control form-control-sm" id="txtAssignRemarks" placeholder="Optional note: e.g. Urgent call required" />
-                </div>
+                </div>--%>
 
+                <asp:HiddenField ID="hfSelectedLeadCodes" runat="server" />
                 <!-- Assign Button -->
                 <div class="col-12 col-md-2 text-md-end">
-                    <button type="button" class="btn btn-nj-primary btn-sm w-100" onclick="openAssignmentModal();">
-                        <i class="bi bi-check-all"></i> Assign Leads
-                    </button>
+                    <asp:Button ID="btnAssignLeads" runat="server"
+                        Text="Assign Leads"
+                        CssClass="btn btn-nj-primary btn-sm w-100"
+                        OnClientClick="collectSelectedLeads(); return validateAssignment();"
+                        OnClick="btnAssignLeads_Click" />
                 </div>
             </div>
         </div>
@@ -68,32 +67,42 @@
     <div class="card mb-3">
         <div class="card-body p-3">
             <div class="row g-2 align-items-center">
+
+                <!-- Search -->
                 <div class="col-12 col-md-4">
-                    <div class="input-group input-group-sm">
-                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-                        <input type="text" id="assignSearch" class="form-control border-start-0" placeholder="Filter by client name, mobile or tour..." />
-                    </div>
+                    <asp:TextBox ID="txtAssignSearch" runat="server"
+                        CssClass="form-control form-control-sm"
+                        placeholder="Search client, mobile or tour..."
+                        AutoPostBack="true"
+                        OnTextChanged="txtAssignSearch_TextChanged">
+                    </asp:TextBox>
                 </div>
-                <div class="col-6 col-md-3">
-                    <select class="form-select form-select-sm" id="assignFilterStatus">
-                        <option value="">All Assignment States</option>
-                        <option value="unassigned" selected="selected">Unassigned Leads Only</option>
-                        <option value="assigned">Already Assigned</option>
-                    </select>
+
+                <!-- Assignment Status -->
+                <div class="col-6 col-md-4">
+                    <asp:DropDownList ID="ddlAssignStatus" runat="server"
+                        CssClass="form-select form-select-sm"
+                        AutoPostBack="true"
+                        OnSelectedIndexChanged="ddlAssignStatus_SelectedIndexChanged">
+                        <asp:ListItem Value="">All Assignment States</asp:ListItem>
+                        <asp:ListItem Value="unassigned" Selected="True">Unassigned Leads Only</asp:ListItem>
+                        <asp:ListItem Value="assigned">Already Assigned</asp:ListItem>
+                    </asp:DropDownList>
                 </div>
-                <div class="col-6 col-md-3">
-                    <select class="form-select form-select-sm" id="assignFilterPriority">
-                        <option value="">All Priorities</option>
-                        <option value="Hot">Hot Priority Only</option>
-                        <option value="Warm">Warm Priority</option>
-                        <option value="Cold">Cold Priority</option>
-                    </select>
+
+                <!-- Priority -->
+                <div class="col-6 col-md-4">
+                    <asp:DropDownList ID="ddlAssignPriority" runat="server"
+                        CssClass="form-select form-select-sm"
+                        AutoPostBack="true"
+                        OnSelectedIndexChanged="ddlAssignPriority_SelectedIndexChanged">
+                        <asp:ListItem Value="">All Priorities</asp:ListItem>
+                        <asp:ListItem Value="Hot">Hot Priority</asp:ListItem>
+                        <asp:ListItem Value="Warm">Warm Priority</asp:ListItem>
+                        <asp:ListItem Value="Cold">Cold Priority</asp:ListItem>
+                    </asp:DropDownList>
                 </div>
-                <div class="col-12 col-md-2 text-md-end">
-                    <button type="button" class="btn btn-outline-secondary btn-sm w-100" onclick="selectAllVisible(true);">
-                        <i class="bi bi-check-square"></i> Select All
-                    </button>
-                </div>
+
             </div>
         </div>
     </div>
@@ -109,11 +118,12 @@
     <div class="card">
         <div class="card-header bg-white">
             <div>
-                <h6 class="mb-0"><i class="bi bi-list-check"></i> Assignable Leads List</h6>
+                <h6 class="mb-0"><i class="bi bi-list-check"></i>Assignable Leads List</h6>
                 <small class="text-muted">Select leads using checkboxes on the left</small>
             </div>
             <div class="small text-muted">
                 Showing 8 leads
+           
             </div>
         </div>
         <div class="card-body p-0">
@@ -137,7 +147,7 @@
                     </thead>
                     <tbody>
                         <asp:Repeater ID="rptAssignableLeads" runat="server">
-                            <ItemTemplate>
+                            <itemtemplate>
                                 <tr class="lead-row">
                                     <td class="text-center">
                                         <input type="checkbox" class="form-check-input lead-chk" value='<%# Eval("lead_code") %>' data-client='<%# Eval("client_name") %>' onchange="updateSelectedCount();" />
@@ -161,9 +171,9 @@
                                         <%# Eval("created_by") %>
                                     </td>
                                     <td>
-                                        <span class="badge <%# Eval("assigned_employee_id") == DBNull.Value || string.IsNullOrEmpty(Eval("assigned_employee_id").ToString()) || Eval("assigned_employee_id").ToString().ToLower() == "unassigned" ? "bg-secondary-subtle text-secondary" : "bg-primary-subtle text-primary" %>">
-                                            <%# Eval("assigned_employee_id") == DBNull.Value || string.IsNullOrEmpty(Eval("assigned_employee_id").ToString()) ? "Unassigned" : Eval("assigned_employee_id") %>
-                                        </span>
+                                        <span class="badge bg-primary-subtle text-primary">
+                                            <%# Eval("assigned_employee_name") %>
+    </span>
                                     </td>
                                     <td>
                                         <span class='badge <%# Eval("lead_status") != null && Eval("lead_status").ToString().ToLower() == "confirmed" ? "bg-success-subtle text-success" : (Eval("lead_status") != null && Eval("lead_status").ToString().ToLower() == "interested" ? "bg-info-subtle text-info" : (Eval("lead_status") != null && Eval("lead_status").ToString().ToLower() == "new" ? "badge-status-new" : "bg-warning-subtle text-warning")) %>'>
@@ -179,12 +189,14 @@
                                         <small class="text-muted"><%# Eval("followup_date") == DBNull.Value || Eval("followup_date") == null ? "-" : Eval("followup_date") %></small>
                                     </td>
                                 </tr>
-                            </ItemTemplate>
+                            </itemtemplate>
                         </asp:Repeater>
                     </tbody>
                 </table>
             </div>
         </div>
+
+
 
         <div class="card-footer bg-white p-3 d-flex justify-content-between align-items-center">
             <span class="small text-muted">Showing 8 leads pending assignment</span>
@@ -201,7 +213,7 @@
             <div class="modal-content">
                 <div class="modal-header border-bottom">
                     <h6 class="modal-title fw-bold" id="assignConfirmModalLabel">
-                        <i class="bi bi-person-check text-success me-1"></i> Confirm Lead Assignment
+                        <i class="bi bi-person-check text-success me-1"></i>Confirm Lead Assignment
                     </h6>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -224,12 +236,14 @@
                     <div class="alert alert-info border small mb-0">
                         <i class="bi bi-info-circle me-1"></i>
                         <strong>Attribution Guarantee:</strong> Each lead's original <em>Lead Owner</em> remains unchanged in the system for tracking commission and conversion credit.
+                   
                     </div>
                 </div>
                 <div class="modal-footer border-top">
                     <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-sm btn-nj-primary" onclick="executeAssignment();">
-                        <i class="bi bi-check2"></i> Confirm Assignment
+                        <i class="bi bi-check2"></i>Confirm Assignment
+                   
                     </button>
                 </div>
             </div>
@@ -238,6 +252,34 @@
 
     <!-- JavaScript for Checkboxes & Assignment UI -->
     <script>
+
+        function collectSelectedLeads() {
+            let selected = [];
+
+            document.querySelectorAll('.lead-chk:checked').forEach(function (checkbox) {
+                selected.push(checkbox.value);
+            });
+
+            document.getElementById('<%= hfSelectedLeadCodes.ClientID %>').value = selected.join(',');
+        }
+
+        function validateAssignment() {
+            let selected = document.querySelectorAll('.lead-chk:checked').length;
+            let employee = document.getElementById('<%= ddlTargetEmployee.ClientID %>').value;
+
+            if (selected === 0) {
+                alert('Please select at least one lead.');
+                return false;
+            }
+
+            if (employee === '') {
+                alert('Please select an employee.');
+                return false;
+            }
+
+            return true;
+        }
+
         function updateSelectedCount() {
             var checked = document.querySelectorAll('.lead-chk:checked');
             var count = checked.length;

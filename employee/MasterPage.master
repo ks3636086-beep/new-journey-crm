@@ -38,7 +38,7 @@
                         <img src="images/logo.png" alt="New Journey Holidays" class="brand-logo-img" />
                         <div>
                             <div class="brand-title">New Journey</div>
-                            <div class="brand-sub">Holidays CRM &bull; Staff</div>
+                            <div class="brand-sub">Holidays CRM</div>
                         </div>
                     </div>
                 </div>
@@ -93,21 +93,11 @@
                 <img src="images/logo.png" alt="New Journey Holidays" class="brand-logo-img" />
                 <div>
                     <div class="brand-title">New Journey</div>
-                    <div class="brand-sub">Holidays CRM &bull; Staff</div>
+                    <div class="brand-sub">Holidays CRM</div>
                 </div>
             </a>
 
-            <!-- Role Badge in Sidebar -->
-            <div class="px-3 pt-3 pb-1">
-                <div class="p-2 rounded bg-black bg-opacity-25 border border-white border-opacity-10 text-center">
-                    <div class="text-white-50" style="font-size: 0.7rem;">LOGGED IN CATEGORY</div>
-                    <div class="fw-bold text-white small" id="sidebarCategoryName">
-                        <i class="bi bi-briefcase-fill text-success me-1"></i>Sales (Field Work)
-                   
-                    </div>
-                </div>
-            </div>
-
+             
             <div class="nj-nav-category">My Workspace</div>
             <ul class="nj-nav-list">
                 <li class="nj-nav-item">

@@ -4,6 +4,7 @@ using System.Activities.Statements;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Web;
 using System.Web.UI.WebControls;
 
@@ -413,4 +414,108 @@ public class Master
         cmd.ExecuteNonQuery();
     }
 
+
+
+
+    public DataTable get_active_employees_for_assign()
+    {
+        string query = @"
+        SELECT employee_id,
+               employee_name + ' (' + employee_category + ')' AS display_name
+        FROM dbo.tbl_employees
+        WHERE employee_status = 'Active'
+        ORDER BY employee_name";
+
+        SqlDataAdapter da = new SqlDataAdapter(query, con);
+        DataTable dt = new DataTable();
+        da.Fill(dt);
+
+        return dt;
+    }
+
+    public void assign_leads(string leadCodes, int employeeId)
+    {
+        string[] codes = leadCodes.Split(',');
+
+        foreach (string code in codes)
+        {
+            string query = @"UPDATE dbo.tbl_leads
+                         SET assigned_employee_id = @employeeId
+                         WHERE lead_code = @leadCode";
+
+            SqlCommand cmd = new SqlCommand(query, con);
+            cmd.Parameters.AddWithValue("@employeeId", employeeId);
+            cmd.Parameters.AddWithValue("@leadCode", code.Trim());
+
+            cmd.ExecuteNonQuery();
+        }
+    }
+
+    public string get_employee_name(string employeeId)
+    {
+        string query = @"SELECT employee_name FROM tbl_employees
+                     WHERE employee_id = @id";
+
+        SqlCommand cmd = new SqlCommand(query, con);
+        cmd.Parameters.AddWithValue("@id", employeeId);
+
+        return Convert.ToString(cmd.ExecuteScalar());
+    }
+
+    public DataTable get_employee_dashboard_metrics(int employeeId)
+    {
+        string query = @"
+    DECLARE @employeeName NVARCHAR(100);
+
+    SELECT @employeeName = employee_name
+    FROM dbo.tbl_employees
+    WHERE employee_id = @employeeId;
+
+    SELECT
+        -- My Field Leads
+        (SELECT COUNT(*)
+         FROM dbo.tbl_leads
+         WHERE created_by = @employeeName) AS MyFieldLeads,
+
+        -- Active Leads
+        (SELECT COUNT(*)
+         FROM dbo.tbl_leads
+         WHERE created_by = @employeeName
+         AND lead_status IN ('Pending', 'Interested')) AS ActiveLeads,
+
+        -- Monthly Calls
+        (SELECT COUNT(*)
+         FROM dbo.tbl_lead_call_history
+         WHERE called_by = @employeeName
+         AND call_date >= DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1)
+         AND call_date < DATEADD(MONTH, 1,
+             DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1))
+        ) AS MonthlyCalls,
+
+        -- Today's Calls
+        (SELECT COUNT(*)
+         FROM dbo.tbl_lead_call_history
+         WHERE called_by = @employeeName
+         AND call_date >= CAST(GETDATE() AS DATE)
+         AND call_date < DATEADD(DAY, 1, CAST(GETDATE() AS DATE))
+        ) AS TodayCalls,
+
+        -- Assigned Leads
+        (SELECT COUNT(*)
+         FROM dbo.tbl_leads
+         WHERE TRY_CONVERT(INT, assigned_employee_id) = @employeeId
+        ) AS AssignedLeads,
+
+        -- Monthly Target
+        30 AS MonthlyTarget";
+
+        SqlCommand cmd = new SqlCommand(query, con);
+        cmd.Parameters.AddWithValue("@employeeId", employeeId);
+
+        SqlDataAdapter da = new SqlDataAdapter(cmd);
+        DataTable dt = new DataTable();
+        da.Fill(dt);
+
+        return dt;
+    }
 }

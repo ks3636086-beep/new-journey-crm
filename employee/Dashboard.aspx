@@ -34,17 +34,17 @@
                     </div>
                 </div>
 
-                
+
             </div>
         </div>
     </div>
 
     <!-- 1. Common Statistics Row (6 Cards required: Total Leads, Hot, Warm, Cold, Today's Calls, Today's Follow-ups) -->
-    <div class="mb-2 d-flex align-items-center justify-content-between">
+    <%-- <div class="mb-2 d-flex align-items-center justify-content-between">
         <span class="text-uppercase fw-bold text-muted" style="font-size: 0.725rem; letter-spacing: 0.05em;">Common Overview Metrics</span>
         <span class="badge bg-light text-dark border">All Employee Categories</span>
-    </div>
-    <div class="row g-3 mb-4">
+    </div>--%>
+    <%-- <div class="row g-3 mb-4">
         <!-- Total Leads -->
         <div class="col-6 col-md-4 col-xl-2">
             <div class="nj-stat-card">
@@ -149,7 +149,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>--%>
 
     <!-- 2. Category-Specific Statistics Row (Dynamically changes between Sales and Calling) -->
 
@@ -234,7 +234,9 @@
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <span class="text-muted small">Assigned Leads</span>
-                            <h4 class="fw-bold mb-0 text-dark">35</h4>
+                            <h4 class="fw-bold mb-0 text-dark">
+                                <asp:Label ID="lblMyFieldLeads" runat="server" Text="0"></asp:Label>
+                            </h4>
                             <div class="text-success small mt-1"><i class="bi bi-inbox-fill"></i>From Admin / Office</div>
                         </div>
                         <span class="badge bg-success-subtle text-success p-2 fs-6"><i class="bi bi-folder-check"></i></span>
@@ -247,22 +249,35 @@
                 <div class="card p-3 h-100 border-start border-4 border-success">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <span class="text-muted small">Self-Found Leads</span>
-                            <h4 class="fw-bold mb-0 text-dark">15</h4>
-                            <div class="text-success small mt-1"><i class="bi bi-award-fill"></i>Google/Internet Sourced</div>
+                            <span class="text-muted small">Active Leads</span>
+                            <h4 class="fw-bold mb-0 text-dark">
+                                <asp:Label ID="lblActiveLeads" runat="server" Text="0"></asp:Label>
+                            </h4>
+                            <div class="text-success small mt-1">
+                                <i class="bi bi-graph-up-arrow"></i>Active Pipeline
+               
+                            </div>
                         </div>
-                        <span class="badge bg-success-subtle text-success p-2 fs-6"><i class="bi bi-globe"></i></span>
+                        <span class="badge bg-success-subtle text-success p-2 fs-6">
+                            <i class="bi bi-people"></i>
+                        </span>
                     </div>
-                    <div class="text-muted small mt-2">Leads found independently where you are Lead Owner</div>
+                    <div class="text-muted small mt-2">
+                        Pending & Interested Client Enquiries
+       
+                    </div>
                 </div>
             </div>
+
 
             <div class="col-12 col-sm-6 col-xl-3">
                 <div class="card p-3 h-100 border-start border-4 border-success">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <span class="text-muted small">Today's Call Target</span>
-                            <h4 class="fw-bold mb-0 text-dark">22 / 30</h4>
+                            <h4 class="fw-bold mb-0 text-dark">
+                                <asp:Label ID="lblMonthlyTarget" runat="server" Text="0 / 30"></asp:Label>
+                            </h4>
                             <div class="text-success small mt-1"><i class="bi bi-check-circle"></i>73% Completed</div>
                         </div>
                         <span class="badge bg-success-subtle text-success p-2 fs-6"><i class="bi bi-telephone-forward"></i></span>
@@ -276,7 +291,9 @@
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <span class="text-muted small">Pending Follow-ups</span>
-                            <h4 class="fw-bold mb-0 text-dark">5 Calls</h4>
+                            <h4 class="fw-bold mb-0 text-dark">
+                                <asp:Label ID="lblTodayCalls" runat="server" Text="0 Calls"></asp:Label>
+                            </h4>
                             <div class="text-success small mt-1"><i class="bi bi-exclamation-circle"></i>Action Needed Today</div>
                         </div>
                         <span class="badge bg-success-subtle text-success p-2 fs-6"><i class="bi bi-alarm"></i></span>
@@ -389,7 +406,7 @@
             </div>
         </div>
 
-         
+
     </div>
 
     <!-- 4. Recent Leads & Recent Call Activity Row -->

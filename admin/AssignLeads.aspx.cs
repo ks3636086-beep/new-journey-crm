@@ -10,11 +10,14 @@ using System.Web.UI.WebControls;
 
 public partial class AssignLeads : System.Web.UI.Page
 {
+    Master ob = new Master();
+
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
         {
             BindAssignableLeads();
+            bind_target_employees();
         }
     }
 
@@ -25,30 +28,107 @@ public partial class AssignLeads : System.Web.UI.Page
         using (SqlConnection con = new SqlConnection(cs))
         {
             string query = @"
-            SELECT
-                lead_code,
-                client_name,
-                mobile,
-                city,
-                destination,
-                created_by,
-                assigned_employee_id,
-                lead_status,
-                lead_priority,
-                followup_date
-            FROM tbl_leads
-            ORDER BY lead_code DESC";
+        SELECT * FROM dbo.tbl_leads
+        WHERE
+        (@status = '' OR
+        (@status = 'unassigned' AND ISNULL(assigned_employee_id,'') = '') OR
+        (@status = 'assigned' AND ISNULL(assigned_employee_id,'') <> ''))
+        AND (@priority = '' OR lead_priority = @priority)
+        AND (@search = '' OR client_name LIKE '%'+@search+'%'
+        OR mobile LIKE '%'+@search+'%' OR destination LIKE '%'+@search+'%')
+        ORDER BY lead_code DESC";
 
-            using (SqlDataAdapter da = new SqlDataAdapter(query, con))
+            using (SqlCommand cmd = new SqlCommand(query, con))
             {
-                DataTable dt = new DataTable();
-                da.Fill(dt);
+                cmd.Parameters.AddWithValue("@status", ddlAssignStatus.SelectedValue);
+                cmd.Parameters.AddWithValue("@priority", ddlAssignPriority.SelectedValue);
+                cmd.Parameters.AddWithValue("@search", txtAssignSearch.Text.Trim());
 
-                rptAssignableLeads.DataSource = dt;
-                rptAssignableLeads.DataBind();
+                using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                {
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+
+                    dt.Columns.Add("assigned_employee_name", typeof(string));
+
+                    ob.con.Open();
+
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        string id = Convert.ToString(row["assigned_employee_id"]);
+
+                        row["assigned_employee_name"] =
+                            string.IsNullOrEmpty(id) ? "Unassigned" : ob.get_employee_name(id);
+                    }
+
+                    ob.con.Close();
+
+                    rptAssignableLeads.DataSource = dt;
+                    rptAssignableLeads.DataBind();
+                }
             }
         }
     }
 
+
+    protected void txtAssignSearch_TextChanged(object sender, EventArgs e)
+    {
+        BindAssignableLeads();
+    }
+
+    protected void ddlAssignStatus_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        BindAssignableLeads();
+    }
+
+    protected void ddlAssignPriority_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        BindAssignableLeads();
+    }
+    private void bind_target_employees()
+    {
+        DataTable dt = ob.get_active_employees_for_assign();
+
+        ddlTargetEmployee.DataSource = dt;
+        ddlTargetEmployee.DataTextField = "display_name";
+        ddlTargetEmployee.DataValueField = "employee_id";
+        ddlTargetEmployee.DataBind();
+
+        ddlTargetEmployee.Items.Insert(0,
+            new ListItem("-- Choose Staff Member --", ""));
+    }
+
+    protected void btnAssignLeads_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            string leadCodes = hfSelectedLeadCodes.Value;
+            int employeeId = Convert.ToInt32(ddlTargetEmployee.SelectedValue);
+
+            ob.con.Open();
+
+            ob.assign_leads(leadCodes, employeeId);
+
+            ob.con.Close();
+
+            ClientScript.RegisterStartupScript(
+                this.GetType(), "Success",
+                "alert('Leads assigned successfully!');", true
+            );
+        }
+        catch (Exception ex)
+        {
+            if (ob.con.State == ConnectionState.Open)
+                ob.con.Close();
+
+            hfSelectedLeadCodes.Value = "";
+            ddlTargetEmployee.SelectedIndex = 0;
+
+            ClientScript.RegisterStartupScript(
+                this.GetType(), "Error",
+                "alert('" + System.Web.HttpUtility.JavaScriptStringEncode(ex.Message) + "');", true
+            );
+        }
+    }
 }
 

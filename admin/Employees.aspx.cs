@@ -25,13 +25,13 @@ public partial class Employees : System.Web.UI.Page
         string name = txtName.Text.Trim();
         string mobile = txtMobile.Text.Trim();
         string email = txtEmail.Text.Trim();
-        string username = txtUsername.Text.Trim();
+       
         string password = txtPassword.Text;
         string category = ddlCategory.SelectedValue;
         string status = ddlStatus.SelectedValue;
 
-        if (name == "" || mobile == "" || email == "" ||
-            username == "" || password == "")
+        if (name == "" || mobile == "" || email == "" || password == "")
+
         {
             lblMessage.Text = "<span class='text-danger'>Please fill all required fields.</span>";
             return;
@@ -40,6 +40,8 @@ public partial class Employees : System.Web.UI.Page
         try
         {
             ob.con.Open();
+            string username = GenerateUsername(name);
+            txtUsername.Text = username;
 
             // Check duplicate email or username
             string checkQuery = @"SELECT COUNT(*) FROM tbl_employees
@@ -95,7 +97,7 @@ VALUES
             cmd.Parameters.AddWithValue("@Mobile", mobile);
             cmd.Parameters.AddWithValue("@Email", email);
             cmd.Parameters.AddWithValue("@Username", username);
-            cmd.Parameters.AddWithValue("@Password", hashedPassword);
+            cmd.Parameters.AddWithValue("@Password", password);
             cmd.Parameters.AddWithValue("@Category", category);
             cmd.Parameters.AddWithValue("@Status", status);
 
@@ -110,7 +112,7 @@ VALUES
             txtName.Text = "";
             txtMobile.Text = "";
             txtEmail.Text = "";
-            txtUsername.Text = "";
+            
             txtPassword.Text = "";
 
             ddlCategory.SelectedIndex = 0;
@@ -131,18 +133,54 @@ VALUES
 
     }
 
+    private string GenerateUsername(string name)
+    {
+        string baseUsername = System.Text.RegularExpressions.Regex
+            .Replace(name.ToLower(), @"[^a-z0-9]", "");
+
+        Random random = new Random();
+
+        string username;
+
+        do
+        {
+            int number = random.Next(10, 100);
+            username = baseUsername + "@" + number;
+
+            string query = @"SELECT COUNT(*) FROM tbl_employees
+                         WHERE employee_username = @username";
+
+            using (SqlCommand cmd = new SqlCommand(query, ob.con))
+            {
+                cmd.Parameters.AddWithValue("@username", username);
+
+                int count = Convert.ToInt32(cmd.ExecuteScalar());
+
+                if (count == 0)
+                    return username;
+            }
+
+        } while (true);
+    }
+
     private void BindEmployees()
     {
         try
         {
-            string query = @"SELECT employee_id, employee_code, employee_name,
-       employee_mobile, employee_email, employee_username,
-       employee_category, employee_status
-FROM tbl_employees
-ORDER BY employee_id DESC";
+            string query = @"
+        SELECT employee_id, employee_code, employee_name,
+        employee_mobile, employee_email, employee_username,
+        employee_category, employee_status
+        FROM tbl_employees
+        WHERE (@category = '' OR employee_category = @category)
+        AND (@status = '' OR employee_status = @status)
+        ORDER BY employee_id DESC";
 
             using (SqlCommand cmd = new SqlCommand(query, ob.con))
             {
+                cmd.Parameters.AddWithValue("@category", ddlCategoryFilter.SelectedValue);
+                cmd.Parameters.AddWithValue("@status", ddlStatusFilter.SelectedValue);
+
                 using (SqlDataAdapter da = new SqlDataAdapter(cmd))
                 {
                     DataTable dt = new DataTable();
@@ -150,6 +188,8 @@ ORDER BY employee_id DESC";
 
                     rptEmployees.DataSource = dt;
                     rptEmployees.DataBind();
+
+                    lblEmployeeCount.Text = dt.Rows.Count + " Employees Found";
                 }
             }
         }
@@ -159,6 +199,15 @@ ORDER BY employee_id DESC";
         }
     }
 
+    protected void ddlCategoryFilter_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        BindEmployees();
+    }
+
+    protected void ddlStatusFilter_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        BindEmployees();
+    }
     private string getemployee_id()
     {
         string empid = string.Empty;
@@ -223,22 +272,22 @@ ORDER BY employee_id DESC";
             }
 
             // Hash password if admin entered a new password
-            if (!string.IsNullOrWhiteSpace(password))
-            {
-                byte[] salt = new byte[16];
-                using (var rng = RandomNumberGenerator.Create())
-                {
-                    rng.GetBytes(salt);
-                }
+            //if (!string.IsNullOrWhiteSpace(password))
+            //{
+            //    byte[] salt = new byte[16];
+            //    using (var rng = RandomNumberGenerator.Create())
+            //    {
+            //        rng.GetBytes(salt);
+            //    }
 
-                byte[] hash;
-                using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 100000))
-                {
-                    hash = pbkdf2.GetBytes(32);
-                }
+            //    byte[] hash;
+            //    using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 100000))
+            //    {
+            //        hash = pbkdf2.GetBytes(32);
+            //    }
 
-                password = Convert.ToBase64String(salt) + ":" + Convert.ToBase64String(hash);
-            }
+            //    password = Convert.ToBase64String(salt) + ":" + Convert.ToBase64String(hash);
+            //}
 
             if (ob.con.State == ConnectionState.Closed)
                 ob.con.Open();

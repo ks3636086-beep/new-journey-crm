@@ -5,106 +5,41 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <!-- Page Header -->
-    <div class="nj-page-header">
-        <div>
-            <h2 class="nj-page-title">Employee Management</h2>
-            <p class="nj-page-subtitle">Manage agency staff, roles and access credentials across all operational departments.</p>
-        </div>
-        <div class="d-flex align-items-center gap-2">
-            <button type="button" class="btn btn-nj-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addEmployeeModal">
-                <i class="bi bi-person-plus-fill"></i>Add Employee
-           
-            </button>
-            <a href="EmployeeCategories.aspx" class="btn btn-nj-outline btn-sm">
-                <i class="bi bi-tags"></i>Manage Categories
-            </a>
-        </div>
-    </div>
-
-    <!-- Category Distribution KPI Cards -->
-    <div class="row g-3 mb-3">
-        <div class="col-6 col-md-3">
-            <div class="card p-3 h-100">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-muted small">Sales Team</span>
-                        <h4 class="fw-bold mb-0 text-dark">4</h4>
-                    </div>
-                    <span class="badge bg-primary-subtle text-primary p-2 fs-6"><i class="bi bi-briefcase"></i></span>
-                </div>
-                <div class="text-muted small mt-2">Conversion & client closing</div>
-            </div>
-        </div>
-
-        <div class="col-6 col-md-3">
-            <div class="card p-3 h-100">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-muted small">Calling Desk</span>
-                        <h4 class="fw-bold mb-0 text-dark">4</h4>
-                    </div>
-                    <span class="badge bg-info-subtle text-info p-2 fs-6"><i class="bi bi-telephone"></i></span>
-                </div>
-                <div class="text-muted small mt-2">Telecalling & inquiries</div>
-            </div>
-        </div>
-
-        <div class="col-6 col-md-3">
-            <div class="card p-3 h-100">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-muted small">Field Force</span>
-                        <h4 class="fw-bold mb-0 text-dark">3</h4>
-                    </div>
-                    <span class="badge bg-warning-subtle text-warning p-2 fs-6"><i class="bi bi-geo-alt"></i></span>
-                </div>
-                <div class="text-muted small mt-2">Gorakhpur & Eastern UP</div>
-            </div>
-        </div>
-
-        <div class="col-6 col-md-3">
-            <div class="card p-3 h-100">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-muted small">Data Entry</span>
-                        <h4 class="fw-bold mb-0 text-dark">1</h4>
-                    </div>
-                    <span class="badge bg-secondary-subtle text-secondary p-2 fs-6"><i class="bi bi-keyboard"></i></span>
-                </div>
-                <div class="text-muted small mt-2">Itinerary & tariff updates</div>
-            </div>
-        </div>
-    </div>
-
+     
+    
     <!-- Search & Filter Card -->
     <div class="card mb-3">
         <div class="card-body p-3">
             <div class="row g-2 align-items-center">
-                <div class="col-12 col-md-5">
+                <div class="col-12 col-md-4 col-lg-5">
                     <div class="input-group input-group-sm">
                         <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-                        <input type="text" class="form-control border-start-0" placeholder="Search by employee name, mobile or username..." />
+                        <input type="search" id="employeeSearchInput" class="form-control border-start-0" placeholder="Search by employee name, mobile or username..." autocomplete="off" name="emp_search_filter" onkeyup="filterEmployeesTable();" />
                     </div>
                 </div>
-                <div class="col-6 col-md-3">
-                    <select class="form-select form-select-sm">
-                        <option value="">All Categories</option>
-                        <option value="Sales">Sales</option>
-                        <option value="Field">Field</option>
-                        <option value="Calling">Calling</option>
-                        <option value="Data Entry">Data Entry</option>
-                    </select>
+                <div class="col-6 col-md-3 col-lg-2">
+                    <asp:DropDownList ID="ddlCategoryFilter" runat="server"
+                        CssClass="form-select form-select-sm"
+                        AutoPostBack="true"
+                        OnSelectedIndexChanged="ddlCategoryFilter_SelectedIndexChanged">
+                        <asp:ListItem Value="">All Categories</asp:ListItem>
+                        <asp:ListItem Value="Sales">Sales</asp:ListItem>
+                        <asp:ListItem Value="Calling">Calling</asp:ListItem>
+                    </asp:DropDownList>
                 </div>
-                <div class="col-6 col-md-2">
-                    <select class="form-select form-select-sm">
-                        <option value="">All Statuses</option>
-                        <option value="Active">Active</option>
-                        <option value="Inactive">Inactive</option>
-                    </select>
+                <div class="col-6 col-md-3 col-lg-2">
+                    <asp:DropDownList ID="ddlStatusFilter" runat="server"
+                        CssClass="form-select form-select-sm"
+                        AutoPostBack="true"
+                        OnSelectedIndexChanged="ddlStatusFilter_SelectedIndexChanged">
+                        <asp:ListItem Value="">All Statuses</asp:ListItem>
+                        <asp:ListItem Value="Active">Active</asp:ListItem>
+                        <asp:ListItem Value="Inactive">Inactive</asp:ListItem>
+                    </asp:DropDownList>
                 </div>
-                <div class="col-12 col-md-2 text-md-end">
-                    <span class="small text-muted">12 Employees Total</span>
+                <div class="col-12 col-md-2 col-lg-3 text-md-end text-nowrap">
+                    <asp:Label ID="lblEmployeeCount" runat="server"
+                        CssClass="small text-muted" />
                 </div>
             </div>
         </div>
@@ -209,7 +144,7 @@
                     <div class="mb-3">
                         <label class="form-label">Full Name <span class="text-danger">*</span></label>
                         <asp:TextBox ID="txtName" runat="server" CssClass="form-control"
-                            placeholder="e.g. Alok Nath Pandey">
+                            placeholder="e.g. Alok Nath Pandey" onkeyup="generateUsername(this.value);" oninput="generateUsername(this.value);">
                         </asp:TextBox>
                     </div>
 
@@ -232,15 +167,15 @@
                     <div class="row g-2 mb-3">
                         <div class="col-6">
                             <label class="form-label">Username <span class="text-danger">*</span></label>
-                            <asp:TextBox ID="txtUsername" runat="server"
-                                CssClass="form-control" placeholder="e.g. alok_sales">
+                            <asp:TextBox ID="txtUsername" runat="server" ClientIDMode="Static"
+                                CssClass="form-control" placeholder="Auto-generated username">
                             </asp:TextBox>
                         </div>
 
                         <div class="col-6">
                             <label class="form-label">Password <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <asp:TextBox ID="txtPassword" runat="server" TextMode="Password"
+                                <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" autocomplete="new-password"
                                     CssClass="form-control" placeholder="••••••••">
                                 </asp:TextBox>
 
@@ -368,6 +303,40 @@
     </div>
 
     <script>
+        // Clear browser autofill on search input on page load
+        window.addEventListener('DOMContentLoaded', function () {
+            var searchInput = document.getElementById('employeeSearchInput');
+            if (searchInput) {
+                searchInput.value = '';
+                setTimeout(function () { searchInput.value = ''; }, 50);
+                setTimeout(function () { searchInput.value = ''; }, 200);
+            }
+        });
+        function filterEmployeesTable() {
+            var input = document.getElementById('employeeSearchInput');
+            if (!input) return;
+            var filter = input.value.toLowerCase();
+            var rows = document.querySelectorAll('.table tbody tr');
+            rows.forEach(function (row) {
+                var text = row.innerText.toLowerCase();
+                row.style.display = (text.indexOf(filter) > -1) ? '' : 'none';
+            });
+        }
+
+        function generateUsername(name) {
+            var username = (name || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+            var userBox = document.getElementById('txtUsername') || document.getElementById('<%= txtUsername.ClientID %>');
+            if (!userBox) return;
+
+            if (username !== "") {
+                var current = userBox.value || '';
+                var existingNum = (current.indexOf('@') !== -1) ? current.split('@')[1] : '';
+                var number = (existingNum && !isNaN(existingNum)) ? existingNum : (Math.floor(Math.random() * 90) + 10);
+                userBox.value = username + '@' + number;
+            } else {
+                userBox.value = '';
+            }
+        }
         function togglePassword(id) {
             var input = document.getElementById(id);
             if (input) {
