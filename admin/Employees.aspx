@@ -1,12 +1,26 @@
-﻿<%@ Page Language="C#" MasterPageFile="MasterPage.master" AutoEventWireup="true" CodeFile="Employees.aspx.cs" Inherits="Employees" %>
+<%@ Page Language="C#" MasterPageFile="MasterPage.master" AutoEventWireup="true" CodeFile="Employees.aspx.cs" Inherits="Employees" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <title>Employees | New Journey Holidays CRM</title>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-     
-    
+    <!-- Page Header -->
+    <div class="nj-page-header">
+        <div>
+            <h2 class="nj-page-title">Employee Management</h2>
+            <p class="nj-page-subtitle">Manage agency staff, roles and access credentials across all operational departments.</p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <button type="button" class="btn btn-nj-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addEmployeeModal">
+                <i class="bi bi-person-plus-fill me-1"></i>Add Employee
+            </button>
+            <a href="EmployeeCategories.aspx" class="btn btn-nj-outline btn-sm">
+                <i class="bi bi-tags me-1"></i>Manage Categories
+            </a>
+        </div>
+    </div>
+
     <!-- Search & Filter Card -->
     <div class="card mb-3">
         <div class="card-body p-3">

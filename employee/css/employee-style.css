@@ -1,22 +1,35 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    New Journey Holidays CRM - Employee Panel Stylesheet
-   Theme: Professional White & Dark Green
+   Theme: Vibrant Ocean & Coastal Blue (Inspired by Logo Ocean Waves)
+   Distinct from Admin Forest Green Theme
    Location: Gorakhpur, Uttar Pradesh
    ========================================================================== */
 
 :root {
-    --nj-primary: #14532D;
-    --nj-primary-hover: #0f3f22;
-    --nj-sidebar-bg: #123524;
-    --nj-sidebar-hover: #1b4b34;
-    --nj-sidebar-active: #21593e;
-    --nj-light-green: #E8F3EB;
-    --nj-light-green-border: #c8e4d0;
-    --nj-white: #FFFFFF;
-    --nj-page-bg: #F7F9F7;
-    --nj-text: #26352D;
-    --nj-text-muted: #5e7367;
-    --nj-border: #E3EAE4;
+    /* Brand Logo Ocean Blue Palette */
+    --nj-primary: #0284c7;            /* Sky/Ocean 600 - Vibrant wave blue from logo */
+    --nj-primary-hover: #0369a1;      /* Ocean 700 - Deeper wave blue */
+    --nj-primary-active: #075985;     /* Ocean 800 */
+    
+    /* Deep Nautical Coastal Navy for Sidebar (distinct from Admin's Forest Green) */
+    --nj-sidebar-bg: #0b2545;         /* Deep Nautical Navy */
+    --nj-sidebar-hover: #133a68;      /* Coastal Blue hover */
+    --nj-sidebar-active: #1d4e89;     /* Active Nav Background */
+    --nj-sidebar-accent: #38bdf8;     /* Sky 400 - Light crest wave accent */
+    
+    /* Soft Oceanic Tints & Surfaces */
+    --nj-light-green: #e0f2fe;        /* Soft sky blue surface (keeping variable name for backwards compatibility) */
+    --nj-light-green-border: #bae6fd; /* Soft sky blue border */
+    --nj-light-blue: #e0f2fe;
+    --nj-light-blue-border: #bae6fd;
+    
+    --nj-white: #ffffff;
+    --nj-page-bg: #f4f8fc;            /* Fresh, light oceanic page background */
+    --nj-text: #0f172a;               /* Crisp dark slate text */
+    --nj-text-muted: #64748b;         /* Slate muted text */
+    --nj-border: #e2e8f0;             /* Clean border */
+    --nj-border-subtle: #dbeafe;
+    
     --nj-sidebar-width: 285px;
     --nj-font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
@@ -37,7 +50,7 @@ body {
 .nj-sidebar {
     width: var(--nj-sidebar-width);
     background-color: var(--nj-sidebar-bg);
-    color: #d1e7dd;
+    color: #bae6fd;
     position: fixed;
     top: 0;
     bottom: 0;
@@ -83,23 +96,15 @@ body {
 .nj-sidebar-brand .brand-icon {
     width: 40px;
     height: 40px;
-    background: #14532D;
+    background: var(--nj-primary);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.25rem;
-    color: #86efac;
+    color: #e0f2fe;
     flex-shrink: 0;
-}
-
-.nj-sidebar-brand .brand-title {
-    font-weight: 700;
-    font-size: 0.95rem;
-    letter-spacing: -0.02em;
-    color: #ffffff;
-    line-height: 1.2;
 }
 
 .nj-sidebar-brand .brand-title {
@@ -112,17 +117,17 @@ body {
 
 .nj-sidebar-brand .brand-sub {
     font-size: 0.725rem;
-    color: #ffffff;
+    color: var(--nj-sidebar-accent);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-weight: 600;
+    letter-spacing: 0.06em;
+    font-weight: 700;
 }
 
 .nj-nav-category {
     font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: rgb(255 255 255);
+    color: rgba(255, 255, 255, 0.75);
     padding: 1rem 1.25rem 0.35rem 1.25rem;
     font-weight: 600;
 }
@@ -141,7 +146,7 @@ body {
     align-items: center;
     gap: 0.75rem;
     padding: 0.625rem 0.85rem;
-    color: #ffffff;
+    color: #f1f5f9;
     text-decoration: none;
     border-radius: 6px;
     font-weight: 500;
@@ -149,13 +154,13 @@ body {
     transition: all 0.15s ease-in-out;
 }
 
-    .nj-nav-item .nj-nav-link i {
-        font-size: 1.1rem;
-        color: #ffffff;
-        width: 22px;
-        text-align: center;
-        transition: color 0.15s ease-in-out;
-    }
+.nj-nav-item .nj-nav-link i {
+    font-size: 1.1rem;
+    color: #ffffff;
+    width: 22px;
+    text-align: center;
+    transition: color 0.15s ease-in-out;
+}
 
 .nj-nav-item .nj-nav-link:hover {
     background-color: var(--nj-sidebar-hover);
@@ -170,20 +175,25 @@ body {
     background-color: var(--nj-sidebar-active);
     color: #ffffff;
     font-weight: 600;
-    box-shadow: inset 3px 0 0 #86efac;
+    box-shadow: inset 3px 0 0 var(--nj-sidebar-accent);
+}
+
+.nj-nav-item .nj-nav-link.active i {
+    color: #ffffff;
 }
 
 .nj-sidebar-footer {
     margin-top: auto;
     padding: 1rem 1.25rem;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(0, 0, 0, 0.15);
+    background: rgba(0, 0, 0, 0.2);
 }
 
 .nj-agency-badge {
     font-size: 0.75rem;
-    color: #ffffff;
-    background: rgba(163, 230, 53, 0.1);
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.25);
     padding: 0.2rem 0.5rem;
     border-radius: 4px;
     display: inline-flex;
@@ -223,7 +233,7 @@ body {
 .nj-topbar-title {
     font-weight: 600;
     font-size: 1.1rem;
-    color: var(--nj-primary);
+    color: var(--nj-primary-hover);
     margin: 0;
     display: flex;
     align-items: center;
@@ -231,13 +241,13 @@ body {
 }
 
 .nj-location-badge {
-    background-color: var(--nj-light-green);
-    color: var(--nj-primary);
+    background-color: var(--nj-light-blue);
+    color: var(--nj-primary-hover);
     font-size: 0.75rem;
     font-weight: 600;
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
-    border: 1px solid var(--nj-light-green-border);
+    border: 1px solid var(--nj-light-blue-border);
 }
 
 .nj-topbar-right {
@@ -263,7 +273,7 @@ body {
 }
 
 .nj-icon-btn:hover {
-    background-color: var(--nj-light-green);
+    background-color: var(--nj-light-blue);
     border-color: var(--nj-primary);
     color: var(--nj-primary);
 }
@@ -292,8 +302,8 @@ body {
 }
 
 .nj-user-profile:hover {
-    background-color: var(--nj-light-green);
-    border-color: var(--nj-light-green-border);
+    background-color: var(--nj-light-blue);
+    border-color: var(--nj-light-blue-border);
 }
 
 .nj-avatar {
@@ -345,7 +355,7 @@ body {
 .nj-page-title {
     font-size: 1.25rem;
     font-weight: 700;
-    color: var(--nj-primary);
+    color: var(--nj-primary-hover);
     margin: 0;
     letter-spacing: -0.01em;
 }
@@ -380,7 +390,7 @@ body {
 .card-header h6 {
     margin: 0;
     font-weight: 600;
-    color: var(--nj-primary);
+    color: var(--nj-primary-hover);
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -408,8 +418,8 @@ body {
 
 .nj-stat-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(20, 83, 45, 0.06);
-    border-color: #cbdad0;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.1);
+    border-color: #93c5fd;
 }
 
 .nj-stat-card .stat-label {
@@ -448,14 +458,10 @@ body {
     flex-shrink: 0;
 }
 
-.nj-stat-icon.green {
-    background-color: var(--nj-light-green);
-    color: var(--nj-primary);
-}
-
+.nj-stat-icon.green,
 .nj-stat-icon.blue {
-    background-color: #eff6ff;
-    color: #2563eb;
+    background-color: var(--nj-light-blue);
+    color: var(--nj-primary);
 }
 
 .nj-stat-icon.amber {
@@ -490,6 +496,8 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
+    box-shadow: 0 1px 2px rgba(2, 132, 199, 0.2);
+    transition: all 0.15s ease-in-out;
 }
 
 .btn-nj-primary:hover,
@@ -497,12 +505,13 @@ body {
     background-color: var(--nj-primary-hover);
     border-color: var(--nj-primary-hover);
     color: #ffffff;
+    box-shadow: 0 2px 6px rgba(2, 132, 199, 0.3);
 }
 
 .btn-nj-outline {
     background-color: transparent;
     border-color: var(--nj-border);
-    color: var(--nj-text);
+    color: var(--nj-primary-hover);
     font-weight: 500;
     font-size: 0.875rem;
     padding: 0.45rem 0.95rem;
@@ -510,10 +519,11 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
+    transition: all 0.15s ease-in-out;
 }
 
 .btn-nj-outline:hover {
-    background-color: var(--nj-light-green);
+    background-color: var(--nj-light-blue);
     border-color: var(--nj-primary);
     color: var(--nj-primary);
 }
@@ -598,7 +608,7 @@ body {
 }
 
 .table th {
-    background-color: #f8faf8;
+    background-color: #f8fafc;
     color: var(--nj-text-muted);
     font-weight: 600;
     text-transform: uppercase;
@@ -616,7 +626,7 @@ body {
 }
 
 .table-hover tbody tr:hover {
-    background-color: #f3f8f4;
+    background-color: #f0f7fc;
 }
 
 /* Forms */
@@ -639,7 +649,7 @@ body {
 .form-control:focus,
 .form-select:focus {
     border-color: var(--nj-primary);
-    box-shadow: 0 0 0 0.2rem rgba(20, 83, 45, 0.15);
+    box-shadow: 0 0 0 0.2rem rgba(2, 132, 199, 0.18);
 }
 
 .form-text {
@@ -709,11 +719,12 @@ body {
         transform: translateX(0);
     }
 }
+
 /* Employee Category Badges & Role Switcher */
 .badge-cat-sales {
-    background-color: #ecfdf5;
-    color: #047857;
-    border: 1px solid #a7f3d0;
+    background-color: #e0f2fe;
+    color: #0369a1;
+    border: 1px solid #bae6fd;
     font-weight: 600;
 }
 
@@ -737,20 +748,86 @@ body {
     align-items: center;
     gap: 0.35rem;
 }
+
 .role-switch-btn:hover {
-    background-color: var(--nj-light-green);
+    background-color: var(--nj-light-blue);
     border-color: var(--nj-primary);
     color: var(--nj-primary);
 }
+
 .role-switch-btn.active {
     background-color: var(--nj-primary);
     color: #ffffff;
     border-color: var(--nj-primary);
 }
 
-.timeline-badge-connected { background-color: #15803d; }
+.timeline-badge-connected { background-color: var(--nj-primary); }
 .timeline-badge-interested { background-color: #2563eb; }
 .timeline-badge-callback { background-color: #d97706; }
 .timeline-badge-busy { background-color: #64748b; }
 .timeline-badge-noanswer { background-color: #94a3b8; }
 .timeline-badge-notinterested { background-color: #dc2626; }
+
+/* ==========================================================================
+   Theme Overrides: Maps Bootstrap generic success & primary styling to Logo Ocean Blue
+   Ensures complete distinction from Admin's Forest Green without editing ASPX files
+   ========================================================================== */
+.text-success,
+i.text-success {
+    color: #0284c7 !important;
+}
+
+.border-success {
+    border-color: #0284c7 !important;
+}
+
+.border-success-subtle {
+    border-color: #bae6fd !important;
+}
+
+.bg-success {
+    background-color: #0284c7 !important;
+    color: #ffffff !important;
+}
+
+.bg-success-subtle {
+    background-color: #e0f2fe !important;
+    color: #0369a1 !important;
+}
+
+.btn-success {
+    background-color: #0284c7 !important;
+    border-color: #0284c7 !important;
+    color: #ffffff !important;
+    box-shadow: 0 1px 2px rgba(2, 132, 199, 0.2);
+}
+
+.btn-success:hover,
+.btn-success:focus,
+.btn-success:active {
+    background-color: #0369a1 !important;
+    border-color: #0369a1 !important;
+    color: #ffffff !important;
+}
+
+.btn-outline-success {
+    color: #0284c7 !important;
+    border-color: #0284c7 !important;
+}
+
+.btn-outline-success:hover,
+.btn-outline-success:focus,
+.btn-outline-success:active {
+    background-color: #0284c7 !important;
+    border-color: #0284c7 !important;
+    color: #ffffff !important;
+}
+
+/* Links & Accents */
+a.text-success {
+    color: #0284c7 !important;
+}
+
+a.text-success:hover {
+    color: #0369a1 !important;
+}

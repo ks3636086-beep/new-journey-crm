@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Employee_Login.aspx.cs" Inherits="Employee_Login" %>
+<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Employee_Login.aspx.cs" Inherits="Employee_Login" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -6,12 +6,12 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Employee Login - New Journey Holidays</title>
+    <title>Employee Login | New Journey Holidays</title>
 
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
     <!-- Bootstrap 5.3.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -19,215 +19,347 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
 
     <!-- Employee Theme CSS -->
-    <link href="css/employee-style.css" rel="stylesheet" />
+    <link href="css/employee-style.css?v=20261112e" rel="stylesheet" />
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         html, body {
             height: 100%;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: #ffffff;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: radial-gradient(circle at 10% 20%, rgba(2, 132, 199, 0.08) 0%, transparent 45%),
+                        radial-gradient(circle at 90% 80%, rgba(11, 37, 69, 0.1) 0%, transparent 45%),
+                        #f1f5f9;
         }
 
-        .fullpage-layout {
+        .login-viewport {
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
         }
 
-        /* Left Branding Panel */
-        .brand-panel {
-            background-color: #123524;
-            background-image: radial-gradient(circle at 20% 20%, rgba(20, 83, 45, 0.9) 0%, transparent 60%), radial-gradient(circle at 80% 80%, rgba(30, 95, 58, 0.6) 0%, transparent 60%);
+        /* Modern Centered Split Card */
+        .login-card {
+            width: 100%;
+            max-width: 860px;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(11, 37, 69, 0.12), 0 5px 15px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        /* Left Side: Ocean Blue Welcome Overlay */
+        .welcome-panel {
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 45%, #0b2545 100%);
             color: #ffffff;
-            padding: 3rem;
+            padding: 3.5rem 2.5rem;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
         }
 
-        .brand-logo-icon {
-            width: 48px;
-            height: 48px;
+        .welcome-logo {
+            width: 64px;
+            height: 64px;
             background: #ffffff;
-            color: #14532D;
-            border-radius: 10px;
+            border-radius: 50%;
+            padding: 3px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+            margin-bottom: 1.5rem;
+            object-fit: contain;
+        }
+
+        .welcome-title {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.75rem;
+            color: #ffffff;
+        }
+
+        .welcome-text {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.88);
+            max-width: 290px;
+            margin-bottom: 1.75rem;
+        }
+
+        .btn-outline-pill {
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            color: #ffffff;
+            background: transparent;
+            border-radius: 50px;
+            padding: 0.55rem 2.2rem;
+            font-size: 0.825rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            text-decoration: none;
+            transition: all 0.2s ease-in-out;
+            display: inline-block;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        .btn-outline-pill:hover,
+        .btn-outline-pill:focus,
+        .btn-outline-pill:focus-visible,
+        .btn-outline-pill:active {
+            background: #ffffff;
+            color: #0369a1;
+            border-color: #ffffff;
+            outline: none !important;
+            box-shadow: none !important;
+            transform: translateY(-1px);
+        }
+
+        /* Right Side: Clean Modern Form Panel */
+        .form-panel {
+            padding: 3.5rem 3rem;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-title {
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.02em;
+            text-align: center;
+            margin-bottom: 0.25rem;
+        }
+
+        /* Role circles matching the f, G+, in from the reference */
+        .role-circles {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            margin: 1rem 0 0.75rem 0;
+        }
+
+        .role-circle-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid #e2e8f0;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            color: #475569;
+            background: #ffffff;
+            font-size: 0.95rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: all 0.15s ease-in-out;
         }
 
-        /* Right Form Panel */
-        .form-panel {
+        .role-circle-btn:hover {
+            border-color: #0284c7;
+            color: #0284c7;
+            background: #e0f2fe;
+            transform: translateY(-1px);
+        }
+
+        .form-subtitle {
+            font-size: 0.775rem;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Soft Grey Filled Inputs (matching reference image) */
+        .custom-input-group {
+            background-color: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 0.25rem 0.5rem;
             display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 2.5rem 1.5rem;
-            background-color: #ffffff;
-        }
-
-        .form-wrapper {
-            width: 100%;
-            max-width: 420px;
-        }
-
-        .form-control:focus {
-            border-color: #14532D;
-            box-shadow: 0 0 0 0.2rem rgba(20, 83, 45, 0.15);
-        }
-
-        .btn-nj-primary {
-            background-color: #14532D;
-            border-color: #14532D;
-            color: #ffffff;
+            margin-bottom: 1rem;
             transition: all 0.2s ease-in-out;
         }
 
-        .btn-nj-primary:hover {
-            background-color: #0f3d21;
-            border-color: #0f3d21;
+        .custom-input-group:focus-within {
+            background-color: #ffffff;
+            border-color: #0284c7;
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.18);
+        }
+
+        .custom-input-group .input-icon {
+            color: #94a3b8;
+            padding: 0 0.5rem;
+            font-size: 1rem;
+        }
+
+        .custom-input-group .form-control {
+            border: none;
+            background: transparent;
+            padding: 0.55rem 0.5rem;
+            font-size: 0.875rem;
+            color: #0f172a;
+            box-shadow: none !important;
+        }
+
+        .custom-input-group .form-control::placeholder {
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+
+        .custom-input-group .btn-eye {
+            border: none;
+            background: transparent;
+            color: #94a3b8;
+            padding: 0 0.5rem;
+            cursor: pointer;
+        }
+
+        .custom-input-group .btn-eye:hover {
+            color: #0284c7;
+        }
+
+        /* Submit Button: Rounded Pill (matching reference image) */
+        .btn-nj-submit-pill {
+            background-color: #0284c7;
+            border: 2px solid #0284c7;
             color: #ffffff;
+            border-radius: 10px;
+            padding: 0.65rem 2.8rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+        }
+
+        .btn-nj-submit-pill:hover,
+        .btn-nj-submit-pill:focus {
+            background-color: #0369a1;
+            border-color: #0369a1;
+            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(2, 132, 199, 0.45);
         }
 
         @media (max-width: 991.98px) {
-            .brand-panel {
-                padding: 2rem 1.5rem;
-                min-height: auto;
+            .welcome-panel {
+                padding: 2.5rem 1.5rem;
             }
 
             .form-panel {
-                padding: 2rem 1.5rem 3rem;
+                padding: 2.5rem 1.5rem;
             }
         }
     </style>
 </head>
 <body>
     <form id="form1" runat="server">
-        <div class="container-fluid p-0">
-            <div class="row g-0 fullpage-layout">
+        <div class="login-viewport">
+            <div class="login-card">
+                <div class="row g-0 align-items-stretch">
 
-                <!-- Left Side: Brand Panel (Full Height) -->
-                <div class="col-12 col-lg-5 brand-panel">
-                    <div>
-                        <div class="d-flex align-items-center gap-3 mb-4">
-                            <div class="brand-logo-icon shadow-sm">
-                                <i class="bi bi-airplane-engines-fill"></i>
-                            </div>
-                            <div>
-                                <h4 class="fw-bold mb-0 text-white tracking-wide">New Journey Holidays</h4>
-                                <span class="text-white-50 small">Travel CRM - Employee Portal</span>
-                            </div>
-                        </div>
+                    <!-- ========================================== -->
+                    <!-- Left Side: Welcome Panel (Matching Image)  -->
+                    <!-- ========================================== -->
+                    <div class="col-12 col-lg-5 welcome-panel">
+                        <!-- Logo -->
+                        <img src="images/logo.png" alt="New Journey Holidays" class="welcome-logo" />
 
-                        <div class="my-5 d-none d-lg-block">
-                            <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill mb-3">
-                                <i class="bi bi-shield-check me-1"></i> Staff Workspace
-                            </span>
-                            <h2 class="display-6 fw-bold text-white mb-3">Welcome to Your Daily Travel Hub</h2>
-                            <p class="text-light text-opacity-75 fs-6">
-                                Access your assigned leads, upcoming follow-ups, and holiday bookings all in one unified workspace.
-                            </p>
-                        </div>
-                    </div>
+                        <h2 class="welcome-title">Welcome Back!</h2>
+                        <p class="welcome-text">
+                            To keep connected with us please sign in with your employee credentials
+                        </p>
 
-                    <!-- Gorakhpur Office Address -->
-                    <div class="pt-4 border-top border-white border-opacity-10 text-white-50 small">
-                        <div class="d-flex align-items-start gap-2">
-                            <i class="bi bi-geo-alt-fill text-success fs-5"></i>
-                            <div>
-                                <span class="text-white fw-semibold d-block">New Journey Holidays</span>
-                                Radhika Complex, 5/B, Ambedkar Chowk, Civil Lines, Gorakhpur, UP 273001
-                            </div>
+                        <!-- Switch / Info Pill -->
+                        <a href="../admin/Login.aspx" class="btn-outline-pill">
+                            Admin Portal
+                        </a>
+
+                        <div class="mt-4 pt-3 border-top border-white border-opacity-10 small text-white text-opacity-75">
+                            <i class="bi bi-geo-alt-fill me-1 text-light"></i>New Journey Holidays &bull; Gorakhpur HQ
                         </div>
                     </div>
-                </div>
 
-                <!-- Right Side: Clean Login Form (Full Height) -->
-                <div class="col-12 col-lg-7 form-panel">
-                    <div class="form-wrapper">
+                    <!-- ========================================== -->
+                    <!-- Right Side: Clean Form (Matching Image)   -->
+                    <!-- ========================================== -->
+                    <div class="col-12 col-lg-7 form-panel">
+                        <h2 class="form-title">Staff Sign In</h2>
 
-                        <div class="mb-4">
-                            <span class="badge bg-light text-dark border mb-2 px-2 py-1">
-                                <i class="bi bi-person-badge text-success me-1"></i>Employee Access
-                            </span>
-                            <h2 class="fw-bold text-dark mb-1">Staff Sign In</h2>
-                            <p class="text-muted small">Enter your assigned username or email and password</p>
+                        <!-- Role Circles (f, G+, in style from reference) -->
+                        <div class="role-circles">
+                            <span class="role-circle-btn" title="Sales Executive"><i class="bi bi-briefcase-fill"></i></span>
+                            <span class="role-circle-btn" title="Calling Desk"><i class="bi bi-headset"></i></span>
+                            <span class="role-circle-btn" title="Holiday Operations"><i class="bi bi-airplane-fill"></i></span>
                         </div>
 
-                        <!-- Username or Email -->
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold text-secondary">
-                                Email Address or Username
-                            </label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-white text-muted">
-                                    <i class="bi bi-person"></i>
-                                </span>
-                                <asp:TextBox ID="txtLogin" runat="server"
-                                    ClientIDMode="Static"
-                                    CssClass="form-control"
-                                    placeholder="e.g. alok_sales or name@domain.com" />
-                            </div>
+                        <div class="form-subtitle">or use your assigned email / username</div>
+
+                        <!-- 1. Email / Username Input -->
+                        <div class="custom-input-group">
+                            <span class="input-icon"><i class="bi bi-person"></i></span>
+                            <asp:TextBox ID="txtLogin" runat="server"
+                                ClientIDMode="Static"
+                                CssClass="form-control"
+                                placeholder="Username or Email"
+                                autocomplete="username" />
                         </div>
 
-                        <!-- Password -->
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold text-secondary">
-                                Password
-                            </label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-white text-muted">
-                                    <i class="bi bi-lock"></i>
-                                </span>
-                                <asp:TextBox ID="txtPassword" runat="server"
-                                    ClientIDMode="Static"
-                                    CssClass="form-control"
-                                    TextMode="Password"
-                                    placeholder="Enter your password" />
+                        <!-- 2. Password Input -->
+                        <div class="custom-input-group">
+                            <span class="input-icon"><i class="bi bi-lock"></i></span>
+                            <asp:TextBox ID="txtPassword" runat="server"
+                                ClientIDMode="Static"
+                                CssClass="form-control"
+                                TextMode="Password"
+                                placeholder="Password"
+                                autocomplete="current-password" />
 
-                                <button class="btn btn-outline-secondary border-start-0 bg-white text-muted"
-                                    type="button"
-                                    onclick="togglePasswordVisibility('txtPassword', this);">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                            </div>
+                            <button class="btn-eye" type="button" onclick="togglePasswordVisibility('txtPassword', this);" title="Toggle password">
+                                <i class="bi bi-eye"></i>
+                            </button>
                         </div>
 
                         <!-- Remember Me & Forgot Password -->
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <div class="form-check">
+                        <div class="d-flex justify-content-between align-items-center mb-4 px-1">
+                            <div class="form-check mb-0">
                                 <input class="form-check-input" type="checkbox" id="chkRememberMe" checked />
-                                <label class="form-check-label small text-muted" for="chkRememberMe">
+                                <label class="form-check-label small text-muted" for="chkRememberMe" style="font-size: 0.8rem;">
                                     Remember me
                                 </label>
                             </div>
-                            <span class="small text-muted">
-                                Forgot password? Contact Admin
+                            <span class="small text-muted" style="font-size: 0.8rem;">
+                                Need help? Contact Admin
                             </span>
                         </div>
 
-                        <!-- Login Button -->
-                        <div class="d-grid mb-3">
+                        <!-- Submit Button: Centered Pill matching reference image -->
+                        <div class="text-center mb-2">
                             <asp:Button ID="btnLogin" runat="server"
-                                CssClass="btn btn-nj-primary py-2 fw-semibold"
-                                Text="Sign In to Employee Panel"
+                                CssClass="btn-nj-submit-pill"
+                                Text="Sign In"
                                 OnClick="btnLogin_Click" />
                         </div>
 
+                        <!-- Error Message Label -->
                         <asp:Label ID="lblMessage" runat="server"
-                            CssClass="text-danger small d-block mb-3" />
-
-                        <!-- Switch to Admin Login -->
-                        <div class="text-center pt-3 border-top small text-muted">
-                            Are you an administrator? 
-                            <a href="../admin/Login.aspx" class="text-success fw-bold text-decoration-none ms-1">
-                                Admin Portal <i class="bi bi-arrow-right-short"></i>
-                            </a>
-                        </div>
-
+                            CssClass="text-danger small text-center d-block mt-2" />
                     </div>
-                </div>
 
+                </div>
             </div>
         </div>
     </form>
@@ -250,4 +382,3 @@
     </script>
 </body>
 </html>
-

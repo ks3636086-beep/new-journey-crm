@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -32,6 +32,8 @@ public partial class Dashboard : System.Web.UI.Page
         {
             BindDashboardProfile();
             BindSalesMetrics();
+            BindTodayFollowups();
+            BindRecentLeads();
         }
     }
 
@@ -93,4 +95,72 @@ public partial class Dashboard : System.Web.UI.Page
         }
     }
 
+    private void BindTodayFollowups()
+    {
+        int employeeId = Convert.ToInt32(Session["employee_id"]);
+
+        DataTable dt = ob.get_today_followups(employeeId);
+
+        rptTodayFollowups.DataSource = dt;
+        rptTodayFollowups.DataBind();
+    }
+
+    private void BindRecentLeads()
+    {
+        int employeeId = Convert.ToInt32(Session["employee_id"]);
+
+        DataTable dt = ob.get_recent_employee_leads(employeeId);
+
+        rptRecentLeads.DataSource = dt;
+        rptRecentLeads.DataBind();
+    }
+
+    protected void btnUpdateCall_Click(object sender, EventArgs e)
+    {
+        LinkButton btn = (LinkButton)sender;
+        string leadCode = btn.CommandArgument;
+
+        hfLeadCode.Value = leadCode;
+
+        DataTable dt = ob.get_lead_by_code(leadCode);
+
+        if (dt.Rows.Count > 0)
+        {
+            lblModalClientName.Text = dt.Rows[0]["client_name"].ToString();
+            lblModalClientPhone.Text = "+91 " + dt.Rows[0]["mobile"].ToString();
+        }
+        ClientScript.RegisterStartupScript(
+            this.GetType(),
+            "OpenCallModal",
+            "new bootstrap.Modal(document.getElementById('updateCallModal')).show();",
+            true
+        );
+    }
+
+    protected void btnSaveCallUpdate_Click(object sender, EventArgs e)
+    {
+        Page.Validate("CallUpdate");
+        if (!Page.IsValid) return;
+
+        try
+        {
+            string leadCode = hfLeadCode.Value;
+            string callStatus = ddlCallStatus.SelectedValue;
+            object nextFollowupDate = string.IsNullOrWhiteSpace(txtNextFollowUp.Text) ? DBNull.Value : (object)Convert.ToDateTime(txtNextFollowUp.Text);
+            string remarks = string.IsNullOrWhiteSpace(txtCallRemarks.Text) ? null : txtCallRemarks.Text.Trim();
+
+            string calledBy = Session["employee_name"] != null ? Session["employee_name"].ToString() : "Employee";
+            string callerRole = Session["employee_category"] != null ? Session["employee_category"].ToString() : "Employee";
+
+            ob.insert_call_history(leadCode, calledBy, callerRole, callStatus, nextFollowupDate, remarks);
+
+            Response.Redirect(Request.RawUrl, false);
+            Context.ApplicationInstance.CompleteRequest();
+        }
+        catch (Exception ex)
+        {
+            string error = System.Web.HttpUtility.JavaScriptStringEncode(ex.Message);
+            ClientScript.RegisterStartupScript(this.GetType(), "CallError", "alert('" + error + "');", true);
+        }
+    }
 }

@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
+<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,7 +19,154 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
 
     <!-- Custom Employee Theme CSS (Kept inside employee folder) -->
-    <link href="css/employee-style.css" rel="stylesheet" />
+    <link href="css/employee-style.css?v=20261112e" rel="stylesheet" />
+
+    <style>
+        /* ==========================================================================
+           Brand Theme: Ocean / Coastal Blue (From Logo Waves)
+           Applies forcefully across all pages of the Employee Portal
+           ========================================================================== */
+        :root {
+            --nj-primary: #0284c7 !important;
+            --nj-primary-hover: #0369a1 !important;
+            --nj-sidebar-bg: #0b2545 !important;
+            --nj-sidebar-hover: #133a68 !important;
+            --nj-sidebar-active: #1d4e89 !important;
+            --nj-sidebar-accent: #38bdf8 !important;
+            --nj-light-green: #e0f2fe !important;
+            --nj-light-green-border: #bae6fd !important;
+            --nj-page-bg: #f4f8fc !important;
+        }
+
+        body {
+            background-color: #f4f8fc !important;
+        }
+
+        /* Sidebar & Mobile Offcanvas */
+        .nj-sidebar, #mobileSidebar {
+            background-color: #0b2545 !important;
+        }
+
+        .nj-sidebar-brand .brand-sub {
+            color: #38bdf8 !important;
+        }
+
+        .nj-nav-item .nj-nav-link:hover {
+            background-color: #133a68 !important;
+            color: #ffffff !important;
+        }
+
+        .nj-nav-item .nj-nav-link.active {
+            background-color: #1d4e89 !important;
+            color: #ffffff !important;
+            box-shadow: inset 3px 0 0 #38bdf8 !important;
+        }
+
+        .nj-nav-item .nj-nav-link i,
+        .nj-nav-item .nj-nav-link.active i,
+        .nj-nav-item .nj-nav-link:hover i {
+            color: #ffffff !important;
+        }
+
+        .nj-agency-badge {
+            background: rgba(56, 189, 248, 0.15) !important;
+            color: #38bdf8 !important;
+            border: 1px solid rgba(56, 189, 248, 0.3) !important;
+        }
+
+        /* Headers & Typography */
+        .nj-topbar-title, .nj-page-title, .card-header h5, .card-header h6 {
+            color: #0369a1 !important;
+        }
+
+        .nj-location-badge {
+            background-color: #e0f2fe !important;
+            color: #0369a1 !important;
+            border-color: #bae6fd !important;
+        }
+
+        /* Buttons */
+        .btn-nj-primary, .btn-success {
+            background-color: #0284c7 !important;
+            border-color: #0284c7 !important;
+            color: #ffffff !important;
+        }
+
+        .btn-nj-primary:hover, .btn-nj-primary:focus, .btn-success:hover, .btn-success:focus {
+            background-color: #0369a1 !important;
+            border-color: #0369a1 !important;
+            color: #ffffff !important;
+        }
+
+        .btn-nj-outline, .btn-outline-success {
+            color: #0369a1 !important;
+            border-color: #cbd5e1 !important;
+        }
+
+        .btn-nj-outline:hover, .btn-outline-success:hover {
+            background-color: #e0f2fe !important;
+            border-color: #0284c7 !important;
+            color: #0284c7 !important;
+        }
+
+        /* Bootstrap Success utility overrides inside Employee Portal */
+        .text-success, i.text-success, a.text-success {
+            color: #0284c7 !important;
+        }
+
+        .border-success {
+            border-color: #0284c7 !important;
+        }
+
+        .bg-success {
+            background-color: #0284c7 !important;
+            color: #ffffff !important;
+        }
+
+        .bg-success-subtle {
+            background-color: #e0f2fe !important;
+            color: #0369a1 !important;
+        }
+
+        .border-success-subtle {
+            border-color: #bae6fd !important;
+        }
+
+        /* Stat cards & icons */
+        .nj-stat-icon.green, .nj-stat-icon.blue {
+            background-color: #e0f2fe !important;
+            color: #0284c7 !important;
+        }
+
+        .nj-stat-card:hover {
+            border-color: #93c5fd !important;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.12) !important;
+        }
+
+        /* Badges & Switchers */
+        .badge-cat-sales {
+            background-color: #e0f2fe !important;
+            color: #0369a1 !important;
+            border: 1px solid #bae6fd !important;
+        }
+
+        .role-switch-btn.active {
+            background-color: #0284c7 !important;
+            border-color: #0284c7 !important;
+            color: #ffffff !important;
+        }
+
+        .nj-avatar {
+            background-color: #0284c7 !important;
+            color: #ffffff !important;
+        }
+
+        /* Form Inputs Focus */
+        .form-control:focus, .form-select:focus {
+            border-color: #0284c7 !important;
+            box-shadow: 0 0 0 0.2rem rgba(2, 132, 199, 0.2) !important;
+        }
+    </style>
 
     <!-- Bootstrap 5.3.3 JS Bundle (in Head so Server Startup Scripts can call bootstrap modals) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -37,8 +184,8 @@
                     <div class="nj-sidebar-brand p-0 border-0">
                         <img src="images/logo.png" alt="New Journey Holidays" class="brand-logo-img" />
                         <div>
-                            <div class="brand-title">New Journey</div>
-                            <div class="brand-sub">Holidays CRM</div>
+                            <div class="brand-title">New Journey Holidays</div>
+                           
                         </div>
                     </div>
                 </div>
@@ -92,8 +239,8 @@
             <a href="Dashboard.aspx" class="nj-sidebar-brand">
                 <img src="images/logo.png" alt="New Journey Holidays" class="brand-logo-img" />
                 <div>
-                    <div class="brand-title">New Journey</div>
-                    <div class="brand-sub">Holidays CRM</div>
+                    <div class="brand-title">New Journey Holidays</div>
+                    
                 </div>
             </a>
 
@@ -167,12 +314,7 @@
                     <button class="btn btn-sm btn-outline-secondary d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-label="Toggle navigation">
                         <i class="bi bi-list fs-5"></i>
                     </button>
-                    <div class="d-flex align-items-center gap-2">
-                        <h1 class="nj-topbar-title">
-                            <span>New Journey Holidays</span>
-                        </h1>
-
-                    </div>
+                    
                 </div>
 
                 <div class="nj-topbar-right">

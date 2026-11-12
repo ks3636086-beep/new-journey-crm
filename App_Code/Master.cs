@@ -518,4 +518,126 @@ public class Master
 
         return dt;
     }
+
+
+    public DataTable get_today_followups(int employeeId)
+    {
+
+        string query = @"
+SELECT lead_code, client_name, mobile, city, destination,
+       travel_date, followup_date, lead_priority, lead_status
+FROM tbl_leads
+WHERE (assigned_employee_id = @employeeId OR created_by = 
+       (SELECT employee_name FROM tbl_employees WHERE employee_id = @employeeId))
+AND CAST(followup_date AS DATE) = CAST(GETDATE() AS DATE)
+ORDER BY followup_date ASC";
+
+        using (SqlCommand cmd = new SqlCommand(query, con))
+        {
+            cmd.Parameters.AddWithValue("@employeeId", employeeId);
+
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+
+            return dt;
+        }
+    }
+
+    public DataTable get_recent_employee_leads(int employeeId)
+    {
+        string query = @"SELECT TOP 5 l.lead_code, l.client_name, l.mobile, l.destination, l.created_by, ISNULL(e.employee_name,'Unassigned') AS assigned_employee_name, l.lead_priority, l.lead_status
+FROM dbo.tbl_leads l LEFT JOIN dbo.tbl_employees e ON TRY_CONVERT(INT,l.assigned_employee_id)=e.employee_id WHERE l.created_by=(SELECT employee_name FROM dbo.tbl_employees WHERE employee_id=@employeeId) OR TRY_CONVERT(INT,l.assigned_employee_id)=@employeeId ORDER BY l.created_at DESC";
+
+        using (SqlCommand cmd = new SqlCommand(query, con))
+        {
+            cmd.Parameters.AddWithValue("@employeeId", employeeId);
+
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            return dt;
+        }
+    }
+
+    public void unassign_lead(string leadCode)
+    {
+        string query = "UPDATE dbo.tbl_leads SET assigned_employee_id = NULL WHERE lead_code = @leadCode";
+
+        SqlCommand cmd = new SqlCommand(query, con);
+        cmd.Parameters.AddWithValue("@leadCode", leadCode);
+
+        if (con.State == ConnectionState.Closed)
+            con.Open();
+
+        cmd.ExecuteNonQuery();
+        con.Close();
+    }
+
+
+    public DataTable get_today_followups_data(int employeeId)
+    {
+        DataTable dt = new DataTable();
+
+        string query = @"
+        SELECT lead_code, client_name, mobile, destination,
+               followup_date, remarks, lead_priority, lead_status
+        FROM dbo.tbl_leads
+        WHERE (assigned_employee_id = @employeeId
+               OR created_by = @employeeId)
+          AND CAST(followup_date AS DATE) > CAST(GETDATE() AS DATE)
+        ORDER BY followup_date ASC";
+
+        SqlCommand cmd = new SqlCommand(query, con);
+        cmd.Parameters.AddWithValue("@employeeId", employeeId);
+
+        SqlDataAdapter da = new SqlDataAdapter(cmd);
+        da.Fill(dt);
+
+        return dt;
+    }
+
+    public DataTable get_overdue_followups_data(int employeeId)
+    {
+        DataTable dt = new DataTable();
+
+        string query = @"
+        SELECT lead_code, client_name, mobile, destination,
+               followup_date, remarks, lead_priority, lead_status
+        FROM dbo.tbl_leads
+        WHERE (assigned_employee_id = @employeeId
+               OR created_by = @employeeId)
+          AND CAST(followup_date AS DATE) < CAST(GETDATE() AS DATE)
+        ORDER BY followup_date ASC";
+
+        SqlCommand cmd = new SqlCommand(query, con);
+        cmd.Parameters.AddWithValue("@employeeId", employeeId);
+
+        SqlDataAdapter da = new SqlDataAdapter(cmd);
+        da.Fill(dt);
+
+        return dt;
+    }
+
+    public DataTable get_upcoming_followups_data(int employeeId)
+    {
+        DataTable dt = new DataTable();
+
+        string query = @"
+        SELECT lead_code, client_name, mobile, destination,
+               followup_date, remarks, lead_priority, lead_status
+        FROM dbo.tbl_leads
+        WHERE (assigned_employee_id = @employeeId
+               OR created_by = @employeeId)
+          AND CAST(followup_date AS DATE) > CAST(GETDATE() AS DATE)
+        ORDER BY followup_date ASC";
+
+        SqlCommand cmd = new SqlCommand(query, con);
+        cmd.Parameters.AddWithValue("@employeeId", employeeId);
+
+        SqlDataAdapter da = new SqlDataAdapter(cmd);
+        da.Fill(dt);
+
+        return dt;
+    }
 }

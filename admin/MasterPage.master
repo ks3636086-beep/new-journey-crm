@@ -37,8 +37,8 @@
                     <div class="nj-sidebar-brand p-0 border-0">
                         <img src="images/logo.png" alt="New Journey Holidays" class="brand-logo-img" />
                         <div>
-                            <div class="brand-title">New Journey</div>
-                            <div class="brand-sub">Holidays CRM</div>
+                            <div class="brand-title">New Journey Holidays</div>
+                             
                         </div>
                     </div>
                 </div>
@@ -81,8 +81,8 @@
             <a href="Dashboard.aspx" class="nj-sidebar-brand">
                 <img src="images/logo.png" alt="New Journey Holidays" class="brand-logo-img" />
                 <div>
-                    <div class="brand-title">New Journey</div>
-                    <div class="brand-sub">Holidays CRM</div>
+                    <div class="brand-title">New Journey Holidays</div>
+                     
                 </div>
             </a>
 
@@ -128,12 +128,12 @@
                         <span>Employee Categories</span>
                     </a>
                 </li>--%>
-                <li class="nj-nav-item">
+               <%-- <li class="nj-nav-item">
                     <a href="FollowUps.aspx" class="nj-nav-link" id="nav-followups">
                         <i class="bi bi-calendar-check-fill"></i>
                         <span>Follow-ups</span>
                     </a>
-                </li>
+                </li>--%>
                 <li class="nj-nav-item">
                     <a href="CallHistory.aspx" class="nj-nav-link" id="nav-calls">
                         <i class="bi bi-telephone-outbound-fill"></i>
@@ -178,12 +178,7 @@
                     <button class="btn btn-sm btn-outline-secondary d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-label="Toggle navigation">
                         <i class="bi bi-list fs-5"></i>
                     </button>
-                    <div class="d-flex align-items-center gap-2">
-                        <h1 class="nj-topbar-title">
-                            <span>New Journey Holidays</span>
-                        </h1>
-                      <%--  <span class="nj-location-badge d-none d-sm-inline-block">Gorakhpur HQ</span>--%>
-                    </div>
+                     
                 </div>
 
                 <div class="nj-topbar-right">

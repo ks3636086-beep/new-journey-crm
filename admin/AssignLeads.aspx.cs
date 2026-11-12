@@ -130,5 +130,12 @@ public partial class AssignLeads : System.Web.UI.Page
             );
         }
     }
+
+    protected void UnassignLead(string leadCode)
+    {
+        ob.unassign_lead(leadCode);
+        BindAssignableLeads();
+
+    }
 }
 
