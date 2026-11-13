@@ -184,8 +184,8 @@
                     <div class="nj-sidebar-brand p-0 border-0">
                         <img src="images/logo.png" alt="New Journey Holidays" class="brand-logo-img" />
                         <div>
-                            <div class="brand-title">New Journey Holidays</div>
-                           
+                            <div class="brand-title">New Journey</div>
+                            <div class="brand-sub">Holidays CRM</div>
                         </div>
                     </div>
                 </div>
@@ -239,8 +239,8 @@
             <a href="Dashboard.aspx" class="nj-sidebar-brand">
                 <img src="images/logo.png" alt="New Journey Holidays" class="brand-logo-img" />
                 <div>
-                    <div class="brand-title">New Journey Holidays</div>
-                    
+                    <div class="brand-title">New Journey</div>
+                    <div class="brand-sub">Holidays CRM</div>
                 </div>
             </a>
 
@@ -314,7 +314,12 @@
                     <button class="btn btn-sm btn-outline-secondary d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-label="Toggle navigation">
                         <i class="bi bi-list fs-5"></i>
                     </button>
-                    
+                    <div class="d-flex align-items-center gap-2">
+                        <h1 class="nj-topbar-title">
+                            <span>New Journey Holidays</span>
+                        </h1>
+
+                    </div>
                 </div>
 
                 <div class="nj-topbar-right">

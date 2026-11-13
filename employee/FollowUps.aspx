@@ -13,38 +13,55 @@
         </div>
         <div class="d-flex align-items-center gap-2">
             <a href="CallHistory.aspx" class="btn btn-nj-outline btn-sm">
-                <i class="bi bi-clock-history"></i> Call Log
+                <i class="bi bi-clock-history"></i>Call Log
             </a>
         </div>
     </div>
 
     <!-- 1. Three Follow-up Section Tabs -->
     <ul class="nav nav-pills mb-3 gap-2" id="followupSectionTabs" role="tablist">
-        <!-- Tab 1: Today's Follow-ups -->
+
+        <!-- Today's Follow-ups -->
         <li class="nav-item" role="presentation">
-            <button class="nav-link active d-flex align-items-center gap-2 border" id="tab-btn-today" data-bs-toggle="pill" data-bs-target="#section-today" type="button" role="tab">
+            <button class="nav-link active d-flex align-items-center gap-2 border"
+                id="tab-btn-today" type="button"
+                onclick="loadFollowups('today', this)">
+
                 <i class="bi bi-calendar-check-fill text-primary"></i>
                 <span>Today's Follow-ups</span>
-                <span class="badge bg-danger">4</span>
             </button>
         </li>
-        <!-- Tab 2: Upcoming Follow-ups -->
+
+        <!-- Upcoming Follow-ups -->
         <li class="nav-item" role="presentation">
-            <button class="nav-link d-flex align-items-center gap-2 border" id="tab-btn-upcoming" data-bs-toggle="pill" data-bs-target="#section-upcoming" type="button" role="tab">
+            <button class="nav-link d-flex align-items-center gap-2 border"
+                id="tab-btn-upcoming" type="button"
+                onclick="loadFollowups('upcoming', this)">
+
                 <i class="bi bi-calendar-range text-primary"></i>
                 <span>Upcoming Follow-ups</span>
-                <span class="badge bg-secondary">3</span>
             </button>
         </li>
-        <!-- Tab 3: Overdue Follow-ups -->
+
+        <!-- Overdue Follow-ups -->
         <li class="nav-item" role="presentation">
-            <button class="nav-link d-flex align-items-center gap-2 border text-danger" id="tab-btn-overdue" data-bs-toggle="pill" data-bs-target="#section-overdue" type="button" role="tab">
+            <button class="nav-link d-flex align-items-center gap-2 border text-danger"
+                id="tab-btn-overdue" type="button"
+                onclick="loadFollowups('overdue', this)">
+
                 <i class="bi bi-exclamation-triangle-fill"></i>
                 <span>Overdue Follow-ups</span>
-                <span class="badge bg-danger">1</span>
             </button>
         </li>
+
     </ul>
+
+
+    <asp:HiddenField ID="hdnFollowupType" runat="server" Value="today" />
+
+    <asp:Button ID="btnLoadFollowups" runat="server"
+        OnClick="btnLoadFollowups_Click"
+        Style="display: none;" />
 
     <!-- 2. Search & Priority Filter Toolbar (Works across all 3 tabs) -->
     <div class="card mb-3">
@@ -66,7 +83,8 @@
                 </div>
                 <div class="col-6 col-md-2 text-md-end">
                     <button type="button" class="btn btn-outline-secondary btn-sm w-100" onclick="resetFollowUpFilters();">
-                        <i class="bi bi-arrow-counterclockwise"></i> Reset
+                        <i class="bi bi-arrow-counterclockwise"></i>Reset
+                   
                     </button>
                 </div>
             </div>
@@ -83,7 +101,7 @@
             <div class="card">
                 <div class="card-header bg-white d-flex justify-content-between align-items-center">
                     <div>
-                        <h6 class="mb-0"><i class="bi bi-calendar2-day-fill text-primary"></i> Today's Follow-ups</h6>
+                        <h6 class="mb-0" id="followupHeading">Today's Follow-ups</h6>
                         <small class="text-muted">High priority client calls scheduled for today</small>
                     </div>
                     <span class="badge bg-danger-subtle text-danger">3 Pending Calls</span>
@@ -104,7 +122,7 @@
                             </thead>
                             <tbody>
                                 <asp:Repeater ID="rptTodayFollowups" runat="server">
-                                    <ItemTemplate>
+                                    <itemtemplate>
                                         <tr class="fup-row" data-priority='<%# Eval("lead_priority") %>'>
                                             <!-- 1. Customer Name & Mobile -->
                                             <td>
@@ -157,11 +175,12 @@
                                                     </a>
                                                     <button type="button" class="btn btn-nj-primary btn-sm text-nowrap" onclick='openUpdateCallModal("<%# Eval("client_name") %>", "<%# Eval("mobile") %>", "<%# Eval("destination") %>");' title="Update Call Details">
                                                         <i class="bi bi-telephone-forward me-1"></i>Update Call
+                                                   
                                                     </button>
                                                 </div>
                                             </td>
                                         </tr>
-                                    </ItemTemplate>
+                                    </itemtemplate>
                                 </asp:Repeater>
 
                                 <!-- Empty State Row for Today's Follow-ups -->
@@ -182,7 +201,7 @@
         <!-- ========================================== -->
         <!-- Tab 2: Upcoming Follow-ups               -->
         <!-- ========================================== -->
-        <div class="tab-pane fade" id="section-upcoming" role="tabpanel">
+        <%--<div class="tab-pane fade" id="section-upcoming" role="tabpanel">
             <div class="card">
                 <div class="card-header bg-white d-flex justify-content-between align-items-center">
                     <div>
@@ -321,12 +340,12 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>--%>
 
         <!-- ========================================== -->
         <!-- Tab 3: Overdue Follow-ups                 -->
         <!-- ========================================== -->
-        <div class="tab-pane fade" id="section-overdue" role="tabpanel">
+        <%--<div class="tab-pane fade" id="section-overdue" role="tabpanel">
             <div class="card border-danger">
                 <div class="card-header bg-danger-subtle text-danger d-flex justify-content-between align-items-center">
                     <div>
@@ -399,144 +418,158 @@
             </div>
         </div>
 
-    </div>
+    </div>--%>
 
-    <!-- 4. Simple Update Call Modal -->
-    <div class="modal fade" id="modalUpdateCall" tabindex="-1" aria-labelledby="modalUpdateCallLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header border-bottom py-2">
-                    <h6 class="modal-title fw-bold" id="modalUpdateCallLabel">
-                        <i class="bi bi-telephone-forward text-primary me-1"></i>Update Call
+        <!-- 4. Simple Update Call Modal -->
+        <div class="modal fade" id="modalUpdateCall" tabindex="-1" aria-labelledby="modalUpdateCallLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header border-bottom py-2">
+                        <h6 class="modal-title fw-bold" id="modalUpdateCallLabel">
+                            <i class="bi bi-telephone-forward text-primary me-1"></i>Update Call
                     </h6>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <!-- Customer Information Banner -->
-                    <div class="p-2 bg-light rounded mb-3 border">
-                        <div class="fw-bold text-dark" id="fupModalCustName">Customer Name</div>
-                        <div class="text-muted small" id="fupModalCustInfo">+91 00000 00000 &bull; Destination</div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+                    <div class="modal-body">
+                        <!-- Customer Information Banner -->
+                        <div class="p-2 bg-light rounded mb-3 border">
+                            <div class="fw-bold text-dark" id="fupModalCustName">Customer Name</div>
+                            <div class="text-muted small" id="fupModalCustInfo">+91 00000 00000 &bull; Destination</div>
+                        </div>
 
-                    <!-- 1. Call Outcome -->
-                    <div class="mb-3">
-                        <label class="form-label small fw-semibold">Call Outcome <span class="text-danger">*</span></label>
-                        <select class="form-select form-select-sm" id="callOutcomeSelect">
-                            <option value="">-- Select Outcome --</option>
-                            <option value="Connected">Connected</option>
-                            <option value="Interested">Interested</option>
-                            <option value="Call Back Later">Call Back Later</option>
-                            <option value="Busy">Busy</option>
-                            <option value="No Answer">No Answer</option>
-                            <option value="Switched Off">Switched Off</option>
-                            <option value="Not Interested">Not Interested</option>
-                        </select>
-                    </div>
+                        <!-- 1. Call Outcome -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Call Outcome <span class="text-danger">*</span></label>
+                            <select class="form-select form-select-sm" id="callOutcomeSelect">
+                                <option value="">-- Select Outcome --</option>
+                                <option value="Connected">Connected</option>
+                                <option value="Interested">Interested</option>
+                                <option value="Call Back Later">Call Back Later</option>
+                                <option value="Busy">Busy</option>
+                                <option value="No Answer">No Answer</option>
+                                <option value="Switched Off">Switched Off</option>
+                                <option value="Not Interested">Not Interested</option>
+                            </select>
+                        </div>
 
-                    <!-- 2. Call Remarks -->
-                    <div class="mb-3">
-                        <label class="form-label small fw-semibold">Call Remarks <span class="text-danger">*</span></label>
-                        <textarea class="form-control form-control-sm" id="callRemarksText" rows="3" placeholder="Key points from the conversation, client response, notes..."></textarea>
-                    </div>
+                        <!-- 2. Call Remarks -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Call Remarks <span class="text-danger">*</span></label>
+                            <textarea class="form-control form-control-sm" id="callRemarksText" rows="3" placeholder="Key points from the conversation, client response, notes..."></textarea>
+                        </div>
 
-                    <!-- 3. Next Follow-up Date & Time -->
-                    <div class="mb-2">
-                        <label class="form-label small fw-semibold">Next Follow-up Date & Time</label>
-                        <input type="datetime-local" class="form-control form-control-sm" id="nextFollowupInput" />
+                        <!-- 3. Next Follow-up Date & Time -->
+                        <div class="mb-2">
+                            <label class="form-label small fw-semibold">Next Follow-up Date & Time</label>
+                            <input type="datetime-local" class="form-control form-control-sm" id="nextFollowupInput" />
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer border-top py-2">
-                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-sm btn-nj-primary" onclick="saveCallRecord();">Save Call</button>
+                    <div class="modal-footer border-top py-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-sm btn-nj-primary" onclick="saveCallRecord();">Save Call</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Client-side Search, Filter & Modal Scripts -->
-    <script>
-        function openUpdateCallModal(name, phone, dest) {
-            var nameEl = document.getElementById('fupModalCustName');
-            var infoEl = document.getElementById('fupModalCustInfo');
-            if (nameEl) nameEl.textContent = name;
-            if (infoEl) infoEl.textContent = phone + ' • ' + dest;
+        <!-- Client-side Search, Filter & Modal Scripts -->
+        <script>
+            function loadFollowups(type, btn) {
 
-            var outcome = document.getElementById('callOutcomeSelect');
-            var remarks = document.getElementById('callRemarksText');
-            var nextDate = document.getElementById('nextFollowupInput');
-            if (outcome) outcome.selectedIndex = 0;
-            if (remarks) remarks.value = '';
-            if (nextDate) nextDate.value = '';
+                document.getElementById('<%= hdnFollowupType.ClientID %>').value = type;
 
-            var modalEl = document.getElementById('modalUpdateCall');
-            if (modalEl && typeof bootstrap !== 'undefined') {
-                var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-                modal.show();
-            }
-        }
+    document.querySelectorAll('#followupSectionTabs .nav-link').forEach(function (tab) {
+        tab.classList.remove('active');
+    });
 
-        function saveCallRecord() {
-            var outcome = document.getElementById('callOutcomeSelect');
-            if (!outcome || !outcome.value) {
-                alert('Please select a Call Outcome.');
-                if (outcome) outcome.focus();
-                return;
+    btn.classList.add('active');
+
+    document.getElementById('<%= btnLoadFollowups.ClientID %>').click();
             }
 
-            alert('Call details updated successfully (UI Demo)!');
 
-            var modalEl = document.getElementById('modalUpdateCall');
-            if (modalEl && typeof bootstrap !== 'undefined') {
-                var modal = bootstrap.Modal.getInstance(modalEl);
-                if (modal) modal.hide();
+            function openUpdateCallModal(name, phone, dest) {
+                var nameEl = document.getElementById('fupModalCustName');
+                var infoEl = document.getElementById('fupModalCustInfo');
+                if (nameEl) nameEl.textContent = name;
+                if (infoEl) infoEl.textContent = phone + ' • ' + dest;
+
+                var outcome = document.getElementById('callOutcomeSelect');
+                var remarks = document.getElementById('callRemarksText');
+                var nextDate = document.getElementById('nextFollowupInput');
+                if (outcome) outcome.selectedIndex = 0;
+                if (remarks) remarks.value = '';
+                if (nextDate) nextDate.value = '';
+
+                var modalEl = document.getElementById('modalUpdateCall');
+                if (modalEl && typeof bootstrap !== 'undefined') {
+                    var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                    modal.show();
+                }
             }
-        }
 
-        function filterFollowUps() {
-            var search = (document.getElementById('followUpSearch').value || '').toLowerCase().trim();
-            var priority = (document.getElementById('followUpPriorityFilter').value || '').trim();
+            function saveCallRecord() {
+                var outcome = document.getElementById('callOutcomeSelect');
+                if (!outcome || !outcome.value) {
+                    alert('Please select a Call Outcome.');
+                    if (outcome) outcome.focus();
+                    return;
+                }
 
-            var tabs = ['section-today', 'section-upcoming', 'section-overdue'];
+                alert('Call details updated successfully (UI Demo)!');
 
-            tabs.forEach(function (tabId) {
-                var tabEl = document.getElementById(tabId);
-                if (!tabEl) return;
+                var modalEl = document.getElementById('modalUpdateCall');
+                if (modalEl && typeof bootstrap !== 'undefined') {
+                    var modal = bootstrap.Modal.getInstance(modalEl);
+                    if (modal) modal.hide();
+                }
+            }
 
-                var rows = tabEl.querySelectorAll('.fup-row');
-                var visibleCount = 0;
+            function filterFollowUps() {
+                var search = (document.getElementById('followUpSearch').value || '').toLowerCase().trim();
+                var priority = (document.getElementById('followUpPriorityFilter').value || '').trim();
 
-                rows.forEach(function (row) {
-                    var text = row.innerText.toLowerCase();
-                    var rPriority = (row.getAttribute('data-priority') || '').trim();
+                var tabs = ['section-today', 'section-upcoming', 'section-overdue'];
 
-                    var mSearch = search === '' || text.indexOf(search) > -1;
-                    var mPriority = priority === '' || rPriority.toLowerCase() === priority.toLowerCase();
+                tabs.forEach(function (tabId) {
+                    var tabEl = document.getElementById(tabId);
+                    if (!tabEl) return;
 
-                    if (mSearch && mPriority) {
-                        row.style.display = '';
-                        visibleCount++;
-                    } else {
-                        row.style.display = 'none';
+                    var rows = tabEl.querySelectorAll('.fup-row');
+                    var visibleCount = 0;
+
+                    rows.forEach(function (row) {
+                        var text = row.innerText.toLowerCase();
+                        var rPriority = (row.getAttribute('data-priority') || '').trim();
+
+                        var mSearch = search === '' || text.indexOf(search) > -1;
+                        var mPriority = priority === '' || rPriority.toLowerCase() === priority.toLowerCase();
+
+                        if (mSearch && mPriority) {
+                            row.style.display = '';
+                            visibleCount++;
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+
+                    var emptyRow = tabEl.querySelector('.fup-empty-row');
+                    if (emptyRow) {
+                        if (visibleCount === 0) {
+                            emptyRow.classList.remove('d-none');
+                        } else {
+                            emptyRow.classList.add('d-none');
+                        }
                     }
                 });
+            }
 
-                var emptyRow = tabEl.querySelector('.fup-empty-row');
-                if (emptyRow) {
-                    if (visibleCount === 0) {
-                        emptyRow.classList.remove('d-none');
-                    } else {
-                        emptyRow.classList.add('d-none');
-                    }
-                }
-            });
-        }
-
-        function resetFollowUpFilters() {
-            var s = document.getElementById('followUpSearch');
-            var p = document.getElementById('followUpPriorityFilter');
-            if (s) s.value = '';
-            if (p) p.selectedIndex = 0;
-            filterFollowUps();
-        }
+            function resetFollowUpFilters() {
+                var s = document.getElementById('followUpSearch');
+                var p = document.getElementById('followUpPriorityFilter');
+                if (s) s.value = '';
+                if (p) p.selectedIndex = 0;
+                filterFollowUps();
+            }
     </script>
 </asp:Content>

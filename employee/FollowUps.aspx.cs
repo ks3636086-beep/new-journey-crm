@@ -33,24 +33,43 @@ public partial class FollowUps : System.Web.UI.Page
     private void BindTodayFollowups()
     {
         int employeeId = Convert.ToInt32(Session["employee_id"]);
-        rptTodayFollowups.DataSource = ob.get_today_followups_data(employeeId);
+        string employeeName = Session["employee_name"].ToString();
+        rptTodayFollowups.DataSource = ob.get_today_followups_data(employeeId, employeeName);
         rptTodayFollowups.DataBind();
     }
 
     private void BindUpcomingFollowups()
     {
         int employeeId = Convert.ToInt32(Session["employee_id"]);
-        rptTodayFollowups.DataSource = ob.get_upcoming_followups_data(employeeId);
+        string employeeName = Session["employee_name"].ToString();
+        rptTodayFollowups.DataSource = ob.get_upcoming_followups_data(employeeId, employeeName);
         rptTodayFollowups.DataBind();
     }
 
     private void BindOverdueFollowups()
     {
         int employeeId = Convert.ToInt32(Session["employee_id"]);
-        rptTodayFollowups.DataSource = ob.get_overdue_followups_data(employeeId);
+        string employeeName = Session["employee_name"].ToString();
+
+        rptTodayFollowups.DataSource = ob.get_overdue_followups_data(employeeId, employeeName);
         rptTodayFollowups.DataBind();
     }
+    protected void btnLoadFollowups_Click(object sender, EventArgs e)
+    {
+        string type = hdnFollowupType.Value;
 
-    
+        if (type == "today")
+        {
+            BindTodayFollowups();
+        }
+        else if (type == "upcoming")
+        {
+            BindUpcomingFollowups();
+        }
+        else if (type == "overdue")
+        {
+            BindOverdueFollowups();
+        }
+    }
 }
 

@@ -575,7 +575,7 @@ FROM dbo.tbl_leads l LEFT JOIN dbo.tbl_employees e ON TRY_CONVERT(INT,l.assigned
     }
 
 
-    public DataTable get_today_followups_data(int employeeId)
+    public DataTable get_today_followups_data(int employeeId, string employeeName)
     {
         DataTable dt = new DataTable();
 
@@ -584,60 +584,104 @@ FROM dbo.tbl_leads l LEFT JOIN dbo.tbl_employees e ON TRY_CONVERT(INT,l.assigned
                followup_date, remarks, lead_priority, lead_status
         FROM dbo.tbl_leads
         WHERE (assigned_employee_id = @employeeId
-               OR created_by = @employeeId)
+               OR created_by = @employeeName)
+          AND CAST(followup_date AS DATE) = CAST(GETDATE() AS DATE)
+        ORDER BY followup_date ASC";
+
+        SqlCommand cmd = new SqlCommand(query, con);
+        cmd.Parameters.AddWithValue("@employeeId", employeeId);
+        cmd.Parameters.AddWithValue("@employeeName", employeeName);
+
+
+        SqlDataAdapter da = new SqlDataAdapter(cmd);
+        da.Fill(dt);
+
+        return dt;
+    }
+
+    public DataTable get_overdue_followups_data(int employeeId, string employeeName)
+    {
+        DataTable dt = new DataTable();
+
+        string query = @"
+    SELECT lead_code, client_name, mobile, destination,
+           followup_date, remarks, lead_priority, lead_status
+    FROM dbo.tbl_leads
+    WHERE (assigned_employee_id = @employeeId
+           OR created_by = @employeeName)
+      AND CAST(followup_date AS DATE) < CAST(GETDATE() AS DATE)
+    ORDER BY followup_date ASC";
+
+        SqlCommand cmd = new SqlCommand(query, con);
+        cmd.Parameters.AddWithValue("@employeeId", employeeId);
+        cmd.Parameters.AddWithValue("@employeeName", employeeName);
+
+        SqlDataAdapter da = new SqlDataAdapter(cmd);
+        da.Fill(dt);
+
+        return dt;
+    }
+
+    public DataTable get_upcoming_followups_data(int employeeId, string employeeName)
+    {
+        DataTable dt = new DataTable();
+
+        string query = @"
+        SELECT lead_code, client_name, mobile, destination,
+               followup_date, remarks, lead_priority, lead_status
+        FROM dbo.tbl_leads
+        WHERE (assigned_employee_id = @employeeId
+               OR created_by = @employeeName)
           AND CAST(followup_date AS DATE) > CAST(GETDATE() AS DATE)
         ORDER BY followup_date ASC";
 
         SqlCommand cmd = new SqlCommand(query, con);
-        cmd.Parameters.AddWithValue("@employeeId", employeeId);
 
+        cmd.Parameters.AddWithValue("@employeeId", employeeId);
+        cmd.Parameters.AddWithValue("@employeeName", employeeName);
         SqlDataAdapter da = new SqlDataAdapter(cmd);
         da.Fill(dt);
 
         return dt;
     }
 
-    public DataTable get_overdue_followups_data(int employeeId)
+
+    // Sakshi
+    public DataTable get_employee_profile(int employeeId)
     {
         DataTable dt = new DataTable();
 
-        string query = @"
-        SELECT lead_code, client_name, mobile, destination,
-               followup_date, remarks, lead_priority, lead_status
-        FROM dbo.tbl_leads
-        WHERE (assigned_employee_id = @employeeId
-               OR created_by = @employeeId)
-          AND CAST(followup_date AS DATE) < CAST(GETDATE() AS DATE)
-        ORDER BY followup_date ASC";
+        using (SqlConnection con = new SqlConnection(
+            ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+        {
+            string query = @"SELECT 
+                            employee_id,
+                            employee_code,
+                            employee_name,
+                            employee_mobile,
+                            employee_email,
+                            employee_username,
+                            employee_password,
+                            employee_category,
+                            employee_status,
+                            created_at
+                         FROM tbl_employees
+                         WHERE employee_id = @employee_id";
 
-        SqlCommand cmd = new SqlCommand(query, con);
-        cmd.Parameters.AddWithValue("@employeeId", employeeId);
+            using (SqlCommand cmd = new SqlCommand(query, con))
+            {
+                cmd.Parameters.AddWithValue("@employee_id", employeeId);
 
-        SqlDataAdapter da = new SqlDataAdapter(cmd);
-        da.Fill(dt);
-
-        return dt;
-    }
-
-    public DataTable get_upcoming_followups_data(int employeeId)
-    {
-        DataTable dt = new DataTable();
-
-        string query = @"
-        SELECT lead_code, client_name, mobile, destination,
-               followup_date, remarks, lead_priority, lead_status
-        FROM dbo.tbl_leads
-        WHERE (assigned_employee_id = @employeeId
-               OR created_by = @employeeId)
-          AND CAST(followup_date AS DATE) > CAST(GETDATE() AS DATE)
-        ORDER BY followup_date ASC";
-
-        SqlCommand cmd = new SqlCommand(query, con);
-        cmd.Parameters.AddWithValue("@employeeId", employeeId);
-
-        SqlDataAdapter da = new SqlDataAdapter(cmd);
-        da.Fill(dt);
+                using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                {
+                    da.Fill(dt);
+                }
+            }
+        }
 
         return dt;
     }
+
+
+    // Sakshi
 }

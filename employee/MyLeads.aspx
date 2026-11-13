@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" MasterPageFile="MasterPage.master" AutoEventWireup="true" CodeFile="MyLeads.aspx.cs" Inherits="MyLeads" %>
+<%@ Page Language="C#" MasterPageFile="MasterPage.master" AutoEventWireup="true" CodeFile="MyLeads.aspx.cs" Inherits="MyLeads" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <title>My Leads | New Journey Holidays CRM</title>
@@ -27,15 +27,23 @@
         <div class="card-body p-3">
             <div class="row g-2 align-items-center">
                 <!-- Search input -->
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-4">
                     <div class="input-group input-group-sm">
                         <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
                         <input type="text" id="leadSearchInput" class="form-control border-start-0" placeholder="Search customer, phone, city..." onkeyup="filterLeads();" />
                     </div>
                 </div>
 
-                <!-- Status Filter (New, Interested, Pending, Confirmed, Not Interested, Closed) -->
+                <!-- Date Filter -->
                 <div class="col-6 col-md-3">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-white border-end-0" title="Follow-up Date"><i class="bi bi-calendar-event text-muted"></i></span>
+                        <input type="date" id="filterDate" class="form-control border-start-0" title="Filter by Follow-up Date" onchange="filterLeads();" />
+                    </div>
+                </div>
+
+                <!-- Status Filter (New, Interested, Pending, Confirmed, Not Interested, Closed) -->
+                <div class="col-6 col-md-2">
                     <select id="filterStatus" class="form-select form-select-sm" onchange="filterLeads();">
                         <option value="">All Statuses</option>
                         <option value="New">New</option>
@@ -95,7 +103,7 @@
                     <tbody>
                         <asp:Repeater ID="rptMyLeads" runat="server">
                             <itemtemplate>
-                                <tr class="lead-item-row" data-status='<%# Eval("lead_status") %>' data-priority='<%# Eval("lead_priority") %>'>
+                                <tr class="lead-item-row" data-status='<%# Eval("lead_status") %>' data-priority='<%# Eval("lead_priority") %>' data-date='<%# Eval("followup_date", "{0:yyyy-MM-dd}") %>'>
                                     <td>
                                         <span class="fw-bold text-success">#<%# Eval("lead_code") %></span>
                                     </td>
@@ -497,10 +505,10 @@
 
     <script>
         function filterLeads() {
-            var search = document.getElementById('leadSearchInput').value.toLowerCase();
-            var status = document.getElementById('filterStatus').value;
-            var priority = document.getElementById('filterPriority').value;
-
+            var search = (document.getElementById('leadSearchInput').value || '').toLowerCase().trim();
+            var date = (document.getElementById('filterDate').value || '').trim();
+            var status = (document.getElementById('filterStatus').value || '').trim();
+            var priority = (document.getElementById('filterPriority').value || '').trim();
 
             // Desktop Rows
             var rows = document.querySelectorAll('.lead-item-row');
@@ -508,16 +516,31 @@
 
             rows.forEach(function (row) {
                 var text = row.innerText.toLowerCase();
-                var rStatus = row.getAttribute('data-status');
-                var rPriority = row.getAttribute('data-priority');
-
+                var rStatus = (row.getAttribute('data-status') || '').trim();
+                var rPriority = (row.getAttribute('data-priority') || '').trim();
+                var rDate = (row.getAttribute('data-date') || '').trim();
 
                 var mSearch = search === '' || text.indexOf(search) > -1;
-                var mStatus = status === '' || rStatus === status;
-                var mPriority = priority === '' || rPriority === priority;
+                var mStatus = status === '' || rStatus.toLowerCase() === status.toLowerCase();
+                var mPriority = priority === '' || rPriority.toLowerCase() === priority.toLowerCase();
+                
+                var mDate = true;
+                if (date !== '') {
+                    if (rDate === '') {
+                        mDate = false;
+                    } else if (rDate === date || rDate.indexOf(date) === 0) {
+                        mDate = true;
+                    } else {
+                        var dRow = new Date(rDate);
+                        var dFilter = new Date(date);
+                        mDate = !isNaN(dRow) && !isNaN(dFilter) &&
+                                dRow.getFullYear() === dFilter.getFullYear() &&
+                                dRow.getMonth() === dFilter.getMonth() &&
+                                dRow.getDate() === dFilter.getDate();
+                    }
+                }
 
-
-                if (mSearch && mStatus && mPriority) {
+                if (mSearch && mDate && mStatus && mPriority) {
                     row.style.display = '';
                     visibleCount++;
                 } else {
@@ -529,34 +552,41 @@
             var cards = document.querySelectorAll('.lead-mobile-card');
             cards.forEach(function (card) {
                 var text = card.innerText.toLowerCase();
-                var cStatus = card.getAttribute('data-status');
-                var cPriority = card.getAttribute('data-priority');
-                var cSource = card.getAttribute('data-source');
+                var cStatus = (card.getAttribute('data-status') || '').trim();
+                var cPriority = (card.getAttribute('data-priority') || '').trim();
 
                 var mSearch = search === '' || text.indexOf(search) > -1;
-                var mStatus = status === '' || cStatus === status;
-                var mPriority = priority === '' || cPriority === priority;
-                var mSource = source === '' || cSource === source;
+                var mStatus = status === '' || cStatus.toLowerCase() === status.toLowerCase();
+                var mPriority = priority === '' || cPriority.toLowerCase() === priority.toLowerCase();
 
-                if (mSearch && mStatus && mPriority && mSource) {
+                if (mSearch && mStatus && mPriority) {
                     card.style.display = '';
+                    visibleCount++;
                 } else {
                     card.style.display = 'none';
                 }
             });
 
             var empty = document.getElementById('leadsEmptyState');
-            if (visibleCount === 0) {
-                empty.classList.remove('d-none');
-            } else {
-                empty.classList.add('d-none');
+            if (empty) {
+                if (visibleCount === 0) {
+                    empty.classList.remove('d-none');
+                } else {
+                    empty.classList.add('d-none');
+                }
             }
         }
 
         function resetFilters() {
-            document.getElementById('leadSearchInput').value = '';
-            document.getElementById('filterStatus').selectedIndex = 0;
-            document.getElementById('filterPriority').selectedIndex = 0;
+            var s = document.getElementById('leadSearchInput');
+            var d = document.getElementById('filterDate');
+            var st = document.getElementById('filterStatus');
+            var p = document.getElementById('filterPriority');
+
+            if (s) s.value = '';
+            if (d) d.value = '';
+            if (st) st.selectedIndex = 0;
+            if (p) p.selectedIndex = 0;
 
             filterLeads();
         }
