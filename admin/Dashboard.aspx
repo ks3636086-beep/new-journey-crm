@@ -11,17 +11,7 @@
             <h2 class="nj-page-title">Executive Dashboard</h2>
             <p class="nj-page-subtitle">Welcome back, Admin. Real-time overview of leads, team operations & follow-ups.</p>
         </div>
-        <div class="d-flex align-items-center gap-2">
-            <a href="AddLead.aspx" class="btn btn-nj-primary btn-sm">
-                <i class="bi bi-plus-circle"></i> Add Lead
-            </a>
-            <a href="AssignLeads.aspx" class="btn btn-nj-outline btn-sm">
-                <i class="bi bi-arrow-left-right"></i> Assign Leads
-            </a>
-            <button type="button" class="btn btn-nj-outline btn-sm" onclick="alert('Exporting monthly summary report (sample)...');">
-                <i class="bi bi-download"></i> Export
-            </button>
-        </div>
+        
     </div>
 
     <!-- 6 Summary KPI Cards -->

@@ -684,4 +684,222 @@ FROM dbo.tbl_leads l LEFT JOIN dbo.tbl_employees e ON TRY_CONVERT(INT,l.assigned
 
 
     // Sakshi
+
+    // Sakshi
+
+    public DataTable get_call_history(string employeeName)
+    {
+        string query = @"
+    SELECT
+        ch.srno,
+        ch.call_id,
+        ch.lead_code,
+        ch.called_by,
+        ch.caller_role,
+        ch.call_date,
+        ch.call_status,
+        ch.remarks,
+        ch.next_followup_date,
+        ch.is_latest,
+
+        l.client_name,
+        l.mobile,
+        l.alternate_mobile,
+        l.city,
+        l.destination,
+        l.travel_date,
+        l.lead_status,
+        l.lead_priority,
+        l.followup_date
+
+    FROM dbo.tbl_lead_call_history ch
+
+    INNER JOIN dbo.tbl_leads l
+        ON ch.lead_code = l.lead_code
+
+    WHERE ch.called_by = @employee_name
+
+    ORDER BY
+        ch.call_date DESC,
+        ch.srno DESC";
+
+        SqlCommand cmd = new SqlCommand(query, con);
+
+        cmd.Parameters.AddWithValue("@employee_name", employeeName);
+
+        SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+        DataTable dt = new DataTable();
+        da.Fill(dt);
+
+        return dt;
+    }
+    // Sakshi
+
+    // Confirmed aur Closed Bookings lane ke liye method
+    public DataTable get_employee_bookings_data(int employeeId, string employeeName)
+    {
+        DataTable dt = new DataTable();
+
+        string query = @"
+    SELECT lead_code, client_name, mobile, alternate_mobile, city, destination,
+           travel_date, remarks, lead_status, lead_priority
+    FROM dbo.tbl_leads
+    WHERE (assigned_employee_id = @employeeId OR created_by = @employeeName)
+      AND lead_status IN ('Confirmed', 'Closed')
+    ORDER BY travel_date DESC, lead_id DESC";
+
+        using (SqlCommand cmd = new SqlCommand(query, con))
+        {
+            cmd.Parameters.AddWithValue("@employeeId", employeeId);
+            cmd.Parameters.AddWithValue("@employeeName", employeeName);
+
+            using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+            {
+                da.Fill(dt);
+            }
+        }
+
+        return dt;
+    }
+
+    public bool close_employee_trip(string leadCode)
+    {
+        string query = @"
+        UPDATE dbo.tbl_leads
+        SET lead_status = 'Closed'
+        WHERE lead_code = @leadCode
+        AND lead_status = 'Confirmed'";
+
+        using (SqlCommand cmd = new SqlCommand(query, con))
+        {
+            cmd.Parameters.AddWithValue("@leadCode", leadCode);
+
+            bool wasClosed = con.State == ConnectionState.Closed;
+
+            try
+            {
+                if (wasClosed)
+                    con.Open();
+
+                int result = cmd.ExecuteNonQuery();
+
+                return result > 0;
+            }
+            finally
+            {
+                if (wasClosed && con.State == ConnectionState.Open)
+                    con.Close();
+            }
+        }
+    }
+
+
+
+
+    //saksahi
+
+
+    public DataTable get_admin_call_history()
+    {
+        string query = @"
+SELECT
+    ch.srno,
+    ch.call_id,
+    ch.lead_code,
+    ch.called_by,
+    ch.caller_role,
+    ch.call_date,
+    ch.call_status,
+    ch.remarks,
+    ch.next_followup_date,
+    ch.is_latest,
+
+    ISNULL(l.client_name, 'No Client') AS client_name,
+    ISNULL(l.mobile, '-') AS mobile,
+    l.alternate_mobile,
+    l.city,
+    l.destination,
+    l.travel_date,
+    ISNULL(l.lead_status, 'New') AS lead_status,
+    ISNULL(l.lead_priority, 'Normal') AS lead_priority,
+    l.followup_date,
+    l.assigned_employee_id
+
+FROM dbo.tbl_lead_call_history ch
+
+LEFT JOIN dbo.tbl_leads l
+    ON LTRIM(RTRIM(ch.lead_code)) = LTRIM(RTRIM(l.lead_code))
+
+ORDER BY
+    ch.call_date DESC,
+    ch.srno DESC";
+
+        SqlDataAdapter da = new SqlDataAdapter(query, con);
+
+        DataTable dt = new DataTable();
+        da.Fill(dt);
+
+        return dt;
+    }
+
+
+
+    //saksahi
+
+
+
+
+    // sakshi - Get all employees & callers
+    public DataTable get_call_staff()
+    {
+        string query = @"
+    SELECT DISTINCT employee_name AS called_by
+    FROM dbo.tbl_employees
+    WHERE employee_name IS NOT NULL AND LTRIM(RTRIM(employee_name)) <> ''
+    UNION
+    SELECT DISTINCT called_by
+    FROM dbo.tbl_lead_call_history
+    WHERE called_by IS NOT NULL AND LTRIM(RTRIM(called_by)) <> ''
+    ORDER BY called_by";
+
+        SqlDataAdapter da = new SqlDataAdapter(query, con);
+
+        DataTable dt = new DataTable();
+        da.Fill(dt);
+
+        return dt;
+    }
+
+    //Sakshi
+
+
+    
+    public DataTable get_all_bookings_data()
+    {
+        DataTable dt = new DataTable();
+
+        string query = @"
+    SELECT lead_code, client_name, mobile, alternate_mobile, city, destination,
+           travel_date, remarks, lead_status, lead_priority, assigned_employee_id, created_by
+    FROM dbo.tbl_leads
+    WHERE lead_status IN ('Confirmed', 'Closed')
+    ORDER BY travel_date DESC, lead_id DESC";
+
+        using (SqlCommand cmd = new SqlCommand(query, con))
+        {
+            using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+            {
+                da.Fill(dt);
+            }
+        }
+
+        return dt;
+    }
+    // Returned (Close Needed) Bookings ka count   method
+    public int get_returned_bookings_count()
+    {
+        return get_dashboard_count(
+            "SELECT COUNT(*) FROM dbo.tbl_leads WHERE lead_status = 'Confirmed' AND travel_date < CAST(GETDATE() AS DATE)");
+    }
 }

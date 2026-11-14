@@ -11,301 +11,150 @@
             <h2 class="nj-page-title">Client Call History</h2>
             <p class="nj-page-subtitle">Personal communication audit log for all dials, discussions and client call outcomes.</p>
         </div>
-        <div class="d-flex align-items-center gap-2">
-            <button type="button" class="btn btn-nj-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalAddCallEntry">
-                <i class="bi bi-telephone-plus"></i> Add Call Record
-            </button>
-            <a href="FollowUps.aspx" class="btn btn-nj-outline btn-sm">
-                <i class="bi bi-calendar-check"></i> Follow-up Tasks
-            </a>
-        </div>
+       
     </div>
 
-    <!-- Calling Metrics Row -->
-    <div class="row g-2 mb-3">
-        <div class="col-6 col-md-3">
-            <div class="p-2 px-3 bg-white border rounded d-flex align-items-center justify-content-between">
-                <div>
-                    <span class="text-muted" style="font-size: 0.75rem;">Today's Calls</span>
-                    <h5 class="fw-bold mb-0 text-dark">14 Calls</h5>
-                </div>
-                <span class="badge bg-light text-primary border p-2"><i class="bi bi-telephone"></i></span>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="p-2 px-3 bg-white border rounded d-flex align-items-center justify-content-between">
-                <div>
-                    <span class="text-muted" style="font-size: 0.75rem;">Connected / Interested</span>
-                    <h5 class="fw-bold mb-0 text-success">10 Calls</h5>
-                </div>
-                <span class="badge bg-success-subtle text-success border p-2"><i class="bi bi-check-circle"></i></span>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="p-2 px-3 bg-white border rounded d-flex align-items-center justify-content-between">
-                <div>
-                    <span class="text-muted" style="font-size: 0.75rem;">Call Back Scheduled</span>
-                    <h5 class="fw-bold mb-0 text-warning">3 Leads</h5>
-                </div>
-                <span class="badge bg-warning-subtle text-warning border p-2"><i class="bi bi-clock-history"></i></span>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="p-2 px-3 bg-white border rounded d-flex align-items-center justify-content-between">
-                <div>
-                    <span class="text-muted" style="font-size: 0.75rem;">No Answer / Busy</span>
-                    <h5 class="fw-bold mb-0 text-secondary">1 Call</h5>
-                </div>
-                <span class="badge bg-secondary-subtle text-secondary border p-2"><i class="bi bi-telephone-x"></i></span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Search & Filter Card -->
-    <div class="card mb-3">
-        <div class="card-body p-3">
-            <div class="row g-2 align-items-center">
-                <!-- Search text -->
-                <div class="col-12 col-md-4">
-                    <div class="input-group input-group-sm">
-                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-                        <input type="text" class="form-control border-start-0" id="txtSearchCalls" placeholder="Search customer, phone or remarks..." onkeyup="filterCallRecords();" />
-                    </div>
-                </div>
-
-                <!-- Call Outcome Filter -->
-                <div class="col-6 col-md-3">
-                    <select class="form-select form-select-sm" id="ddlOutcomeFilter" onchange="filterCallRecords();">
-                        <option value="">All Call Outcomes</option>
-                        <option value="Connected">Connected</option>
-                        <option value="Interested">Interested</option>
-                        <option value="Call Back Later">Call Back Later</option>
-                        <option value="Busy">Busy</option>
-                        <option value="No Answer">No Answer</option>
-                        <option value="Not Interested">Not Interested</option>
-                    </select>
-                </div>
-
-                <!-- Date Filter -->
-                <div class="col-6 col-md-3">
-                    <select class="form-select form-select-sm" id="ddlDateFilter" onchange="filterCallRecords();">
-                        <option value="">All Dates</option>
-                        <option value="Today">Today's Calls</option>
-                        <option value="Yesterday">Yesterday</option>
-                        <option value="This Week">Earlier This Week</option>
-                    </select>
-                </div>
-
-                <!-- Reset button -->
-                <div class="col-12 col-md-2 text-md-end">
-                    <button type="button" class="btn btn-outline-secondary btn-sm w-100" onclick="resetCallFilters();">
-                        <i class="bi bi-arrow-counterclockwise"></i> Reset
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Call History Table Card -->
+     <!-- Call History Table Card -->
     <div class="card">
         <div class="card-header bg-white d-flex justify-content-between align-items-center">
             <div>
                 <h6 class="mb-0"><i class="bi bi-telephone-outbound text-primary"></i> Call Records Directory</h6>
                 <small class="text-muted">History of interactions covering all standard call classification outcomes</small>
             </div>
-            <span class="badge bg-light text-dark border">Static Activity Sample</span>
+            <span class="badge bg-light text-dark border"><i class="bi bi-clock-history me-1"></i>Interaction Log</span>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0" id="tableCallHistory">
                     <thead>
                         <tr>
+                            <th>Lead ID</th>
                             <th>Customer Name</th>
-                            <th>Mobile Number</th>
-                            <th>Call Date</th>
-                            <th>Call Time</th>
+                            <th>Mobile</th>
+                            <th>Call Date & Time</th>
+                            <th>Called By</th>
                             <th>Call Outcome</th>
-                            <th>Remarks & Discussion</th>
                             <th>Next Follow-up</th>
-                            <th>Lead Priority</th>
-                            <th class="text-end">View Lead</th>
+                            <th>Priority / Status</th>
+                            <th class="text-end">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- 1. Connected -->
-                        <tr class="call-entry-row" data-outcome="Connected" data-date="Today">
-                            <td>
-                                <div class="fw-bold">Rohit Verma</div>
-                                <small class="text-muted">Kashmir Tour</small>
-                            </td>
-                            <td><a href="tel:+919876543210" class="text-decoration-none text-dark">+91 98765 43210</a></td>
-                            <td>Today (02 Nov)</td>
-                            <td>11:45 AM</td>
-                            <td>
-                                <span class="badge bg-success-subtle text-success border border-success-subtle">
-                                    <i class="bi bi-telephone-inbound-fill me-1"></i> Connected
-                                </span>
-                            </td>
-                            <td>
-                                <span class="text-truncate d-inline-block" style="max-width: 240px;">
-                                    Discussed 5N/6D Kashmir itinerary with Sonmarg snow point. Client positive about Srinagar houseboat.
-                                </span>
-                            </td>
-                            <td><span class="fw-bold text-danger">Today, 05:15 PM</span></td>
-                            <td><span class="badge badge-priority-hot"><i class="bi bi-fire me-1"></i>Hot</span></td>
-                            <td class="text-end">
-                                <a href="LeadDetails.aspx?id=NJ-10301" class="btn btn-nj-outline btn-sm" title="View Customer Lead">
-                                    <i class="bi bi-eye"></i>
-                                </a>
-                            </td>
-                        </tr>
+                        <asp:Repeater ID="rptCallHistory" runat="server">
+                            <ItemTemplate>
+                                <tr class="call-entry-row" data-outcome='<%# Eval("call_status") %>' data-date='<%# Eval("call_date") %>'>
+                                    <!-- 1. Lead ID -->
+                                    <td>
+                                        <div class="d-flex align-items-center gap-1">
+                                            <span class="badge bg-light text-primary border fw-semibold">#<%# Eval("lead_code") %></span>
+                                            <%# Eval("is_latest") != null && Eval("is_latest") != DBNull.Value && (Eval("is_latest").ToString() == "1" || Eval("is_latest").ToString().ToLower() == "true") ? "<span class=\"badge bg-info-subtle text-info border\" style=\"font-size:0.65rem;\">Latest</span>" : "" %>
+                                        </div>
+                                    </td>
 
-                        <!-- 2. Interested -->
-                        <tr class="call-entry-row" data-outcome="Interested" data-date="Today">
-                            <td>
-                                <div class="fw-bold">Dr. Arvind Kumar</div>
-                                <small class="text-muted">Char Dham Heli</small>
-                            </td>
-                            <td><a href="tel:+919839012345" class="text-decoration-none text-dark">+91 98390 12345</a></td>
-                            <td>Today (02 Nov)</td>
-                            <td>10:15 AM</td>
-                            <td>
-                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle">
-                                    <i class="bi bi-star-fill me-1"></i> Interested
-                                </span>
-                            </td>
-                            <td>
-                                <span class="text-truncate d-inline-block" style="max-width: 240px;">
-                                    Customer verified pilgrimage intent. Requested helicopter VIP pricing for 4 senior family members.
-                                </span>
-                            </td>
-                            <td><span class="fw-bold text-danger">Today, 02:30 PM</span></td>
-                            <td><span class="badge badge-priority-hot"><i class="bi bi-fire me-1"></i>Hot</span></td>
-                            <td class="text-end">
-                                <a href="LeadDetails.aspx?id=NJ-10306" class="btn btn-nj-outline btn-sm" title="View Customer Lead">
-                                    <i class="bi bi-eye"></i>
-                                </a>
-                            </td>
-                        </tr>
+                                    <!-- 2. Customer Name -->
+                                    <td>
+                                        <div class="fw-bold text-dark"><%# Eval("client_name") %></div>
+                                    </td>
 
-                        <!-- 3. Call Back Later -->
-                        <tr class="call-entry-row" data-outcome="Call Back Later" data-date="Today">
-                            <td>
-                                <div class="fw-bold">Preeti Agrawal</div>
-                                <small class="text-muted">Dubai Tour</small>
-                            </td>
-                            <td><a href="tel:+919918088990" class="text-decoration-none text-dark">+91 99180 88990</a></td>
-                            <td>Today (02 Nov)</td>
-                            <td>09:30 AM</td>
-                            <td>
-                                <span class="badge bg-warning-subtle text-dark border border-warning-subtle">
-                                    <i class="bi bi-clock-history me-1"></i> Call Back Later
-                                </span>
-                            </td>
-                            <td>
-                                <span class="text-truncate d-inline-block" style="max-width: 240px;">
-                                    Customer was at medical clinic; asked to call back in evening after 06:00 PM for package options.
-                                </span>
-                            </td>
-                            <td><span class="fw-bold text-dark">Today, 06:00 PM</span></td>
-                            <td><span class="badge badge-priority-warm">Warm</span></td>
-                            <td class="text-end">
-                                <a href="LeadDetails.aspx?id=NJ-10314" class="btn btn-nj-outline btn-sm" title="View Customer Lead">
-                                    <i class="bi bi-eye"></i>
-                                </a>
-                            </td>
-                        </tr>
+                                    <!-- 3. Contact (Mobile) -->
+                                    <td>
+                                        <a href='tel:+91<%# Eval("mobile") %>' class="text-decoration-none text-dark fw-semibold">
+                                            <i class="bi bi-telephone text-muted me-1"></i><%# Eval("mobile") %>
+                                        </a>
+                                    </td>
 
-                        <!-- 4. Busy -->
-                        <tr class="call-entry-row" data-outcome="Busy" data-date="Yesterday">
-                            <td>
-                                <div class="fw-bold">Harsh Vardhan</div>
-                                <small class="text-muted">Himachal Tour</small>
-                            </td>
-                            <td><a href="tel:+919793022334" class="text-decoration-none text-dark">+91 97930 22334</a></td>
-                            <td>Yesterday (01 Nov)</td>
-                            <td>04:20 PM</td>
-                            <td>
-                                <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">
-                                    <i class="bi bi-dash-circle me-1"></i> Busy
-                                </span>
-                            </td>
-                            <td>
-                                <span class="text-truncate d-inline-block" style="max-width: 240px;">
-                                    Line was busy on both attempts. Sent WhatsApp message with Manali summer package link.
-                                </span>
-                            </td>
-                            <td>Tomorrow, 10:30 AM</td>
-                            <td><span class="badge badge-priority-warm">Warm</span></td>
-                            <td class="text-end">
-                                <a href="LeadDetails.aspx" class="btn btn-nj-outline btn-sm" title="View Customer Lead">
-                                    <i class="bi bi-eye"></i>
-                                </a>
-                            </td>
-                        </tr>
+                                    <!-- 4. Call Date & Time (Separate Column) -->
+                                    <td>
+                                        <div class="fw-semibold text-dark text-nowrap">
+                                            <i class="bi bi-calendar-event me-1 text-muted"></i><%# Eval("call_date") == DBNull.Value || Eval("call_date") == null ? "-" : Eval("call_date") %>
+                                        </div>
+                                    </td>
 
-                        <!-- 5. No Answer -->
-                        <tr class="call-entry-row" data-outcome="No Answer" data-date="Yesterday">
-                            <td>
-                                <div class="fw-bold">Vikram Chauhan</div>
-                                <small class="text-muted">Thailand Tour</small>
-                            </td>
-                            <td><a href="tel:+919798123456" class="text-decoration-none text-dark">+91 97981 23456</a></td>
-                            <td>Yesterday (01 Nov)</td>
-                            <td>03:00 PM</td>
-                            <td>
-                                <span class="badge bg-light text-muted border">
-                                    <i class="bi bi-telephone-x me-1"></i> No Answer
-                                </span>
-                            </td>
-                            <td>
-                                <span class="text-truncate d-inline-block" style="max-width: 240px;">
-                                    Rang out completely. No response on phone. Scheduled for morning retry.
-                                </span>
-                            </td>
-                            <td><span class="text-danger fw-bold">Overdue</span></td>
-                            <td><span class="badge badge-priority-hot"><i class="bi bi-fire me-1"></i>Hot</span></td>
-                            <td class="text-end">
-                                <a href="LeadDetails.aspx" class="btn btn-nj-outline btn-sm" title="View Customer Lead">
-                                    <i class="bi bi-eye"></i>
-                                </a>
-                            </td>
-                        </tr>
+                                    <!-- 5. Called By (Separate Column) -->
+                                    <td>
+                                        <div class="fw-semibold text-dark text-nowrap">
+                                            <i class="bi bi-person me-1 text-muted"></i><%# Eval("called_by") != null && Eval("called_by") != DBNull.Value ? Eval("called_by") : "-" %>
+                                        </div>
+                                        <%# Eval("caller_role") != null && Eval("caller_role") != DBNull.Value && Eval("caller_role").ToString() != "" ? "<span class=\"badge bg-light text-secondary border\" style=\"font-size:0.65rem;\">" + Eval("caller_role") + "</span>" : "" %>
+                                    </td>
 
-                        <!-- 6. Not Interested -->
-                        <tr class="call-entry-row" data-outcome="Not Interested" data-date="This Week">
-                            <td>
-                                <div class="fw-bold">Dharmendra Maurya</div>
-                                <small class="text-muted">Rajasthan Tour</small>
-                            </td>
-                            <td><a href="tel:+919161233445" class="text-decoration-none text-dark">+91 91612 33445</a></td>
-                            <td>31 Oct 2026</td>
-                            <td>02:15 PM</td>
-                            <td>
-                                <span class="badge bg-danger-subtle text-danger border border-danger-subtle">
-                                    <i class="bi bi-x-circle me-1"></i> Not Interested
-                                </span>
-                            </td>
-                            <td>
-                                <span class="text-truncate d-inline-block" style="max-width: 240px;">
-                                    Customer cancelled vacation plans due to children's school examination timetable.
-                                </span>
-                            </td>
-                            <td><span class="text-muted">None (Closed)</span></td>
-                            <td><span class="badge badge-priority-cold">Cold</span></td>
-                            <td class="text-end">
-                                <a href="LeadDetails.aspx?id=NJ-10309" class="btn btn-nj-outline btn-sm" title="View Customer Lead">
-                                    <i class="bi bi-eye"></i>
-                                </a>
+                                    <!-- 6. Call Outcome -->
+                                    <td>
+                                        <span class='badge <%# 
+                                            Eval("call_status") != null && Eval("call_status").ToString().ToLower().Contains("connected") ? "bg-success-subtle text-success border border-success-subtle" :
+                                            (Eval("call_status") != null && Eval("call_status").ToString().ToLower().Contains("interested") && !Eval("call_status").ToString().ToLower().Contains("not") ? "bg-primary-subtle text-primary border border-primary-subtle" :
+                                            (Eval("call_status") != null && Eval("call_status").ToString().ToLower().Contains("back") ? "bg-warning-subtle text-dark border border-warning-subtle" :
+                                            (Eval("call_status") != null && Eval("call_status").ToString().ToLower().Contains("busy") ? "bg-secondary-subtle text-secondary border border-secondary-subtle" :
+                                            (Eval("call_status") != null && Eval("call_status").ToString().ToLower().Contains("not") ? "bg-danger-subtle text-danger border border-danger-subtle" :
+                                            "bg-light text-dark border")))) %>'>
+                                            <%# Eval("call_status") != null && Eval("call_status") != DBNull.Value ? Eval("call_status") : "-" %>
+                                        </span>
+                                    </td>
+
+                                    <!-- 7. Next Follow-up -->
+                                    <td>
+                                        <span class="fw-bold text-danger text-nowrap">
+                                            <i class="bi bi-clock me-1"></i><%# Eval("next_followup_date") == DBNull.Value || Eval("next_followup_date") == null ? "-" : Eval("next_followup_date") %>
+                                        </span>
+                                    </td>
+
+                                    <!-- 8. Priority & Lead Status -->
+                                    <td>
+                                        <div class="d-flex flex-column gap-1">
+                                            <span class='badge <%# Eval("lead_priority") != null && Eval("lead_priority").ToString().ToLower() == "hot" ? "badge-priority-hot" : (Eval("lead_priority") != null && Eval("lead_priority").ToString().ToLower() == "warm" ? "badge-priority-warm" : "badge-priority-cold") %>'>
+                                                <%# Eval("lead_priority") != null && Eval("lead_priority") != DBNull.Value ? Eval("lead_priority") : "-" %>
+                                            </span>
+                                            <span class='badge <%# Eval("lead_status") != null && Eval("lead_status").ToString().ToLower() == "confirmed" ? "bg-success-subtle text-success" : (Eval("lead_status") != null && Eval("lead_status").ToString().ToLower() == "interested" ? "badge-status-interested" : (Eval("lead_status") != null && Eval("lead_status").ToString().ToLower() == "new" ? "badge-status-new" : "badge-status-pending")) %>'>
+                                                <%# Eval("lead_status") != null && Eval("lead_status") != DBNull.Value ? Eval("lead_status") : "-" %>
+                                            </span>
+                                        </div>
+                                    </td>
+
+                                    <!-- 9. Actions (View Modal Trigger) -->
+                                    <td class="text-end">
+                                        <button type="button" class="btn btn-nj-outline btn-sm text-nowrap"
+                                            title="View Call Details"
+                                            onclick="openCallDetailsModal(this);"
+                                            data-leadcode='<%# Eval("lead_code") %>'
+                                            data-callid='<%# Eval("call_id") %>'
+                                            data-srno='<%# Eval("srno") %>'
+                                            data-name='<%# Eval("client_name") %>'
+                                            data-mobile='<%# Eval("mobile") %>'
+                                            data-altmobile='<%# Eval("alternate_mobile") %>'
+                                            data-dest='<%# Eval("destination") %>'
+                                            data-city='<%# Eval("city") %>'
+                                            data-traveldate='<%# Eval("travel_date") %>'
+                                            data-calldate='<%# Eval("call_date") %>'
+                                            data-calledby='<%# Eval("called_by") %>'
+                                            data-callerrole='<%# Eval("caller_role") %>'
+                                            data-outcome='<%# Eval("call_status") %>'
+                                            data-nextfollowup='<%# Eval("next_followup_date") %>'
+                                            data-remarks='<%# Eval("remarks") %>'
+                                            data-priority='<%# Eval("lead_priority") %>'
+                                            data-status='<%# Eval("lead_status") %>'>
+                                            <i class="bi bi-eye me-1"></i>View
+                                        </button>
+                                    </td>
+                                </tr>
+                            </ItemTemplate>
+                        </asp:Repeater>
+
+                        <!-- Empty State Row when no records match filter -->
+                        <tr class="call-empty-row d-none">
+                            <td colspan="9" class="text-center py-4 text-muted">
+                                <i class="bi bi-inbox fs-2 d-block mb-2 text-muted"></i>
+                                <div class="fw-semibold text-dark">No call history records found</div>
+                                <small>No records match your search or outcome filter.</small>
                             </td>
                         </tr>
                     </tbody>
+                      
                 </table>
             </div>
         </div>
 
         <div class="card-footer bg-white p-3 d-flex justify-content-between align-items-center">
-            <span class="small text-muted">Showing 6 sample calls covering all outcomes</span>
+            <span class="small text-muted">Call history and interactions audit log</span>
             <ul class="pagination pagination-sm mb-0">
                 <li class="page-item disabled"><a class="page-link" href="#">Prev</a></li>
                 <li class="page-item active"><a class="page-link" href="#">1</a></li>
@@ -315,99 +164,249 @@
         </div>
     </div>
 
-    <!-- Modal: Add Call Record -->
-    <div class="modal fade" id="modalAddCallEntry" tabindex="-1" aria-labelledby="modalAddCallEntryTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header border-bottom">
-                    <h6 class="modal-title fw-bold" id="modalAddCallEntryTitle">
-                        <i class="bi bi-telephone-plus text-success me-1"></i> Add Call Record
+  
+
+
+
+
+        <!-- Modal: Add Call Record -->
+        <div class="modal fade" id="modalAddCallEntry" tabindex="-1" aria-labelledby="modalAddCallEntryTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header border-bottom">
+                        <h6 class="modal-title fw-bold" id="modalAddCallEntryTitle">
+                          
                     </h6>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Select Customer / Lead <span class="text-danger">*</span></label>
-                        <select class="form-select">
-                            <option>Rohit Verma (+91 98765 43210 - Kashmir 5N/6D)</option>
-                            <option>Dr. Arvind Kumar (+91 98390 12345 - Char Dham Heli)</option>
-                            <option>Preeti Agrawal (+91 99180 88990 - Dubai 5N)</option>
-                            <option>Alok Dubey (+91 97931 12233 - Singapore 5N)</option>
-                        </select>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="row g-2 mb-3">
-                        <div class="col-6">
-                            <label class="form-label">Call Date & Time <span class="text-danger">*</span></label>
-                            <input type="datetime-local" class="form-control" />
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Call Outcome <span class="text-danger">*</span></label>
-                            <select class="form-select" id="newCallOutcome">
-                                <option value="Connected">Connected</option>
-                                <option value="Interested">Interested</option>
-                                <option value="Call Back Later">Call Back Later</option>
-                                <option value="Busy">Busy</option>
-                                <option value="No Answer">No Answer</option>
-                                <option value="Not Interested">Not Interested</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Call Remarks <span class="text-danger">*</span></label>
-                        <textarea class="form-control" rows="3" placeholder="Key points discussed during conversation, client preferences, quotation feedback..."></textarea>
-                    </div>
-                    <div class="row g-2 mb-2">
-                        <div class="col-6">
-                            <label class="form-label">Next Follow-up Date</label>
-                            <input type="datetime-local" class="form-control" />
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Lead Priority (Urgency)</label>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Select Customer / Lead <span class="text-danger">*</span></label>
                             <select class="form-select">
-                                <option value="Hot">Hot (&lt; 30 Days)</option>
-                                <option value="Warm">Warm (1-2 Months)</option>
-                                <option value="Cold">Cold</option>
+                                <option>Rohit Verma (+91 98765 43210 - Kashmir 5N/6D)</option>
+                                <option>Dr. Arvind Kumar (+91 98390 12345 - Char Dham Heli)</option>
+                                <option>Preeti Agrawal (+91 99180 88990 - Dubai 5N)</option>
+                                <option>Alok Dubey (+91 97931 12233 - Singapore 5N)</option>
                             </select>
                         </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label">Call Date & Time <span class="text-danger">*</span></label>
+                                <input type="datetime-local" class="form-control" />
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Call Outcome <span class="text-danger">*</span></label>
+                                <select class="form-select" id="newCallOutcome">
+                                    <option value="Connected">Connected</option>
+                                    <option value="Interested">Interested</option>
+                                    <option value="Call Back Later">Call Back Later</option>
+                                    <option value="Busy">Busy</option>
+                                    <option value="No Answer">No Answer</option>
+                                    <option value="Not Interested">Not Interested</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Call Remarks <span class="text-danger">*</span></label>
+                            <textarea class="form-control" rows="3" placeholder="Key points discussed during conversation, client preferences, quotation feedback..."></textarea>
+                        </div>
+                        <div class="row g-2 mb-2">
+                            <div class="col-6">
+                                <label class="form-label">Next Follow-up Date</label>
+                                <input type="datetime-local" class="form-control" />
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Lead Priority (Urgency)</label>
+                                <select class="form-select">
+                                    <option value="Hot">Hot (&lt; 30 Days)</option>
+                                    <option value="Warm">Warm (1-2 Months)</option>
+                                    <option value="Cold">Cold</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer border-top">
-                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-sm btn-nj-primary" onclick="alert('Call record added to history (UI sample)!');" data-bs-dismiss="modal">Save Call Record</button>
+                    <div class="modal-footer border-top">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-sm btn-nj-primary" onclick="alert('Call record added to history (UI sample)!');" data-bs-dismiss="modal">Save Call Record</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script>
-        function filterCallRecords() {
-            var search = document.getElementById('txtSearchCalls').value.toLowerCase();
-            var outcome = document.getElementById('ddlOutcomeFilter').value;
-            var date = document.getElementById('ddlDateFilter').value;
+        <!-- Modal: Call & Lead Details -->
+        <div class="modal fade" id="modalCallDetails" tabindex="-1" aria-labelledby="modalCallDetailsTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content border-0 shadow">
+                    <div class="modal-header border-bottom py-3">
+                        <h6 class="modal-title fw-bold" id="modalCallDetailsTitle">
+                            <i class="bi bi-telephone-inbound text-primary me-2"></i>Call Record Details
+                        </h6>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <!-- Top Customer Banner -->
+                        <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded border mb-3">
+                            <div>
+                                <asp:Label ID="lblModalCustomerName" runat="server" ClientIDMode="Static" CssClass="h5 mb-1 fw-bold text-dark d-block" />
+                                <div class="text-muted small">
+                                    <i class="bi bi-telephone text-muted me-1"></i><asp:Label ID="lblModalMobile" runat="server" ClientIDMode="Static" CssClass="fw-semibold text-dark me-3" />
+                                    <i class="bi bi-phone text-muted me-1"></i>Alt: <asp:Label ID="lblModalAltMobile" runat="server" ClientIDMode="Static" CssClass="fw-semibold text-dark" />
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge bg-primary-subtle text-primary border px-2 py-1 mb-1 d-inline-block">
+                                    <asp:Label ID="lblModalLeadCode" runat="server" ClientIDMode="Static" />
+                                </span>
+                                <div class="text-muted small" style="font-size: 0.75rem;">
+                                    <asp:Label ID="lblModalCallId" runat="server" ClientIDMode="Static" />
+                                </div>
+                            </div>
+                        </div>
 
-            var rows = document.querySelectorAll('.call-entry-row');
-            rows.forEach(function (row) {
-                var text = row.innerText.toLowerCase();
-                var rOutcome = row.getAttribute('data-outcome');
-                var rDate = row.getAttribute('data-date');
+                        <!-- Details Grid -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-12 col-md-6">
+                                <div class="p-3 border rounded bg-white h-100">
+                                    <span class="text-muted small d-block mb-1"><i class="bi bi-geo-alt me-1 text-primary"></i>Destination &amp; City</span>
+                                    <asp:Label ID="lblModalDestCity" runat="server" ClientIDMode="Static" CssClass="fw-bold text-dark d-block" />
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="p-3 border rounded bg-white h-100">
+                                    <span class="text-muted small d-block mb-1"><i class="bi bi-airplane me-1 text-primary"></i>Travel Date</span>
+                                    <asp:Label ID="lblModalTravelDate" runat="server" ClientIDMode="Static" CssClass="fw-bold text-dark d-block" />
+                                </div>
+                            </div>
 
-                var mSearch = search === '' || text.indexOf(search) > -1;
-                var mOutcome = outcome === '' || rOutcome === outcome;
-                var mDate = date === '' || rDate === date;
+                            <div class="col-12 col-md-4">
+                                <div class="p-2 border rounded bg-white">
+                                    <span class="text-muted small d-block mb-1"><i class="bi bi-calendar-event me-1 text-muted"></i>Call Date &amp; Time</span>
+                                    <asp:Label ID="lblModalCallDate" runat="server" ClientIDMode="Static" CssClass="fw-semibold small text-dark d-block" />
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <div class="p-2 border rounded bg-white">
+                                    <span class="text-muted small d-block mb-1"><i class="bi bi-person-badge me-1 text-muted"></i>Called By</span>
+                                    <asp:Label ID="lblModalCalledBy" runat="server" ClientIDMode="Static" CssClass="fw-semibold small text-dark d-block" />
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <div class="p-2 border rounded bg-white">
+                                    <span class="text-muted small d-block mb-1"><i class="bi bi-telephone-forward me-1 text-muted"></i>Call Outcome</span>
+                                    <asp:Label ID="lblModalOutcome" runat="server" ClientIDMode="Static" CssClass="badge bg-success-subtle text-success border border-success-subtle" />
+                                </div>
+                            </div>
 
-                if (mSearch && mOutcome && mDate) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
+                            <div class="col-12 col-md-6">
+                                <div class="p-2 border rounded bg-white">
+                                    <span class="text-muted small d-block mb-1"><i class="bi bi-clock me-1 text-danger"></i>Next Follow-up</span>
+                                    <asp:Label ID="lblModalNextFollowup" runat="server" ClientIDMode="Static" CssClass="fw-bold text-danger small d-block" />
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="p-2 border rounded bg-white">
+                                    <span class="text-muted small d-block mb-1"><i class="bi bi-flag me-1 text-muted"></i>Priority &amp; Status</span>
+                                    <span class="d-inline-flex gap-1">
+                                        <asp:Label ID="lblModalPriority" runat="server" ClientIDMode="Static" CssClass="badge badge-priority-hot" />
+                                        <asp:Label ID="lblModalStatus" runat="server" ClientIDMode="Static" CssClass="badge bg-light text-dark border" />
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Remarks & Discussion -->
+                        <div>
+                            <label class="form-label text-muted small fw-semibold mb-1"><i class="bi bi-chat-left-text me-1 text-primary"></i>Call Remarks &amp; Discussion</label>
+                            <div class="p-3 bg-light border rounded small text-dark" style="min-height: 70px; white-space: pre-wrap;">
+                                <asp:Label ID="lblModalRemarks" runat="server" ClientIDMode="Static" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-top py-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                        <a id="lnkModalViewLead" href="#" class="btn btn-sm btn-nj-primary">
+                            <i class="bi bi-person-lines-fill me-1"></i>View Full Lead
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function openCallDetailsModal(btn) {
+                var getVal = function (attr) { return btn.getAttribute(attr) || '-'; };
+
+                var callId = getVal('data-callid');
+                var srno = getVal('data-srno');
+                var callFull = callId;
+                if (srno && srno !== '-') {
+                    callFull += ' • #' + srno;
                 }
-            });
-        }
 
-        function resetCallFilters() {
-            document.getElementById('txtSearchCalls').value = '';
-            document.getElementById('ddlOutcomeFilter').selectedIndex = 0;
-            document.getElementById('ddlDateFilter').selectedIndex = 0;
-            filterCallRecords();
-        }
+                var dest = getVal('data-dest');
+                var city = getVal('data-city');
+                var destCity = dest;
+                if (city && city !== '-') {
+                    destCity += (dest !== '-' ? ' • ' : '') + city;
+                }
+
+                var leadCode = getVal('data-leadcode');
+
+                document.getElementById('lblModalCustomerName').innerText = getVal('data-name');
+                document.getElementById('lblModalLeadCode').innerText = leadCode !== '-' ? ('#' + leadCode) : '-';
+                document.getElementById('lblModalCallId').innerText = callFull;
+                document.getElementById('lblModalMobile').innerText = getVal('data-mobile');
+                document.getElementById('lblModalAltMobile').innerText = getVal('data-altmobile');
+                document.getElementById('lblModalDestCity').innerText = destCity;
+                document.getElementById('lblModalTravelDate').innerText = getVal('data-traveldate');
+                document.getElementById('lblModalCallDate').innerText = getVal('data-calldate');
+                document.getElementById('lblModalCalledBy').innerText = getVal('data-calledby') + (getVal('data-callerrole') !== '-' ? ' (' + getVal('data-callerrole') + ')' : '');
+                document.getElementById('lblModalOutcome').innerText = getVal('data-outcome');
+                document.getElementById('lblModalNextFollowup').innerText = getVal('data-nextfollowup');
+                document.getElementById('lblModalPriority').innerText = getVal('data-priority');
+                document.getElementById('lblModalStatus').innerText = getVal('data-status');
+                document.getElementById('lblModalRemarks').innerText = getVal('data-remarks');
+
+                var lnk = document.getElementById('lnkModalViewLead');
+                if (lnk) {
+                    lnk.href = 'LeadDetails.aspx?id=' + encodeURIComponent(leadCode);
+                }
+
+                var modalEl = document.getElementById('modalCallDetails');
+                if (modalEl && typeof bootstrap !== 'undefined') {
+                    var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                    modal.show();
+                }
+            }
+
+            function filterCallRecords() {
+                var search = document.getElementById('txtSearchCalls').value.toLowerCase();
+                var outcome = document.getElementById('ddlOutcomeFilter').value;
+                var date = document.getElementById('ddlDateFilter').value;
+
+                var rows = document.querySelectorAll('.call-entry-row');
+                rows.forEach(function (row) {
+                    var text = row.innerText.toLowerCase();
+                    var rOutcome = row.getAttribute('data-outcome');
+                    var rDate = row.getAttribute('data-date');
+
+                    var mSearch = search === '' || text.indexOf(search) > -1;
+                    var mOutcome = outcome === '' || rOutcome === outcome;
+                    var mDate = date === '' || rDate === date;
+
+                    if (mSearch && mOutcome && mDate) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+
+            function resetCallFilters() {
+                document.getElementById('txtSearchCalls').value = '';
+                document.getElementById('ddlOutcomeFilter').selectedIndex = 0;
+                document.getElementById('ddlDateFilter').selectedIndex = 0;
+                filterCallRecords();
+            }
     </script>
 </asp:Content>

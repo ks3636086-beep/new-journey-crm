@@ -369,9 +369,7 @@
                                             </td>
                                             <td class="text-end">
                                                 <div class="d-inline-flex gap-1 justify-content-end">
-                                                    <a href='LeadDetails.aspx?id=<%# Eval("lead_code") %>' class="btn btn-nj-outline btn-sm text-nowrap" title="View Lead">
-                                                        <i class="bi bi-eye"></i>View
-                                                    </a>
+                                                    
                                                     <a href='tel:+91<%# Eval("mobile") %>' class="btn btn-nj-primary btn-sm text-nowrap" title="Call Customer">
                                                         <i class="bi bi-telephone-outbound me-1"></i>Call
                                                     </a>
@@ -525,6 +523,19 @@
                             CssClass="text-danger small"
                             Display="Dynamic"
                             ValidationGroup="CallUpdate" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Trip / Lead Status</label>
+                        <asp:DropDownList ID="ddlTripStatus" runat="server"
+                            CssClass="form-select form-select-sm">
+                            <asp:ListItem Text="-- Keep Current Status --" Value="" />
+                            <asp:ListItem Text="Interested" Value="Interested" />
+                            <asp:ListItem Text="Pending" Value="Pending" />
+                            <asp:ListItem Text="Trip Confirmed" Value="Confirmed" />
+                            <asp:ListItem Text="Trip Completed / Closed" Value="Closed" />
+                            <asp:ListItem Text="Not Interested" Value="Not Interested" />
+                        </asp:DropDownList>
                     </div>
 
                     <div class="mb-3">

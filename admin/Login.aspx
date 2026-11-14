@@ -94,7 +94,7 @@
             .welcome-text {
                 font-size: 0.9rem;
                 line-height: 1.6;
-                color: rgba(255, 255, 255, 0.88);
+                color: rgb(255 255 255);
                 max-width: 290px;
                 margin-bottom: 1.75rem;
             }

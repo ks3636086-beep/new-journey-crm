@@ -82,9 +82,9 @@
                                 <asp:ListItem Value="New">New</asp:ListItem>
                                 <asp:ListItem Value="Interested">Interested</asp:ListItem>
                                 <asp:ListItem Value="Pending">Pending</asp:ListItem>
-                                <asp:ListItem Value="Confirmed">Confirmed</asp:ListItem>
+                            <%--    <asp:ListItem Value="Confirmed">Confirmed</asp:ListItem>--%>
                                 <asp:ListItem Value="Not Interested">Not Interested</asp:ListItem>
-                                <asp:ListItem Value="Closed">Closed</asp:ListItem>
+                                
                             </asp:DropDownList>
                             <asp:RequiredFieldValidator ID="rfvLeadStatus" runat="server" ControlToValidate="ddlLeadStatus" InitialValue="" ErrorMessage="Please select lead status." CssClass="text-danger small" Display="Dynamic" />
                         </div>

@@ -184,8 +184,8 @@
                     <div class="nj-sidebar-brand p-0 border-0">
                         <img src="images/logo.png" alt="New Journey Holidays" class="brand-logo-img" />
                         <div>
-                            <div class="brand-title">New Journey</div>
-                            <div class="brand-sub">Holidays CRM</div>
+                            <div class="brand-title">New Journey Holidays</div>
+                          
                         </div>
                     </div>
                 </div>
@@ -212,6 +212,7 @@
                     <li class="nj-nav-item"><a href="Dashboard.aspx" class="nj-nav-link" id="mob-nav-dashboard"><i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></a></li>
                     <li class="nj-nav-item"><a href="MyLeads.aspx" class="nj-nav-link" id="mob-nav-myleads"><i class="bi bi-person-lines-fill"></i><span>My Leads</span></a></li>
                     <li class="nj-nav-item"><a href="Add-Lead.aspx" class="nj-nav-link" id="mob-nav-addlead"><i class="bi bi-person-plus-fill"></i><span>Add Lead</span></a></li>
+                    <li class="nj-nav-item"><a href="Bookings.aspx" class="nj-nav-link" id="mob-nav-bookings"><i class="bi bi-bookmark-check-fill"></i><span>Bookings</span></a></li>
                 </ul>
                 <div class="nj-nav-category">Communications</div>
                 <ul class="nj-nav-list">
@@ -239,8 +240,8 @@
             <a href="Dashboard.aspx" class="nj-sidebar-brand">
                 <img src="images/logo.png" alt="New Journey Holidays" class="brand-logo-img" />
                 <div>
-                    <div class="brand-title">New Journey</div>
-                    <div class="brand-sub">Holidays CRM</div>
+                    <div class="brand-title">New Journey Holidays</div>
+                  
                 </div>
             </a>
 
@@ -263,6 +264,12 @@
                     <a href="Add-Lead.aspx" class="nj-nav-link" id="nav-addlead">
                         <i class="bi bi-person-plus-fill"></i>
                         <span>Add Lead</span>
+                    </a>
+                </li>
+                <li class="nj-nav-item">
+                    <a href="Bookings.aspx" class="nj-nav-link" id="nav-bookings">
+                        <i class="bi bi-bookmark-check-fill"></i>
+                        <span>Bookings</span>
                     </a>
                 </li>
             </ul>
@@ -314,12 +321,7 @@
                     <button class="btn btn-sm btn-outline-secondary d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-label="Toggle navigation">
                         <i class="bi bi-list fs-5"></i>
                     </button>
-                    <div class="d-flex align-items-center gap-2">
-                        <h1 class="nj-topbar-title">
-                            <span>New Journey Holidays</span>
-                        </h1>
-
-                    </div>
+                    
                 </div>
 
                 <div class="nj-topbar-right">

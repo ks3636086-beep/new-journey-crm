@@ -90,7 +90,7 @@
         .welcome-text {
             font-size: 0.9rem;
             line-height: 1.6;
-            color: rgba(255, 255, 255, 0.88);
+            color: rgb(255 255 255);
             max-width: 290px;
             margin-bottom: 1.75rem;
         }
@@ -284,9 +284,9 @@
                         </p>
 
                         <!-- Switch / Info Pill -->
-                        <a href="../admin/Login.aspx" class="btn-outline-pill">
+                       <%-- <a href="../admin/Login.aspx" class="btn-outline-pill">
                             Admin Portal
-                        </a>
+                        </a>--%>
 
                         <div class="mt-4 pt-3 border-top border-white border-opacity-10 small text-white text-opacity-75">
                             <i class="bi bi-geo-alt-fill me-1 text-light"></i>New Journey Holidays &bull; Gorakhpur HQ

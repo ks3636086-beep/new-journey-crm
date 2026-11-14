@@ -452,7 +452,20 @@
                             </select>
                         </div>
 
-                        <!-- 2. Call Remarks -->
+                        <!-- 2. Trip / Lead Status -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Trip / Lead Status</label>
+                            <select class="form-select form-select-sm" id="tripStatusSelect">
+                                <option value="">-- Keep Current Status --</option>
+                                <option value="Interested">Interested</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Confirmed">Trip Confirmed</option>
+                                <option value="Closed">Trip Completed / Closed</option>
+                                <option value="Not Interested">Not Interested</option>
+                            </select>
+                        </div>
+
+                        <!-- 3. Call Remarks -->
                         <div class="mb-3">
                             <label class="form-label small fw-semibold">Call Remarks <span class="text-danger">*</span></label>
                             <textarea class="form-control form-control-sm" id="callRemarksText" rows="3" placeholder="Key points from the conversation, client response, notes..."></textarea>
@@ -495,9 +508,11 @@
                 if (infoEl) infoEl.textContent = phone + ' • ' + dest;
 
                 var outcome = document.getElementById('callOutcomeSelect');
+                var tripStatus = document.getElementById('tripStatusSelect');
                 var remarks = document.getElementById('callRemarksText');
                 var nextDate = document.getElementById('nextFollowupInput');
                 if (outcome) outcome.selectedIndex = 0;
+                if (tripStatus) tripStatus.selectedIndex = 0;
                 if (remarks) remarks.value = '';
                 if (nextDate) nextDate.value = '';
 
