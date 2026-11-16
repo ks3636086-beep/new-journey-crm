@@ -29,19 +29,20 @@ public partial class MyLeads : System.Web.UI.Page
     {
         try
         {
+            int employeeId = Session["employee_id"] != null ? Convert.ToInt32(Session["employee_id"]) : 0;
+            string employeeName = Session["employee_name"] != null ? Convert.ToString(Session["employee_name"]) : "";
+
             string query = @"SELECT lead_code, client_name, mobile, city,
                                 destination, created_by, assigned_employee_id,
                                 lead_status, lead_priority, followup_date
                          FROM tbl_leads
-                         WHERE created_by = @CreatedBy
-                         ORDER BY lead_code DESC";
+                         WHERE (created_by = @employee_name OR TRY_CONVERT(INT, assigned_employee_id) = @employee_id)
+                         ORDER BY lead_id DESC";
 
             using (SqlCommand cmd = new SqlCommand(query, ob.con))
             {
-                cmd.Parameters.AddWithValue(
-                    "@CreatedBy",
-                    Convert.ToString(Session["employee_name"])
-                );
+                cmd.Parameters.AddWithValue("@employee_name", employeeName);
+                cmd.Parameters.AddWithValue("@employee_id", employeeId);
 
                 using (SqlDataAdapter da = new SqlDataAdapter(cmd))
                 {
@@ -64,17 +65,18 @@ public partial class MyLeads : System.Web.UI.Page
         LinkButton btn = (LinkButton)sender;
         string leadCode = btn.CommandArgument;
 
+        int employeeId = Session["employee_id"] != null ? Convert.ToInt32(Session["employee_id"]) : 0;
+        string employeeName = Session["employee_name"] != null ? Convert.ToString(Session["employee_name"]) : "";
+
         string query = @"SELECT * FROM dbo.tbl_leads
                      WHERE lead_code = @lead_code
-                     AND created_by = @created_by";
+                     AND (created_by = @employee_name OR TRY_CONVERT(INT, assigned_employee_id) = @employee_id)";
 
         using (SqlCommand cmd = new SqlCommand(query, ob.con))
         {
             cmd.Parameters.AddWithValue("@lead_code", leadCode);
-            cmd.Parameters.AddWithValue(
-                "@created_by",
-                Convert.ToString(Session["employee_name"])
-            );
+            cmd.Parameters.AddWithValue("@employee_name", employeeName);
+            cmd.Parameters.AddWithValue("@employee_id", employeeId);
 
             using (SqlDataAdapter da = new SqlDataAdapter(cmd))
             {
@@ -124,6 +126,9 @@ public partial class MyLeads : System.Web.UI.Page
     {
         try
         {
+            int employeeId = Session["employee_id"] != null ? Convert.ToInt32(Session["employee_id"]) : 0;
+            string employeeName = Session["employee_name"] != null ? Convert.ToString(Session["employee_name"]) : "";
+
             string query = @"
             UPDATE dbo.tbl_leads
             SET client_name = @client_name,
@@ -137,13 +142,13 @@ public partial class MyLeads : System.Web.UI.Page
                 followup_date = @followup_date,
                 remarks = @remarks
             WHERE lead_code = @lead_code
-            AND created_by = @created_by";
+            AND (created_by = @employee_name OR TRY_CONVERT(INT, assigned_employee_id) = @employee_id)";
 
             using (SqlCommand cmd = new SqlCommand(query, ob.con))
             {
                 cmd.Parameters.AddWithValue("@lead_code", hfEditLeadCode.Value);
-                cmd.Parameters.AddWithValue("@created_by",
-                    Convert.ToString(Session["employee_name"]));
+                cmd.Parameters.AddWithValue("@employee_name", employeeName);
+                cmd.Parameters.AddWithValue("@employee_id", employeeId);
 
                 cmd.Parameters.AddWithValue("@client_name", txtEditClientName.Text.Trim());
                 cmd.Parameters.AddWithValue("@mobile", txtEditMobile.Text.Trim());

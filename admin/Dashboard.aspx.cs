@@ -28,7 +28,7 @@ public partial class Dashboard : System.Web.UI.Page
         bind_dashboard_cards();
 
         bind_recent_leads();
-        bind_upcoming_followups();
+       // bind_upcoming_followups();
 
         if (Session["CallSuccess"] != null)
         {
@@ -47,13 +47,13 @@ public partial class Dashboard : System.Web.UI.Page
         rptRecentLeads.DataBind();
     }
 
-    private void bind_upcoming_followups()
-    {
-        DataTable dt = ob.get_upcoming_followups();
+    //private void bind_upcoming_followups()
+    //{
+    //    DataTable dt = ob.get_upcoming_followups();
 
-        rptUpcomingFollowups.DataSource = dt;
-        rptUpcomingFollowups.DataBind();
-    }
+    //    rptUpcomingFollowups.DataSource = dt;
+    //    rptUpcomingFollowups.DataBind();
+    //}
 
     private void bind_dashboard_cards()
     {
@@ -63,13 +63,13 @@ public partial class Dashboard : System.Web.UI.Page
 
         lblPendingLeads.Text = ob.get_pending_leads().ToString();
 
-        lblHotLeads.Text = ob.get_hot_leads().ToString();
+        //lblHotLeads.Text = ob.get_hot_leads().ToString();
 
         lblTotalEmployees.Text = ob.get_total_employees().ToString();
 
-        lblTodayFollowups.Text = ob.get_today_followups().ToString();
+        //lblTodayFollowups.Text = ob.get_today_followups().ToString();
 
-        lblPendingFollowups.Text = ob.get_pending_followups().ToString();
+        //lblPendingFollowups.Text = ob.get_pending_followups().ToString();
 
         int total = Convert.ToInt32(lblTotalLeads.Text);
         int confirmed = Convert.ToInt32(lblConfirmedLeads.Text);
@@ -124,7 +124,7 @@ public partial class Dashboard : System.Web.UI.Page
 
             bind_dashboard_cards();
             bind_recent_leads();
-            bind_upcoming_followups();
+            //bind_upcoming_followups();
         }
         catch (Exception ex)
         {

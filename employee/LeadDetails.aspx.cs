@@ -35,6 +35,9 @@ public partial class LeadDetails : System.Web.UI.Page
             return;
         }
 
+        int employeeId = Convert.ToInt32(Session["employee_id"]);
+        string employeeName = Convert.ToString(Session["employee_name"]);
+
         string query = @"
             SELECT lead_code, client_name, mobile, alternate_mobile,
                    city, destination, travel_date, lead_status,
@@ -42,15 +45,13 @@ public partial class LeadDetails : System.Web.UI.Page
                    created_by, assigned_employee_id
             FROM dbo.tbl_leads
             WHERE lead_code = @lead_code
-            AND created_by = @created_by";
+            AND (created_by = @created_by OR TRY_CONVERT(INT, assigned_employee_id) = @employee_id)";
 
         using (SqlCommand cmd = new SqlCommand(query, ob.con))
         {
             cmd.Parameters.AddWithValue("@lead_code", leadCode);
-            cmd.Parameters.AddWithValue(
-                "@created_by",
-                Convert.ToString(Session["employee_name"])
-            );
+            cmd.Parameters.AddWithValue("@created_by", employeeName);
+            cmd.Parameters.AddWithValue("@employee_id", employeeId);
 
             using (SqlDataAdapter da = new SqlDataAdapter(cmd))
             {
@@ -74,18 +75,121 @@ public partial class LeadDetails : System.Web.UI.Page
                 litDAltPhone.Text = Value(row, "alternate_mobile");
                 litDCity.Text = Value(row, "city");
                 litLeadCode.Text = Value(row, "lead_code");
+                litLeadBreadcrumb.Text = "#" + Value(row, "lead_code") + " Details";
                 litDCreatedBy.Text = Value(row, "created_by");
 
                 litDDest.Text = Value(row, "destination");
                 litDDate.Text = FormatDate(row, "travel_date");
-                litDStatus.Text = Value(row, "lead_status");
+
+                // Clean Status display
+                string rawStatus = Value(row, "lead_status");
+                string displayStatus = rawStatus;
+                if (rawStatus.Equals("Not Interested", StringComparison.OrdinalIgnoreCase)) displayStatus = "Cancelled";
+                else if (rawStatus.Equals("Pending", StringComparison.OrdinalIgnoreCase) || rawStatus.Equals("Interested", StringComparison.OrdinalIgnoreCase) || rawStatus.Equals("New", StringComparison.OrdinalIgnoreCase)) displayStatus = "In Process";
+                litDStatus.Text = displayStatus;
+
                 litDPriority.Text = Value(row, "lead_priority");
                 litDFollowup.Text = FormatDate(row, "followup_date");
-                litDAssignedEmployee.Text =
-                    Value(row, "assigned_employee_id");
+
+                // Assigned Staff Name
+                string empId = Value(row, "assigned_employee_id");
+                if (!string.IsNullOrEmpty(empId) && empId != "-")
+                {
+                    string empName = ob.get_employee_name(empId);
+                    litDAssignedEmployee.Text = string.IsNullOrEmpty(empName) ? empId : empName;
+                }
+                else
+                {
+                    litDAssignedEmployee.Text = "Not Assigned";
+                }
 
                 litDNotes.Text = Value(row, "remarks");
+
+                // Populate modal labels
+                hfLeadCode.Value = leadCode;
+                lblModalClientName.Text = Value(row, "client_name");
+                lblModalClientPhone.Text = "+91 " + mobile;
+
+                // Bind Call History
+                BindCallHistory(leadCode);
             }
+        }
+    }
+
+    private void BindCallHistory(string leadCode)
+    {
+        string query = @"
+            SELECT call_id, lead_code, called_by, caller_role, call_status, remarks, next_followup_date, call_date
+            FROM dbo.tbl_lead_call_history
+            WHERE lead_code = @lead_code
+            ORDER BY call_date DESC, srno DESC";
+
+        using (SqlCommand cmd = new SqlCommand(query, ob.con))
+        {
+            cmd.Parameters.AddWithValue("@lead_code", leadCode);
+
+            using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+            {
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                if (dt.Rows.Count > 0)
+                {
+                    rptCallHistory.DataSource = dt;
+                    rptCallHistory.DataBind();
+                    phEmptyCallHistory.Visible = false;
+                }
+                else
+                {
+                    rptCallHistory.DataSource = null;
+                    rptCallHistory.DataBind();
+                    phEmptyCallHistory.Visible = true;
+                }
+            }
+        }
+    }
+
+    protected void btnSaveCallUpdate_Click(object sender, EventArgs e)
+    {
+        Page.Validate("CallUpdate");
+        if (!Page.IsValid) return;
+
+        try
+        {
+            string leadCode = hfLeadCode.Value;
+            string callStatus = ddlCallStatus.SelectedValue;
+            object nextFollowupDate = string.IsNullOrWhiteSpace(txtNextFollowUp.Text) ? DBNull.Value : (object)Convert.ToDateTime(txtNextFollowUp.Text);
+            string remarks = string.IsNullOrWhiteSpace(txtCallRemarks.Text) ? null : txtCallRemarks.Text.Trim();
+
+            string calledBy = Session["employee_name"] != null ? Session["employee_name"].ToString() : "Employee";
+            string callerRole = Session["employee_category"] != null ? Session["employee_category"].ToString() : "Employee";
+
+            ob.insert_call_history(leadCode, calledBy, callerRole, callStatus, nextFollowupDate, remarks);
+
+            if (!string.IsNullOrWhiteSpace(ddlTripStatus.SelectedValue))
+            {
+                string tripStatus = ddlTripStatus.SelectedValue;
+                string query = "UPDATE dbo.tbl_leads SET lead_status = @status WHERE lead_code = @code";
+                using (SqlCommand cmd = new SqlCommand(query, ob.con))
+                {
+                    cmd.Parameters.AddWithValue("@status", tripStatus);
+                    cmd.Parameters.AddWithValue("@code", leadCode);
+                    if (ob.con.State == ConnectionState.Closed) ob.con.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+            ClientScript.RegisterStartupScript(
+                this.GetType(),
+                "CallSuccess",
+                "alert('Call details updated successfully!'); window.location.href='" + Request.RawUrl + "';",
+                true
+            );
+        }
+        catch (Exception ex)
+        {
+            string error = System.Web.HttpUtility.JavaScriptStringEncode(ex.Message);
+            ClientScript.RegisterStartupScript(this.GetType(), "CallError", "alert('" + error + "');", true);
         }
     }
 
@@ -104,5 +208,3 @@ public partial class LeadDetails : System.Web.UI.Page
         return Convert.ToDateTime(row[column]).ToString("dd MMM yyyy");
     }
 }
-
-

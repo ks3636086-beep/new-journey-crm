@@ -1,4 +1,4 @@
-﻿//using Razorpay.Api;
+//using Razorpay.Api;
 using System;
 using System.Activities.Statements;
 using System.Configuration;
@@ -645,6 +645,75 @@ FROM dbo.tbl_leads l LEFT JOIN dbo.tbl_employees e ON TRY_CONVERT(INT,l.assigned
         return dt;
     }
 
+    public DataTable get_admin_today_followups_data()
+    {
+        DataTable dt = new DataTable();
+        string query = @"
+        SELECT l.lead_code, l.client_name, l.mobile, l.alternate_mobile, l.destination,
+               l.followup_date, l.remarks, l.lead_priority, l.lead_status,
+               CASE 
+                   WHEN l.assigned_employee_id IS NULL OR LTRIM(RTRIM(l.assigned_employee_id)) = '' THEN 'Not Assigned'
+                   WHEN e.employee_name IS NOT NULL THEN e.employee_name
+                   ELSE l.assigned_employee_id
+               END AS assigned_employee_name
+        FROM dbo.tbl_leads l
+        LEFT JOIN dbo.tbl_employees e ON (TRY_CONVERT(INT, l.assigned_employee_id) = e.employee_id OR l.assigned_employee_id = e.employee_name)
+        WHERE CAST(l.followup_date AS DATE) = CAST(GETDATE() AS DATE)
+        ORDER BY l.followup_date ASC";
+
+        using (SqlDataAdapter da = new SqlDataAdapter(query, con))
+        {
+            da.Fill(dt);
+        }
+        return dt;
+    }
+
+    public DataTable get_admin_overdue_followups_data()
+    {
+        DataTable dt = new DataTable();
+        string query = @"
+        SELECT l.lead_code, l.client_name, l.mobile, l.alternate_mobile, l.destination,
+               l.followup_date, l.remarks, l.lead_priority, l.lead_status,
+               CASE 
+                   WHEN l.assigned_employee_id IS NULL OR LTRIM(RTRIM(l.assigned_employee_id)) = '' THEN 'Not Assigned'
+                   WHEN e.employee_name IS NOT NULL THEN e.employee_name
+                   ELSE l.assigned_employee_id
+               END AS assigned_employee_name
+        FROM dbo.tbl_leads l
+        LEFT JOIN dbo.tbl_employees e ON (TRY_CONVERT(INT, l.assigned_employee_id) = e.employee_id OR l.assigned_employee_id = e.employee_name)
+        WHERE CAST(l.followup_date AS DATE) < CAST(GETDATE() AS DATE)
+          AND l.lead_status NOT IN ('Confirmed', 'Closed', 'Not Interested')
+        ORDER BY l.followup_date ASC";
+
+        using (SqlDataAdapter da = new SqlDataAdapter(query, con))
+        {
+            da.Fill(dt);
+        }
+        return dt;
+    }
+
+    public DataTable get_admin_upcoming_followups_data()
+    {
+        DataTable dt = new DataTable();
+        string query = @"
+        SELECT l.lead_code, l.client_name, l.mobile, l.alternate_mobile, l.destination,
+               l.followup_date, l.remarks, l.lead_priority, l.lead_status,
+               CASE 
+                   WHEN l.assigned_employee_id IS NULL OR LTRIM(RTRIM(l.assigned_employee_id)) = '' THEN 'Not Assigned'
+                   WHEN e.employee_name IS NOT NULL THEN e.employee_name
+                   ELSE l.assigned_employee_id
+               END AS assigned_employee_name
+        FROM dbo.tbl_leads l
+        LEFT JOIN dbo.tbl_employees e ON (TRY_CONVERT(INT, l.assigned_employee_id) = e.employee_id OR l.assigned_employee_id = e.employee_name)
+        WHERE CAST(l.followup_date AS DATE) > CAST(GETDATE() AS DATE)
+        ORDER BY l.followup_date ASC";
+
+        using (SqlDataAdapter da = new SqlDataAdapter(query, con))
+        {
+            da.Fill(dt);
+        }
+        return dt;
+    }
 
     // Sakshi
     public DataTable get_employee_profile(int employeeId)

@@ -125,10 +125,12 @@
                                         </span>
                                     </td>
                                     <td class="text-end">
-                                        <%# Convert.ToString(Eval("lead_status")) == "Closed" ? 
-                                            "<button type='button' class='btn btn-sm btn-outline-secondary' onclick=\"openCloseTripModal('" + Eval("lead_code") + "', '" + Eval("client_name") + "', '" + Eval("mobile") + "', '" + Eval("destination") + "', '" + Eval("travel_date", "{0:dd-MMM-yyyy}") + "', 'Closed');\"><i class='bi bi-lock-fill me-1 text-muted'></i>Closed</button>" : 
-                                            "<button type='button' class='btn btn-sm btn-outline-danger' onclick=\"openCloseTripModal('" + Eval("lead_code") + "', '" + Eval("client_name") + "', '" + Eval("mobile") + "', '" + Eval("destination") + "', '" + Eval("travel_date", "{0:dd-MMM-yyyy}") + "', '" + Eval("lead_status") + "');\"><i class='bi bi-check2-circle me-1'></i>Close Trip</button>" 
-                                        %>
+                                        <button type="button" 
+                                            class='btn btn-sm <%# Convert.ToString(Eval("lead_status")) == "Closed" ? "btn-outline-secondary" : "btn-outline-danger" %>'
+                                            onclick="openCloseTripModal('<%# Eval("lead_code") %>', '<%# Eval("client_name") %>', '<%# Eval("mobile") %>', '<%# Eval("destination") %>', '<%# Eval("travel_date", "{0:dd-MMM-yyyy}") %>', '<%# Eval("lead_status") %>');">
+                                            <i class='bi <%# Convert.ToString(Eval("lead_status")) == "Closed" ? "bi-lock-fill text-muted" : "bi-check2-circle" %> me-1'></i>
+                                            <%# Convert.ToString(Eval("lead_status")) == "Closed" ? "Closed" : "Close Trip" %>
+                                        </button>
                                     </td>
                                 </tr>
                             </ItemTemplate>

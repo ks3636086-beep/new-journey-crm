@@ -62,11 +62,11 @@
             box-shadow: inset 3px 0 0 #38bdf8 !important;
         }
 
-        .nj-nav-item .nj-nav-link i,
-        .nj-nav-item .nj-nav-link.active i,
-        .nj-nav-item .nj-nav-link:hover i {
-            color: #ffffff !important;
-        }
+            .nj-nav-item .nj-nav-link i,
+            .nj-nav-item .nj-nav-link.active i,
+            .nj-nav-item .nj-nav-link:hover i {
+                color: #ffffff !important;
+            }
 
         .nj-agency-badge {
             background: rgba(56, 189, 248, 0.15) !important;
@@ -92,22 +92,22 @@
             color: #ffffff !important;
         }
 
-        .btn-nj-primary:hover, .btn-nj-primary:focus, .btn-success:hover, .btn-success:focus {
-            background-color: #0369a1 !important;
-            border-color: #0369a1 !important;
-            color: #ffffff !important;
-        }
+            .btn-nj-primary:hover, .btn-nj-primary:focus, .btn-success:hover, .btn-success:focus {
+                background-color: #0369a1 !important;
+                border-color: #0369a1 !important;
+                color: #ffffff !important;
+            }
 
         .btn-nj-outline, .btn-outline-success {
             color: #0369a1 !important;
             border-color: #cbd5e1 !important;
         }
 
-        .btn-nj-outline:hover, .btn-outline-success:hover {
-            background-color: #e0f2fe !important;
-            border-color: #0284c7 !important;
-            color: #0284c7 !important;
-        }
+            .btn-nj-outline:hover, .btn-outline-success:hover {
+                background-color: #e0f2fe !important;
+                border-color: #0284c7 !important;
+                color: #0284c7 !important;
+            }
 
         /* Bootstrap Success utility overrides inside Employee Portal */
         .text-success, i.text-success, a.text-success {
@@ -185,27 +185,14 @@
                         <img src="images/logo.png" alt="New Journey Holidays" class="brand-logo-img" />
                         <div>
                             <div class="brand-title">New Journey Holidays</div>
-                          
+
                         </div>
                     </div>
                 </div>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body p-0">
-                <!-- Role / Category Preview in Mobile -->
-                <div class="p-3 border-bottom border-secondary border-opacity-25 bg-black bg-opacity-20">
-                    <div class="text-white-50 small mb-1">Employee Perspective:</div>
-                    <div class="d-flex gap-1">
-                        <button type="button" class="btn btn-sm btn-outline-light flex-grow-1" id="mobSwitchSales" onclick="switchCategoryView('Sales');">
-                            <i class="bi bi-briefcase"></i>Sales
-                       
-                        </button>
-                        <button type="button" class="btn btn-sm btn-outline-light flex-grow-1" id="mobSwitchCalling" onclick="switchCategoryView('Calling');">
-                            <i class="bi bi-headset"></i>Calling
-                       
-                        </button>
-                    </div>
-                </div>
+
 
                 <div class="nj-nav-category">Main Menu</div>
                 <ul class="nj-nav-list">
@@ -241,11 +228,11 @@
                 <img src="images/logo.png" alt="New Journey Holidays" class="brand-logo-img" />
                 <div>
                     <div class="brand-title">New Journey Holidays</div>
-                  
+
                 </div>
             </a>
 
-             
+
             <div class="nj-nav-category">My Workspace</div>
             <ul class="nj-nav-list">
                 <li class="nj-nav-item">
@@ -321,7 +308,7 @@
                     <button class="btn btn-sm btn-outline-secondary d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-label="Toggle navigation">
                         <i class="bi bi-list fs-5"></i>
                     </button>
-                    
+
                 </div>
 
                 <div class="nj-topbar-right">
@@ -452,10 +439,10 @@
             <footer class="nj-footer">
                 <div>
                     <strong>New Journey Holidays CRM</strong> &bull; Employee Panel &bull; Gorakhpur, Uttar Pradesh
-               
+   
                 </div>
                 <div>
-                    <span>Unified Panel: Sales & Calling Team &bull; 2026</span>
+                    <span>Developed by Digital Bull &bull; 2026</span>
                 </div>
             </footer>
         </div>
@@ -482,7 +469,7 @@
 
     </form>
 
-    
+
 
     <!-- Active Menu & Role Switcher Script -->
     <script>

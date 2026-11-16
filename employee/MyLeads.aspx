@@ -42,16 +42,14 @@
                     </div>
                 </div>
 
-                <!-- Status Filter (New, Interested, Pending, Confirmed, Not Interested, Closed) -->
+                <!-- Status Filter (In Process, Confirmed, Cancelled, Closed) -->
                 <div class="col-6 col-md-2">
                     <select id="filterStatus" class="form-select form-select-sm" onchange="filterLeads();">
                         <option value="">All Statuses</option>
-                        <option value="New">New</option>
-                        <option value="Interested">Interested</option>
-                        <option value="Pending">Pending</option>
-                        <option value="Confirmed">Confirmed</option>
-                        <option value="Not Interested">Not Interested</option>
-                        <option value="Closed">Closed</option>
+                        <option value="in process">In Process</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="cancelled">Cancelled</option>
+                        <option value="closed">Closed</option>
                     </select>
                 </div>
 
@@ -124,8 +122,8 @@
                                     </td>
 
                                     <td>
-                                        <span class='badge <%# Eval("lead_status") != null && Eval("lead_status").ToString().ToLower() == "confirmed" ? "bg-success-subtle text-success" : (Eval("lead_status") != null && Eval("lead_status").ToString().ToLower() == "interested" ? "badge-status-interested" : (Eval("lead_status") != null && Eval("lead_status").ToString().ToLower() == "new" ? "badge-status-new" : "badge-status-pending")) %>'>
-                                            <%# Eval("lead_status") %>
+                                        <span class='badge <%# Eval("lead_status") != null && Eval("lead_status").ToString().ToLower() == "confirmed" ? "bg-success-subtle text-success" : (Eval("lead_status") != null && (Eval("lead_status").ToString().ToLower() == "not interested" || Eval("lead_status").ToString().ToLower() == "cancelled") ? "bg-danger-subtle text-danger" : (Eval("lead_status") != null && Eval("lead_status").ToString().ToLower() == "closed" ? "bg-secondary-subtle text-secondary" : "bg-warning-subtle text-warning")) %>'>
+                                            <%# Eval("lead_status") != null && Eval("lead_status").ToString().ToLower() == "not interested" ? "Cancelled" : (Eval("lead_status") != null && (Eval("lead_status").ToString().ToLower() == "pending" || Eval("lead_status").ToString().ToLower() == "interested" || Eval("lead_status").ToString().ToLower() == "new") ? "In Process" : Eval("lead_status")) %>
                                         </span>
                                     </td>
                                     <td>
@@ -329,11 +327,9 @@
                             <label class="form-label small fw-semibold">Lead Status <span class="text-danger">*</span></label>
                             <asp:DropDownList ID="ddlEditLeadStatus" runat="server" ClientIDMode="Static" CssClass="form-select form-select-sm">
                                 <asp:ListItem Text="-- Select Status --" Value="" />
-                                <asp:ListItem Text="New" Value="New" />
-                                <asp:ListItem Text="Interested" Value="Interested" />
-                                <asp:ListItem Text="Pending" Value="Pending" />
+                                <asp:ListItem Text="In Process" Value="Pending" />
                                 <asp:ListItem Text="Confirmed" Value="Confirmed" />
-                                <asp:ListItem Text="Not Interested" Value="Not Interested" />
+                                <asp:ListItem Text="Cancelled" Value="Not Interested" />
                                 <asp:ListItem Text="Closed" Value="Closed" />
                             </asp:DropDownList>
                         </div>
@@ -521,7 +517,18 @@
                 var rDate = (row.getAttribute('data-date') || '').trim();
 
                 var mSearch = search === '' || text.indexOf(search) > -1;
-                var mStatus = status === '' || rStatus.toLowerCase() === status.toLowerCase();
+                                var mStatus = true;
+                if (status !== '') {
+                    var sLow = status.toLowerCase();
+                    var rLow = rStatus.toLowerCase();
+                    if (sLow === 'in process') {
+                        mStatus = (rLow === 'in process' || rLow === 'pending' || rLow === 'interested' || rLow === 'new');
+                    } else if (sLow === 'cancelled') {
+                        mStatus = (rLow === 'cancelled' || rLow === 'not interested');
+                    } else {
+                        mStatus = (rLow === sLow);
+                    }
+                }
                 var mPriority = priority === '' || rPriority.toLowerCase() === priority.toLowerCase();
                 
                 var mDate = true;
@@ -556,7 +563,18 @@
                 var cPriority = (card.getAttribute('data-priority') || '').trim();
 
                 var mSearch = search === '' || text.indexOf(search) > -1;
-                var mStatus = status === '' || cStatus.toLowerCase() === status.toLowerCase();
+                                var mStatus = true;
+                if (status !== '') {
+                    var sLow = status.toLowerCase();
+                    var cLow = cStatus.toLowerCase();
+                    if (sLow === 'in process') {
+                        mStatus = (cLow === 'in process' || cLow === 'pending' || cLow === 'interested' || cLow === 'new');
+                    } else if (sLow === 'cancelled') {
+                        mStatus = (cLow === 'cancelled' || cLow === 'not interested');
+                    } else {
+                        mStatus = (cLow === sLow);
+                    }
+                }
                 var mPriority = priority === '' || cPriority.toLowerCase() === priority.toLowerCase();
 
                 if (mSearch && mStatus && mPriority) {
@@ -657,7 +675,13 @@
             if (document.getElementById('txtEditMobile')) document.getElementById('txtEditMobile').value = mobile;
             if (document.getElementById('txtEditCity')) document.getElementById('txtEditCity').value = city;
             if (document.getElementById('txtEditDestination')) document.getElementById('txtEditDestination').value = dest;
-            if (document.getElementById('ddlEditLeadStatus')) document.getElementById('ddlEditLeadStatus').value = status;
+                        if (document.getElementById('ddlEditLeadStatus')) {
+                var ddl = document.getElementById('ddlEditLeadStatus');
+                var target = (status || '').trim();
+                if (target === 'Interested' || target === 'New' || target === 'In Process') target = 'Pending';
+                if (target === 'Cancelled') target = 'Not Interested';
+                ddl.value = target;
+            }
             if (document.getElementById('ddlEditLeadPriority')) document.getElementById('ddlEditLeadPriority').value = priority;
             if (document.getElementById('txtEditRemarks')) document.getElementById('txtEditRemarks').value = remarks;
 

@@ -86,12 +86,12 @@ public partial class Dashboard : System.Web.UI.Page
         if (category.Equals("Sales", StringComparison.OrdinalIgnoreCase))
         {
             litDashDescription.Text =
-                "Field sales desk • Client visits • Sourcing and converting travel inquiries.";
+                "Field sales desk | Client visits | Converting travel inquiries";
         }
         else
         {
             litDashDescription.Text =
-                "Back office calling desk • Client calls • Lead follow-ups and inquiry management.";
+                "Back office calling desk | Client calls | Lead follow-ups";
         }
     }
 
@@ -154,8 +154,25 @@ public partial class Dashboard : System.Web.UI.Page
 
             ob.insert_call_history(leadCode, calledBy, callerRole, callStatus, nextFollowupDate, remarks);
 
-            Response.Redirect(Request.RawUrl, false);
-            Context.ApplicationInstance.CompleteRequest();
+            if (!string.IsNullOrWhiteSpace(ddlTripStatus.SelectedValue))
+            {
+                string tripStatus = ddlTripStatus.SelectedValue;
+                string query = "UPDATE dbo.tbl_leads SET lead_status = @status WHERE lead_code = @code";
+                using (SqlCommand cmd = new SqlCommand(query, ob.con))
+                {
+                    cmd.Parameters.AddWithValue("@status", tripStatus);
+                    cmd.Parameters.AddWithValue("@code", leadCode);
+                    if (ob.con.State == ConnectionState.Closed) ob.con.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+            ClientScript.RegisterStartupScript(
+                this.GetType(),
+                "CallSuccess",
+                "alert('Call details updated successfully!'); window.location.href='" + Request.RawUrl + "';",
+                true
+            );
         }
         catch (Exception ex)
         {

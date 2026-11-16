@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" MasterPageFile="MasterPage.master" AutoEventWireup="true" CodeFile="FollowUps.aspx.cs" Inherits="FollowUps" %>
+<%@ Page Language="C#" MasterPageFile="MasterPage.master" AutoEventWireup="true" CodeFile="FollowUps.aspx.cs" Inherits="FollowUps" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <title>Follow-ups | New Journey Holidays CRM</title>
@@ -12,473 +12,315 @@
             <p class="nj-page-subtitle">Track scheduled calls, client reminders, and outreach tasks across all employees.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
-            <button type="button" class="btn btn-nj-primary btn-sm" data-bs-toggle="modal" data-bs-target="#scheduleFollowupModal">
-                <i class="bi bi-calendar-plus"></i> Schedule Follow-up
-            </button>
+            <a href="AllLeads.aspx" class="btn btn-nj-primary btn-sm">
+                <i class="bi bi-person-lines-fill"></i> All Leads
+            </a>
             <a href="CallHistory.aspx" class="btn btn-nj-outline btn-sm">
                 <i class="bi bi-clock-history"></i> Call Log
             </a>
         </div>
     </div>
 
-    <!-- Navigation Tabs for Follow-up Queues -->
-    <ul class="nav nav-pills mb-3 gap-2" id="followupTabs" role="tablist">
+    <!-- 1. Follow-up Section Tabs -->
+    <ul class="nav nav-pills mb-3 gap-2" id="followupSectionTabs" role="tablist">
+        <!-- Today's Follow-ups -->
         <li class="nav-item" role="presentation">
-            <button class="nav-link active d-flex align-items-center gap-2 border" id="today-tab" data-bs-toggle="pill" data-bs-target="#tab-today" type="button" role="tab">
-                <i class="bi bi-calendar-check"></i>
+            <button class='nav-link d-flex align-items-center gap-2 border <%= IsTodayTab ? "active" : "" %>'
+                id="tab-btn-today" type="button"
+                onclick="loadFollowups('today', this)">
+                <i class="bi bi-calendar-check-fill text-success"></i>
                 <span>Today's Follow-ups</span>
-                <span class="badge bg-danger">24</span>
             </button>
         </li>
+
+        <!-- Upcoming Follow-ups -->
         <li class="nav-item" role="presentation">
-            <button class="nav-link d-flex align-items-center gap-2 border" id="upcoming-tab" data-bs-toggle="pill" data-bs-target="#tab-upcoming" type="button" role="tab">
-                <i class="bi bi-calendar-range"></i>
-                <span>Upcoming</span>
-                <span class="badge bg-secondary">48</span>
+            <button class='nav-link d-flex align-items-center gap-2 border <%= CurrentTab == "upcoming" ? "active" : "" %>'
+                id="tab-btn-upcoming" type="button"
+                onclick="loadFollowups('upcoming', this)">
+                <i class="bi bi-calendar-range text-primary"></i>
+                <span>Upcoming Follow-ups</span>
             </button>
         </li>
+
+        <!-- Overdue Follow-ups -->
         <li class="nav-item" role="presentation">
-            <button class="nav-link d-flex align-items-center gap-2 border text-danger" id="overdue-tab" data-bs-toggle="pill" data-bs-target="#tab-overdue" type="button" role="tab">
-                <i class="bi bi-exclamation-triangle"></i>
-                <span>Overdue</span>
-                <span class="badge bg-danger">7</span>
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link d-flex align-items-center gap-2 border" id="completed-tab" data-bs-toggle="pill" data-bs-target="#tab-completed" type="button" role="tab">
-                <i class="bi bi-check2-all"></i>
-                <span>Completed</span>
-                <span class="badge bg-success">142</span>
+            <button class='nav-link d-flex align-items-center gap-2 border text-danger <%= CurrentTab == "overdue" ? "active" : "" %>'
+                id="tab-btn-overdue" type="button"
+                onclick="loadFollowups('overdue', this)">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <span>Overdue Follow-ups</span>
             </button>
         </li>
     </ul>
 
-    <!-- Filter & Search Bar -->
+    <asp:HiddenField ID="hdnFollowupType" runat="server" Value="today" />
+
+    <asp:Button ID="btnLoadFollowups" runat="server"
+        OnClick="btnLoadFollowups_Click"
+        Style="display: none;" />
+
+    <!-- 2. Search & Filter Bar -->
     <div class="card mb-3">
         <div class="card-body p-3">
             <div class="row g-2 align-items-center">
-                <div class="col-12 col-md-4">
+                <div class="col-12 col-md-6">
                     <div class="input-group input-group-sm">
                         <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-                        <input type="text" class="form-control border-start-0" placeholder="Search client name, phone or tour..." />
+                        <input type="text" class="form-control border-start-0" id="followUpSearch" placeholder="Search client name, mobile, destination, staff..." onkeyup="filterFollowUps();" />
                     </div>
                 </div>
-                <div class="col-6 col-md-3">
-                    <select class="form-select form-select-sm">
-                        <option value="">All Staff Members</option>
-                        <option>Priya Sharma (Sales)</option>
-                        <option>Rakesh Yadav (Field)</option>
-                        <option>Pooja Srivastava (Calling)</option>
-                        <option>Manoj Tiwari (Sales)</option>
-                    </select>
-                </div>
-                <div class="col-6 col-md-3">
-                    <select class="form-select form-select-sm">
+                <div class="col-6 col-md-4">
+                    <select class="form-select form-select-sm" id="followUpPriorityFilter" onchange="filterFollowUps();">
                         <option value="">All Priorities</option>
-                        <option>Hot Priority</option>
-                        <option>Warm Priority</option>
-                        <option>Cold Priority</option>
+                        <option value="Hot">Hot Priority</option>
+                        <option value="Warm">Warm Priority</option>
+                        <option value="Cold">Cold Priority</option>
                     </select>
                 </div>
-                <div class="col-12 col-md-2 text-md-end">
-                    <button type="button" class="btn btn-outline-secondary btn-sm w-100" onclick="alert('Filtered follow-ups.');">
-                        <i class="bi bi-funnel"></i> Apply Filter
+                <div class="col-6 col-md-2 text-md-end">
+                    <button type="button" class="btn btn-outline-secondary btn-sm w-100" onclick="resetFollowUpFilters();">
+                        <i class="bi bi-arrow-counterclockwise"></i> Reset
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Tab Content -->
-    <div class="tab-content" id="followupTabContent">
-        <!-- 1. Today's Follow-ups Tab -->
-        <div class="tab-pane fade show active" id="tab-today" role="tabpanel">
-            <div class="card">
-                <div class="card-header bg-white">
-                    <div>
-                        <h6 class="mb-0"><i class="bi bi-calendar2-day text-success"></i> Today's Schedule (24 Inquiries)</h6>
-                        <small class="text-muted">Calls due today for Gorakhpur branch clients</small>
-                    </div>
-                    <span class="badge bg-light text-dark border">Auto-sorted by due time</span>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Client Name</th>
-                                    <th>Mobile</th>
-                                    <th>Assigned Employee</th>
-                                    <th>Follow-up Date & Time</th>
-                                    <th>Last Remarks</th>
-                                    <th>Status</th>
-                                    <th class="text-end">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Item 1 -->
-                                <tr>
-                                    <td>
-                                        <div class="fw-bold">Dr. Arvind Kumar</div>
-                                        <small class="text-muted">Char Dham Yatra Heli (4 Pax)</small>
-                                    </td>
-                                    <td><a href="tel:+919839012345" class="text-decoration-none text-dark">+91 98390 12345</a></td>
-                                    <td><span class="badge bg-primary-subtle text-primary">Priya Sharma</span></td>
-                                    <td><span class="fw-bold text-danger">Today, 02:30 PM</span></td>
-                                    <td><span class="text-truncate d-inline-block" style="max-width: 200px;">Reviewing customized helicopter itinerary options.</span></td>
-                                    <td><span class="badge badge-status-pending">Pending Call</span></td>
-                                    <td class="text-end">
-                                        <button type="button" class="btn btn-nj-primary btn-sm" onclick="openLogCallModal('Dr. Arvind Kumar', '+91 98390 12345', 'Char Dham Yatra Heli');">
-                                            <i class="bi bi-telephone"></i> Call
-                                        </button>
-                                        <button type="button" class="btn btn-nj-outline btn-sm" onclick="openRescheduleModal('Dr. Arvind Kumar');">
-                                            <i class="bi bi-clock"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-
-                                <!-- Item 2 -->
-                                <tr>
-                                    <td>
-                                        <div class="fw-bold">Meera Rastogi</div>
-                                        <small class="text-muted">Kerala 6N/7D Tour</small>
-                                    </td>
-                                    <td><a href="tel:+919415098765" class="text-decoration-none text-dark">+91 94150 98765</a></td>
-                                    <td><span class="badge bg-warning-subtle text-warning">Rakesh Yadav</span></td>
-                                    <td><span class="fw-bold text-danger">Today, 04:00 PM</span></td>
-                                    <td><span class="text-truncate d-inline-block" style="max-width: 200px;">Wants quote revision with 4-star Munnar resort.</span></td>
-                                    <td><span class="badge badge-status-interested">Itinerary Sent</span></td>
-                                    <td class="text-end">
-                                        <button type="button" class="btn btn-nj-primary btn-sm" onclick="openLogCallModal('Meera Rastogi', '+91 94150 98765', 'Kerala 6N/7D Tour');">
-                                            <i class="bi bi-telephone"></i> Call
-                                        </button>
-                                        <button type="button" class="btn btn-nj-outline btn-sm" onclick="openRescheduleModal('Meera Rastogi');">
-                                            <i class="bi bi-clock"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-
-                                <!-- Item 3 -->
-                                <tr>
-                                    <td>
-                                        <div class="fw-bold">Rohit Verma</div>
-                                        <small class="text-muted">Kashmir 5N/6D Deluxe</small>
-                                    </td>
-                                    <td><a href="tel:+919876543210" class="text-decoration-none text-dark">+91 98765 43210</a></td>
-                                    <td><span class="badge bg-primary-subtle text-primary">Priya Sharma</span></td>
-                                    <td><span class="fw-bold text-dark">Today, 05:15 PM</span></td>
-                                    <td><span class="text-truncate d-inline-block" style="max-width: 200px;">Confirming flight tickets from Gorakhpur to Srinagar via Delhi.</span></td>
-                                    <td><span class="badge badge-status-interested">In Discussion</span></td>
-                                    <td class="text-end">
-                                        <button type="button" class="btn btn-nj-primary btn-sm" onclick="openLogCallModal('Rohit Verma', '+91 98765 43210', 'Kashmir 5N/6D');">
-                                            <i class="bi bi-telephone"></i> Call
-                                        </button>
-                                        <button type="button" class="btn btn-nj-outline btn-sm" onclick="openRescheduleModal('Rohit Verma');">
-                                            <i class="bi bi-clock"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-
-                                <!-- Item 4 -->
-                                <tr>
-                                    <td>
-                                        <div class="fw-bold">Sunita Singh</div>
-                                        <small class="text-muted">Himachal Adventure (4 Pax)</small>
-                                    </td>
-                                    <td><a href="tel:+919123456789" class="text-decoration-none text-dark">+91 91234 56789</a></td>
-                                    <td><span class="badge bg-info-subtle text-info">Pooja Srivastava</span></td>
-                                    <td><span class="fw-bold text-dark">Today, 06:00 PM</span></td>
-                                    <td><span class="text-truncate d-inline-block" style="max-width: 200px;">Group lead. Needs tempo traveler cost breakdown.</span></td>
-                                    <td><span class="badge badge-status-pending">Follow-up Due</span></td>
-                                    <td class="text-end">
-                                        <button type="button" class="btn btn-nj-primary btn-sm" onclick="openLogCallModal('Sunita Singh', '+91 91234 56789', 'Himachal Adventure');">
-                                            <i class="bi bi-telephone"></i> Call
-                                        </button>
-                                        <button type="button" class="btn btn-nj-outline btn-sm" onclick="openRescheduleModal('Sunita Singh');">
-                                            <i class="bi bi-clock"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+    <!-- 3. Follow-ups Table Card -->
+    <div class="card" id="section-followups">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <div>
+                <h6 class="mb-0"><asp:Literal ID="litFollowupHeading" runat="server" Text="Today's Follow-ups" /></h6>
+                <small class="text-muted"><asp:Literal ID="litFollowupSubHeading" runat="server" Text="High priority client calls scheduled for today" /></small>
             </div>
+            <span class="badge bg-danger-subtle text-danger"><asp:Literal ID="litFollowupBadge" runat="server" Text="Pending Calls" /></span>
         </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Client Name & Mobile</th>
+                            <th>Destination</th>
+                            <th>Assigned Staff</th>
+                            <th>Follow-up Date & Time</th>
+                            <th>Last Remarks</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <asp:Repeater ID="rptFollowups" runat="server">
+                            <ItemTemplate>
+                                <tr class="fup-row" data-priority='<%# Eval("lead_priority") %>'>
+                                    <!-- 1. Client Name & Mobile -->
+                                    <td>
+                                        <div class="fw-bold text-dark"><%# Eval("client_name") %></div>
+                                        <small class="text-muted">
+                                            <a href='tel:+91<%# Eval("mobile") %>' class="text-decoration-none text-dark">
+                                                <i class="bi bi-telephone text-muted me-1"></i><%# Eval("mobile") %>
+                                            </a>
+                                            <%# Eval("alternate_mobile") != DBNull.Value && !string.IsNullOrWhiteSpace(Eval("alternate_mobile").ToString()) ? " | " + Eval("alternate_mobile") : "" %>
+                                        </small>
+                                    </td>
 
-        <!-- 2. Upcoming Tab -->
-        <div class="tab-pane fade" id="tab-upcoming" role="tabpanel">
-            <div class="card">
-                <div class="card-header bg-white">
-                    <div>
-                        <h6 class="mb-0"><i class="bi bi-calendar-range text-primary"></i> Scheduled Upcoming Calls (48 Inquiries)</h6>
-                        <small class="text-muted">Due tomorrow and later this week</small>
-                    </div>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Client Name</th>
-                                    <th>Mobile</th>
-                                    <th>Assigned Employee</th>
-                                    <th>Follow-up Date</th>
-                                    <th>Last Remarks</th>
-                                    <th>Status</th>
-                                    <th class="text-end">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
+                                    <!-- 2. Destination -->
                                     <td>
-                                        <div class="fw-bold">Rajesh Gupta</div>
-                                        <small class="text-muted">Vietnam & Cambodia 8D</small>
+                                        <div class="fw-semibold text-dark"><%# Eval("destination") %></div>
                                     </td>
-                                    <td>+91 97210 54321</td>
-                                    <td><span class="badge bg-info-subtle text-info">Pooja Srivastava</span></td>
-                                    <td>Tomorrow, 11:00 AM</td>
-                                    <td>Passport copies submitted for e-visa.</td>
-                                    <td><span class="badge bg-light text-dark border">Scheduled</span></td>
-                                    <td class="text-end">
-                                        <button type="button" class="btn btn-nj-outline btn-sm" onclick="openLogCallModal('Rajesh Gupta', '+91 97210 54321', 'Vietnam Tour');">
-                                            <i class="bi bi-pencil"></i> Note
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="fw-bold">Sanjay Tripathi</div>
-                                        <small class="text-muted">Andaman Honeymoon 5N</small>
-                                    </td>
-                                    <td>+91 99351 77665</td>
-                                    <td><span class="badge bg-primary-subtle text-primary">Manoj Tiwari</span></td>
-                                    <td>Tomorrow, 03:00 PM</td>
-                                    <td>Client will discuss with spouse tonight.</td>
-                                    <td><span class="badge badge-status-interested">Interested</span></td>
-                                    <td class="text-end">
-                                        <button type="button" class="btn btn-nj-outline btn-sm" onclick="openLogCallModal('Sanjay Tripathi', '+91 99351 77665', 'Andaman');">
-                                            <i class="bi bi-pencil"></i> Note
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- 3. Overdue Tab -->
-        <div class="tab-pane fade" id="tab-overdue" role="tabpanel">
-            <div class="card border-danger">
-                <div class="card-header bg-danger-subtle text-danger">
-                    <h6 class="mb-0 text-danger"><i class="bi bi-exclamation-octagon"></i> Overdue Follow-ups (7 Inquiries)</h6>
-                    <small>Requires immediate supervisor attention</small>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Client Name</th>
-                                    <th>Mobile</th>
-                                    <th>Assigned Employee</th>
-                                    <th>Original Date</th>
-                                    <th>Last Remarks</th>
-                                    <th>Delay</th>
-                                    <th class="text-end">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
+                                    <!-- 3. Assigned Staff -->
                                     <td>
-                                        <div class="fw-bold text-danger">Vikram Chauhan</div>
-                                        <small class="text-muted">Thailand Tour</small>
+                                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle">
+                                            <i class="bi bi-person me-1"></i><%# Eval("assigned_employee_name") %>
+                                        </span>
                                     </td>
-                                    <td>+91 97981 23456</td>
-                                    <td><span class="badge bg-info-subtle text-info">Pooja Srivastava</span></td>
-                                    <td>Yesterday, 04:00 PM</td>
-                                    <td>Client didn't answer on first attempt.</td>
-                                    <td><span class="badge bg-danger">1 Day Overdue</span></td>
-                                    <td class="text-end">
-                                        <button type="button" class="btn btn-danger btn-sm" onclick="openLogCallModal('Vikram Chauhan', '+91 97981 23456', 'Thailand Tour');">
-                                            <i class="bi bi-telephone"></i> Call Now
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- 4. Completed Tab -->
-        <div class="tab-pane fade" id="tab-completed" role="tabpanel">
-            <div class="card">
-                <div class="card-header bg-white">
-                    <h6 class="mb-0"><i class="bi bi-check-circle text-success"></i> Completed Follow-ups Log</h6>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Client Name</th>
-                                    <th>Mobile</th>
-                                    <th>Handled By</th>
-                                    <th>Completion Date</th>
-                                    <th>Call Result</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
+                                    <!-- 4. Follow-up Date & Time -->
                                     <td>
-                                        <div class="fw-bold">Ananya Mishra</div>
-                                        <small class="text-muted">Dubai Tour</small>
+                                        <span class="fw-bold text-danger">
+                                            <i class="bi bi-clock me-1"></i><%# Eval("followup_date") == DBNull.Value || Eval("followup_date") == null ? "-" : Eval("followup_date", "{0:dd-MMM-yyyy hh:mm tt}") %>
+                                        </span>
                                     </td>
-                                    <td>+91 94521 88321</td>
-                                    <td>Priya Sharma (Sales)</td>
-                                    <td>Today, 11:30 AM</td>
-                                    <td>Advance booking deposit received & confirmed.</td>
-                                    <td><span class="badge badge-status-confirmed">Converted / Closed</span></td>
+
+                                    <!-- 5. Remarks -->
+                                    <td>
+                                        <span class="text-muted small d-inline-block text-truncate" style="max-width: 200px;">
+                                            <%# Eval("remarks") == DBNull.Value || string.IsNullOrWhiteSpace(Eval("remarks").ToString()) ? "<em class='text-muted'>No remarks recorded.</em>" : Eval("remarks") %>
+                                        </span>
+                                    </td>
+
+                                    <!-- 6. Priority -->
+                                    <td>
+                                        <span class='badge <%# Eval("lead_priority").ToString() == "Hot" ? "bg-danger" : (Eval("lead_priority").ToString() == "Warm" ? "bg-warning text-dark" : "bg-info") %>'>
+                                            <%# Eval("lead_priority") %>
+                                        </span>
+                                    </td>
+
+                                    <!-- 7. Status -->
+                                    <td>
+                                        <span class='badge <%# Eval("lead_status").ToString() == "Confirmed" ? "bg-success" : (Eval("lead_status").ToString() == "Not Interested" ? "bg-secondary" : "bg-primary") %>'>
+                                            <%# Eval("lead_status").ToString() == "Not Interested" ? "Cancelled" : (Eval("lead_status").ToString() == "Pending" || Eval("lead_status").ToString() == "Interested" || Eval("lead_status").ToString() == "New" ? "In Process" : Eval("lead_status")) %>
+                                        </span>
+                                    </td>
+
+                                    <!-- 8. Actions -->
+                                    <td class="text-end">
+                                        <% if (IsTodayTab) { %>
+                                            <asp:LinkButton ID="btnUpdateCall" runat="server"
+                                                CssClass="btn btn-nj-primary btn-sm"
+                                                CommandArgument='<%# Eval("lead_code") %>'
+                                                OnClick="btnUpdateCall_Click">
+                                                <i class="bi bi-telephone"></i> Call
+                                            </asp:LinkButton>
+                                        <% } %>
+                                        <a href='AllLeads.aspx?search=<%# Eval("lead_code") %>' class="btn btn-nj-outline btn-sm" title="View Lead">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    </td>
                                 </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                            </ItemTemplate>
+                        </asp:Repeater>
+
+                        <!-- Empty State Row -->
+                        <tr class="fup-empty-row <%= rptFollowups.Items.Count == 0 ? "" : "d-none" %>">
+                            <td colspan="8" class="text-center py-4 text-muted">
+                                <i class="bi bi-calendar-check fs-2 d-block mb-2 text-secondary"></i>
+                                No follow-ups found in this list.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
-    <!-- Log Call / Follow-up Note Modal -->
-    <div class="modal fade" id="logCallModal" tabindex="-1" aria-labelledby="logCallModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+    <!-- 4. Update Call Modal -->
+    <div class="modal fade" id="updateCallModal" tabindex="-1" aria-labelledby="updateCallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
             <div class="modal-content">
-                <div class="modal-header border-bottom">
-                    <h6 class="modal-title fw-bold" id="logCallModalLabel">
-                        <i class="bi bi-telephone-outbound text-success me-1"></i> Log Client Call & Follow-up Note
+                <div class="modal-header border-bottom py-2">
+                    <h6 class="modal-title fw-bold" id="updateCallModalLabel">
+                        <i class="bi bi-telephone-forward text-success me-1"></i>Update Call
                     </h6>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+
                 <div class="modal-body">
-                    <div class="p-2 bg-light rounded mb-3">
-                        <div class="fw-bold text-dark" id="modal-call-client">Dr. Arvind Kumar</div>
-                        <div class="text-muted small" id="modal-call-phone">+91 98390 12345 &bull; Char Dham Yatra Heli</div>
-                    </div>
+                    <asp:HiddenField ID="hfLeadCode" runat="server" />
 
-                    <div class="mb-3">
-                        <label class="form-label">Call Outcome <span class="text-danger">*</span></label>
-                        <select class="form-select" id="call_outcome">
-                            <option value="Connected">Connected (Detailed discussion held)</option>
-                            <option value="Interested">Interested (Requested revised package)</option>
-                            <option value="Call Back Later">Call Back Later (Customer asked to call back)</option>
-                            <option value="Busy">Busy / Line Engaged</option>
-                            <option value="No Answer">No Answer / Switched Off</option>
-                            <option value="Not Interested">Not Interested (Trip cancelled or budget mismatch)</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Call Notes / Discussion Summary</label>
-                        <textarea class="form-control" rows="3" placeholder="Enter key points from conversation, date changes, pricing expectations..."></textarea>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Next Follow-up Date (Optional)</label>
-                        <input type="datetime-local" class="form-control" />
-                    </div>
-                </div>
-                <div class="modal-footer border-top">
-                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-sm btn-nj-primary" onclick="alert('Follow-up call logged successfully (UI sample)!');" data-bs-dismiss="modal">
-                        <i class="bi bi-save"></i> Save Call Log
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Reschedule Modal -->
-    <div class="modal fade" id="rescheduleModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content">
-                <div class="modal-header border-bottom">
-                    <h6 class="modal-title fw-bold">Reschedule Follow-up</h6>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="small text-muted mb-2">Select new follow-up time for <strong id="resched-client"></strong>:</p>
-                    <input type="datetime-local" class="form-control form-control-sm mb-2" />
-                    <textarea class="form-control form-control-sm" rows="2" placeholder="Reason for rescheduling..."></textarea>
-                </div>
-                <div class="modal-footer border-top">
-                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-sm btn-nj-primary" onclick="alert('Follow-up rescheduled (UI sample)!');" data-bs-dismiss="modal">Update</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Schedule New Follow-up Modal -->
-    <div class="modal fade" id="scheduleFollowupModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header border-bottom">
-                    <h6 class="modal-title fw-bold"><i class="bi bi-calendar-plus text-success me-1"></i> Schedule New Follow-up</h6>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Select Lead / Client</label>
-                        <select class="form-select">
-                            <option>Rohit Verma (+91 98765 43210 - Kashmir)</option>
-                            <option>Amit Pandey (+91 88765 11234 - Goa)</option>
-                            <option>Sunita Singh (+91 91234 56789 - Himachal)</option>
-                            <option>Vikram Chauhan (+91 97981 23456 - Thailand)</option>
-                        </select>
-                    </div>
-                    <div class="row g-2 mb-3">
-                        <div class="col-6">
-                            <label class="form-label">Assigned Staff</label>
-                            <select class="form-select">
-                                <option>Priya Sharma (Sales)</option>
-                                <option>Rakesh Yadav (Field)</option>
-                                <option>Pooja Srivastava (Calling)</option>
-                            </select>
+                    <div class="mb-3 p-2 bg-light rounded d-flex justify-content-between align-items-center">
+                        <div>
+                            <asp:Label ID="lblModalClientName" runat="server" Text="Client" CssClass="fw-semibold small d-block" />
+                            <asp:Label ID="lblModalClientPhone" runat="server" Text="+91" CssClass="text-muted small" />
                         </div>
-                        <div class="col-6">
-                            <label class="form-label">Date & Time</label>
-                            <input type="datetime-local" class="form-control" />
-                        </div>
+                        <span class="badge bg-success-subtle text-success">Follow-up</span>
                     </div>
+
                     <div class="mb-3">
-                        <label class="form-label">Follow-up Agenda / Note</label>
-                        <input type="text" class="form-control" placeholder="e.g. Discuss revised quote, check flight availability" />
+                        <label class="form-label small fw-semibold">
+                            Call Status <span class="text-danger">*</span>
+                        </label>
+                        <asp:DropDownList ID="ddlCallStatus" runat="server" CssClass="form-select form-select-sm">
+                            <asp:ListItem Text="-- Select Status --" Value="" />
+                            <asp:ListItem Text="Answered" Value="Answered" />
+                            <asp:ListItem Text="Not Answered" Value="Not Answered" />
+                            <asp:ListItem Text="Busy" Value="Busy" />
+                            <asp:ListItem Text="Switched Off" Value="Switched Off" />
+                        </asp:DropDownList>
+                        <asp:RequiredFieldValidator ID="rfvCallStatus" runat="server"
+                            ControlToValidate="ddlCallStatus"
+                            InitialValue=""
+                            ErrorMessage="Please select call status."
+                            CssClass="text-danger small"
+                            Display="Dynamic"
+                            ValidationGroup="CallUpdate" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Trip / Lead Status</label>
+                        <asp:DropDownList ID="ddlTripStatus" runat="server" CssClass="form-select form-select-sm">
+                            <asp:ListItem Text="In Process (Follow-up)" Value="" />
+                            <asp:ListItem Text="Trip Confirmed" Value="Confirmed" />
+                            <asp:ListItem Text="Cancelled" Value="Not Interested" />
+                        </asp:DropDownList>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Next Follow-up Date & Time</label>
+                        <asp:TextBox ID="txtNextFollowUp" runat="server" TextMode="DateTimeLocal" CssClass="form-control form-control-sm" />
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label small fw-semibold">Call Remarks</label>
+                        <asp:TextBox ID="txtCallRemarks" runat="server" TextMode="MultiLine" Rows="3" CssClass="form-control form-control-sm" placeholder="Enter conversation details, client response, notes..." />
                     </div>
                 </div>
-                <div class="modal-footer border-top">
-                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-sm btn-nj-primary" onclick="alert('Follow-up scheduled (UI sample)!');" data-bs-dismiss="modal">Schedule</button>
+
+                <div class="modal-footer border-top py-2">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                    <asp:Button ID="btnSaveCallUpdate" runat="server" Text="Save" CssClass="btn btn-nj-primary btn-sm" ValidationGroup="CallUpdate" OnClick="btnSaveCallUpdate_Click" />
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Client-side Search, Filter & Tabs Scripts -->
     <script>
-        function openLogCallModal(name, phone, tour) {
-            document.getElementById('modal-call-client').textContent = name;
-            document.getElementById('modal-call-phone').textContent = phone + ' • ' + tour;
-            var modal = new bootstrap.Modal(document.getElementById('logCallModal'));
-            modal.show();
+        function loadFollowups(type, btn) {
+            document.getElementById('<%= hdnFollowupType.ClientID %>').value = type;
+
+            document.querySelectorAll('#followupSectionTabs .nav-link').forEach(function (tab) {
+                tab.classList.remove('active');
+            });
+
+            btn.classList.add('active');
+            document.getElementById('<%= btnLoadFollowups.ClientID %>').click();
         }
 
-        function openRescheduleModal(name) {
-            document.getElementById('resched-client').textContent = name;
-            var modal = new bootstrap.Modal(document.getElementById('rescheduleModal'));
-            modal.show();
+        function filterFollowUps() {
+            var search = (document.getElementById('followUpSearch').value || '').toLowerCase().trim();
+            var priority = (document.getElementById('followUpPriorityFilter').value || '').trim();
+
+            var container = document.getElementById('section-followups');
+            if (!container) return;
+
+            var rows = container.querySelectorAll('.fup-row');
+            var visibleCount = 0;
+
+            rows.forEach(function (row) {
+                var text = row.innerText.toLowerCase();
+                var rPriority = (row.getAttribute('data-priority') || '').trim();
+
+                var mSearch = search === '' || text.indexOf(search) > -1;
+                var mPriority = priority === '' || rPriority.toLowerCase() === priority.toLowerCase();
+
+                if (mSearch && mPriority) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            var emptyRow = container.querySelector('.fup-empty-row');
+            if (emptyRow) {
+                if (visibleCount === 0) {
+                    emptyRow.classList.remove('d-none');
+                } else {
+                    emptyRow.classList.add('d-none');
+                }
+            }
+        }
+
+        function resetFollowUpFilters() {
+            var s = document.getElementById('followUpSearch');
+            var p = document.getElementById('followUpPriorityFilter');
+            if (s) s.value = '';
+            if (p) p.selectedIndex = 0;
+            filterFollowUps();
         }
     </script>
 </asp:Content>

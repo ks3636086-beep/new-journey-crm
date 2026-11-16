@@ -1,4 +1,4 @@
-<%@ Page Language="C#" MasterPageFile="MasterPage.master" AutoEventWireup="true" CodeFile="Employees.aspx.cs" Inherits="Employees" %>
+﻿<%@ Page Language="C#" MasterPageFile="MasterPage.master" AutoEventWireup="true" CodeFile="Employees.aspx.cs" Inherits="Employees" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <title>Employees | New Journey Holidays CRM</title>
@@ -15,9 +15,9 @@
             <button type="button" class="btn btn-nj-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addEmployeeModal">
                 <i class="bi bi-person-plus-fill me-1"></i>Add Employee
             </button>
-            <a href="EmployeeCategories.aspx" class="btn btn-nj-outline btn-sm">
+            <%--<a href="EmployeeCategories.aspx" class="btn btn-nj-outline btn-sm">
                 <i class="bi bi-tags me-1"></i>Manage Categories
-            </a>
+            </a>--%>
         </div>
     </div>
 
@@ -190,7 +190,7 @@
                             <label class="form-label">Password <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" autocomplete="new-password"
-                                    CssClass="form-control" placeholder="••••••••">
+                                    CssClass="form-control" placeholder="********">
                                 </asp:TextBox>
 
                                 <button type="button" class="btn btn-outline-secondary"

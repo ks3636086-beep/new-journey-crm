@@ -24,6 +24,8 @@
         <div class="card mb-3 border-success border-opacity-25 bg-white shadow-sm">
             <div class="card-body p-3">
                 <asp:HiddenField ID="hfSelectedLeadCodes" runat="server" />
+                <asp:HiddenField ID="hfUnassignLeadCode" runat="server" />
+                <asp:Button ID="btnServerUnassign" runat="server" OnClick="btnServerUnassign_Click" style="display:none;" />
                 <div class="row g-2 align-items-center">
                     <!-- Selection counter -->
                     <div class="col-12 col-md-4 col-lg-3">
@@ -76,8 +78,8 @@
                     <div class="col-6 col-md-4">
                         <asp:DropDownList ID="ddlAssignStatus" runat="server" CssClass="form-select form-select-sm"
                             AutoPostBack="true" OnSelectedIndexChanged="ddlAssignStatus_SelectedIndexChanged">
-                            <asp:ListItem Value="">All Assignment States</asp:ListItem>
-                            <asp:ListItem Value="unassigned" Selected="True">Unassigned Leads Only</asp:ListItem>
+                            <asp:ListItem Value="" Selected="True">All Assignment States</asp:ListItem>
+                            <asp:ListItem Value="unassigned">Unassigned Leads Only</asp:ListItem>
                             <asp:ListItem Value="assigned">Already Assigned</asp:ListItem>
                         </asp:DropDownList>
                     </div>
@@ -458,28 +460,9 @@
                     if (modal) modal.hide();
                 }
 
-                if (currentUnassignButton) {
-                    var row = currentUnassignButton.closest('tr');
-                    if (row) {
-                        var assigneeCell = row.cells[6];
-                        if (assigneeCell) {
-                            assigneeCell.innerHTML = '<span class="badge bg-secondary-subtle text-muted">Unassigned</span>';
-                        }
-                        var actionCell = row.cells[10];
-                        if (actionCell) {
-                            actionCell.innerHTML = '<span class="text-muted small">--</span>';
-                        }
-                    }
-                }
-
-                var alertBox = document.getElementById('assignSuccessAlert');
-                if (alertBox) {
-                    var textEl = document.getElementById('assignSuccessText');
-                    if (textEl) {
-                        textEl.textContent = 'Lead #' + currentUnassignLeadCode + ' has been unassigned successfully (UI Demo). Ready for backend integration.';
-                    }
-                    alertBox.classList.remove('d-none');
-                    alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                if (currentUnassignLeadCode) {
+                    document.getElementById('<%= hfUnassignLeadCode.ClientID %>').value = currentUnassignLeadCode;
+                    document.getElementById('<%= btnServerUnassign.ClientID %>').click();
                 }
             }
         </script>

@@ -64,24 +64,7 @@
                 </div>
             </div>
         </div>
-
-        <!-- 4. Hot Leads -->
-        <div class="col-12 col-sm-6 col-xl-2">
-            <div class="nj-stat-card">
-                <div>
-                    <div class="stat-label">Hot Leads</div>
-                    <asp:Label ID="lblHotLeads" runat="server" CssClass="stat-value text-danger d-block" Text="0" />
-                    <div class="stat-meta text-danger">
-                        <i class="bi bi-fire fs-6"></i>
-                        <span>High Priority</span>
-                    </div>
-                </div>
-                <div class="nj-stat-icon red">
-                    <i class="bi bi-fire"></i>
-                </div>
-            </div>
-        </div>
-
+ 
         <!-- 5. Total Employees -->
         <div class="col-12 col-sm-6 col-xl-2">
             <div class="nj-stat-card">
@@ -98,21 +81,7 @@
             </div>
         </div>
 
-        <!-- 6. Today's Follow-ups -->
-        <div class="col-12 col-sm-6 col-xl-2">
-            <div class="nj-stat-card">
-                <div>
-                    <div class="stat-label">Today Follow-ups</div>
-                    <asp:Label ID="lblTodayFollowups" runat="server" CssClass="stat-value text-teal d-block" Text="0" />
-                    <div class="stat-meta text-muted">
-                        <asp:Label ID="lblPendingFollowups" runat="server" CssClass="badge bg-danger-subtle text-danger" Text="0 Pending" />
-                    </div>
-                </div>
-                <div class="nj-stat-icon teal">
-                    <i class="bi bi-calendar2-check-fill"></i>
-                </div>
-            </div>
-        </div>
+        
     </div>
 
     <!-- Dashboard Main Grid: Recent Leads -->
@@ -140,7 +109,7 @@
                                     <th>City / Destination</th>
                                     <th>Lead Source</th>
                                     <th>Created By</th>
-                                    <th>Assigned Employee</th>
+                                   <%-- <th>Assigned Employee</th>--%>
                                     <th>Status</th>
                                     <th>Priority</th>
                                     <th>Next Follow-up</th>
@@ -172,11 +141,11 @@
                                             <td>
                                                 <%# Eval("created_by") %>
                                             </td>
-                                            <td>
+                                          <%--  <td>
                                                 <span class="badge bg-primary-subtle text-primary">
                                                     <%# Eval("assigned_employee_id") == DBNull.Value || string.IsNullOrEmpty(Eval("assigned_employee_id").ToString()) ? "Not Assigned" : Eval("assigned_employee_id") %>
                                                 </span>
-                                            </td>
+                                            </td>--%>
                                             <td>
                                                 <span class='badge <%# Eval("lead_status") != null && Eval("lead_status").ToString().ToLower() == "confirmed" ? "bg-success-subtle text-success" : (Eval("lead_status") != null && Eval("lead_status").ToString().ToLower() == "interested" ? "bg-info-subtle text-info" : "bg-warning-subtle text-warning") %>'>
                                                     <%# Eval("lead_status") %>
@@ -215,7 +184,7 @@
     </div>
 
     <!-- Upcoming Follow-ups Table -->
-    <div class="row">
+    <%--<div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
@@ -300,7 +269,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>--%>
 
     <!-- Quick Lead Details View Modal -->
     <div class="modal fade" id="viewLeadModal" tabindex="-1" aria-labelledby="viewLeadModalLabel" aria-hidden="true">

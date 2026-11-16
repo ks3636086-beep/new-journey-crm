@@ -1,4 +1,4 @@
-<%@ Page Language="C#" MasterPageFile="MasterPage.master" AutoEventWireup="true" CodeFile="CallHistory.aspx.cs" Inherits="CallHistory" %>
+﻿<%@ Page Language="C#" MasterPageFile="MasterPage.master" AutoEventWireup="true" CodeFile="CallHistory.aspx.cs" Inherits="CallHistory" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <title>Call History | New Journey Holidays CRM</title>
@@ -340,14 +340,14 @@
                 var srno = getVal('data-srno');
                 var callFull = callId;
                 if (srno && srno !== '-') {
-                    callFull += ' • #' + srno;
+                    callFull += ' - #' + srno;
                 }
 
                 var dest = getVal('data-dest');
                 var city = getVal('data-city');
                 var destCity = dest;
                 if (city && city !== '-') {
-                    destCity += (dest !== '-' ? ' • ' : '') + city;
+                    destCity += (dest !== '-' ? ' - ' : '') + city;
                 }
 
                 var leadCode = getVal('data-leadcode');

@@ -10,6 +10,7 @@
     --nj-sidebar-bg: #123524;
     --nj-sidebar-hover: #1b4b34;
     --nj-sidebar-active: #21593e;
+    --nj-sidebar-accent: #86efac;
     --nj-light-green: #E8F3EB;
     --nj-light-green-border: #c8e4d0;
     --nj-white: #FFFFFF;
@@ -160,10 +161,14 @@ body {
 }
 
 .nj-nav-item .nj-nav-link.active {
-    background-color: var(--nj-sidebar-active);
-    color: #ffffff;
+    background-color: var(--nj-sidebar-active) !important;
+    color: #ffffff !important;
     font-weight: 600;
-    box-shadow: inset 3px 0 0 #86efac;
+    box-shadow: inset 3.5px 0 0 var(--nj-sidebar-accent);
+}
+
+.nj-nav-item .nj-nav-link.active i {
+    color: #ffffff !important;
 }
 
 .nj-sidebar-footer {

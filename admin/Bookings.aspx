@@ -2,6 +2,26 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <title>All Bookings Overview | Admin Panel</title>
+    <!-- Flatpickr Calendar CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+    <style>
+        .flatpickr-calendar {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+            border-radius: 8px !important;
+            border: 1px solid #e2e8f0 !important;
+            font-family: inherit !important;
+        }
+        .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange {
+            background: #0284c7 !important;
+            border-color: #0284c7 !important;
+            color: #fff !important;
+        }
+        .flatpickr-day.inRange {
+            background: #e0f2fe !important;
+            border-color: #e0f2fe !important;
+            color: #0369a1 !important;
+        }
+    </style>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -58,12 +78,12 @@
         </div>
     </div>
 
-    <!-- 2. Search & Filter Bar (Status + Weekly/Monthly Filter) -->
+    <!-- 2. Search & Filter Bar (Status + Calendar Range Filter) -->
     <div class="card mb-3">
         <div class="card-body p-3">
             <div class="row g-2 align-items-center">
                 <!-- Search Box -->
-                <div class="col-12 col-md-5">
+                <div class="col-12 col-md-4">
                     <div class="input-group input-group-sm">
                         <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
                         <input type="text" id="txtAdminBookingSearch" class="form-control border-start-0" placeholder="Search customer, mobile, city, destination, agent..." onkeyup="filterAdminBookings();" />
@@ -77,28 +97,26 @@
                         <select id="ddlAdminStatusFilter" class="form-select form-select-sm" onchange="filterAdminBookings();">
                             <option value="Confirmed" selected="selected">Confirmed</option>
                             <option value="Closed">Closed</option>
-                            <option value="">All (Confirmed &amp; Closed)</option>
+                            <option value="">All Statuses</option>
                         </select>
                     </div>
                 </div>
 
-                <!-- Period Filter (Weekly / Monthly / All Time) -->
-                <div class="col-6 col-md-2">
+                <!-- Calendar Date Range Input (Opens Interactive Calendar Popup) -->
+                <div class="col-6 col-md-4">
                     <div class="input-group input-group-sm">
-                        <span class="input-group-text bg-white"><i class="bi bi-calendar3 text-muted"></i></span>
-                        <select id="ddlPeriodFilter" class="form-select form-select-sm" onchange="filterAdminBookings();">
-                            <option value="all" selected="selected">All Time</option>
-                            <option value="weekly">This Week</option>
-                            <option value="monthly">This Month</option>
-                            <option value="last_month">Last Month</option>
-                        </select>
+                        <span class="input-group-text bg-white text-primary"><i class="bi bi-calendar-event"></i></span>
+                        <input type="text" id="txtDateRangePicker" class="form-control bg-white" placeholder="Choose Date or Date Range (Calendar)..." style="cursor: pointer;" readonly="readonly" />
+                        <button type="button" class="btn btn-outline-secondary" onclick="clearDatePicker();" title="Clear Date Filter">
+                            <i class="bi bi-x"></i>
+                        </button>
                     </div>
                 </div>
 
                 <!-- Reset Button -->
-                <div class="col-12 col-md-2 text-md-end">
-                    <button type="button" class="btn btn-outline-secondary btn-sm w-100" onclick="resetAdminBookingFilters();">
-                        <i class="bi bi-arrow-counterclockwise me-1"></i>Reset
+                <div class="col-12 col-md-1 text-md-end">
+                    <button type="button" class="btn btn-outline-secondary btn-sm w-100" onclick="resetAdminBookingFilters();" title="Reset All Filters">
+                        <i class="bi bi-arrow-counterclockwise"></i>
                     </button>
                 </div>
             </div>
@@ -112,9 +130,7 @@
                 <h6 class="mb-0"><i class="bi bi-bookmark-check-fill text-success me-1"></i>All Bookings Directory</h6>
                 <small class="text-muted">Master log of all confirmed &amp; closed bookings handled across all staff</small>
             </div>
-            <span class="badge bg-primary-subtle text-primary border border-primary-subtle">
-                <i class="bi bi-eye-fill me-1"></i>Admin Monitoring View
-            </span>
+            
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -186,17 +202,43 @@
         </div>
     </div>
 
-    <!-- Client-side Search, Status & Period Script -->
+    <!-- Flatpickr Calendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <!-- Client-side Search, Status & Calendar Filter Script -->
     <script>
+        var fpInstance = null;
+
+        function formatDateYYYYMMDD(d) {
+            var y = d.getFullYear();
+            var m = String(d.getMonth() + 1).padStart(2, '0');
+            var day = String(d.getDate()).padStart(2, '0');
+            return y + '-' + m + '-' + day;
+        }
+
+        function clearDatePicker() {
+            if (fpInstance) {
+                fpInstance.clear();
+            }
+            filterAdminBookings();
+        }
+
         function filterAdminBookings() {
             var search = (document.getElementById('txtAdminBookingSearch').value || '').toLowerCase().trim();
             var statusFilter = (document.getElementById('ddlAdminStatusFilter').value || '').trim().toLowerCase();
-            var periodFilter = (document.getElementById('ddlPeriodFilter').value || 'all').toLowerCase();
+
+            // Calendar dates
+            var fromDate = null;
+            var toDate = null;
+            if (fpInstance && fpInstance.selectedDates && fpInstance.selectedDates.length > 0) {
+                fromDate = formatDateYYYYMMDD(fpInstance.selectedDates[0]);
+                toDate = fpInstance.selectedDates.length > 1 
+                    ? formatDateYYYYMMDD(fpInstance.selectedDates[1]) 
+                    : fromDate;
+            }
 
             var rows = document.querySelectorAll('.admin-booking-row');
             var visibleCount = 0;
-
-            var today = new Date();
 
             rows.forEach(function (row) {
                 var text = row.innerText.toLowerCase();
@@ -207,20 +249,10 @@
                 var mStatus = statusFilter === '' || rStatus === statusFilter;
                 var mPeriod = true;
 
-                if (periodFilter !== 'all' && rDateStr) {
-                    var rDate = new Date(rDateStr);
-                    if (!isNaN(rDate.getTime())) {
-                        if (periodFilter === 'weekly') {
-                            // Check if within 7 days
-                            var diffDays = (today - rDate) / (1000 * 60 * 60 * 24);
-                            mPeriod = diffDays >= -7 && diffDays <= 7;
-                        } else if (periodFilter === 'monthly') {
-                            // Same year & month
-                            mPeriod = rDate.getFullYear() === today.getFullYear() && rDate.getMonth() === today.getMonth();
-                        } else if (periodFilter === 'last_month') {
-                            var lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-                            mPeriod = rDate.getFullYear() === lastMonth.getFullYear() && rDate.getMonth() === lastMonth.getMonth();
-                        }
+                if (fromDate && toDate) {
+                    // Filter using Calendar selection
+                    if (!rDateStr || rDateStr < fromDate || rDateStr > toDate) {
+                        mPeriod = false;
                     }
                 }
 
@@ -245,11 +277,29 @@
         function resetAdminBookingFilters() {
             document.getElementById('txtAdminBookingSearch').value = '';
             document.getElementById('ddlAdminStatusFilter').value = 'Confirmed';
-            document.getElementById('ddlPeriodFilter').value = 'all';
+            if (fpInstance) {
+                fpInstance.clear();
+            }
             filterAdminBookings();
         }
 
         document.addEventListener('DOMContentLoaded', function () {
+            // Initialize Flatpickr Range Calendar
+            if (typeof flatpickr !== 'undefined') {
+                fpInstance = flatpickr("#txtDateRangePicker", {
+                    mode: "range",
+                    dateFormat: "Y-m-d",
+                    altInput: true,
+                    altFormat: "d-M-Y",
+                    altInputClass: "form-control form-control-sm bg-white",
+                    allowInput: false,
+                    placeholder: "Click to pick Date / Range (Calendar)...",
+                    onChange: function (selectedDates) {
+                        filterAdminBookings();
+                    }
+                });
+            }
+
             filterAdminBookings();
         });
     </script>

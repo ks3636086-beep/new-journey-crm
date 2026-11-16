@@ -23,7 +23,7 @@
 
         <!-- Today's Follow-ups -->
         <li class="nav-item" role="presentation">
-            <button class="nav-link active d-flex align-items-center gap-2 border"
+            <button class='nav-link d-flex align-items-center gap-2 border <%= IsTodayTab ? "active" : "" %>'
                 id="tab-btn-today" type="button"
                 onclick="loadFollowups('today', this)">
 
@@ -34,7 +34,7 @@
 
         <!-- Upcoming Follow-ups -->
         <li class="nav-item" role="presentation">
-            <button class="nav-link d-flex align-items-center gap-2 border"
+            <button class='nav-link d-flex align-items-center gap-2 border <%= CurrentTab == "upcoming" ? "active" : "" %>'
                 id="tab-btn-upcoming" type="button"
                 onclick="loadFollowups('upcoming', this)">
 
@@ -45,7 +45,7 @@
 
         <!-- Overdue Follow-ups -->
         <li class="nav-item" role="presentation">
-            <button class="nav-link d-flex align-items-center gap-2 border text-danger"
+            <button class='nav-link d-flex align-items-center gap-2 border text-danger <%= CurrentTab == "overdue" ? "active" : "" %>'
                 id="tab-btn-overdue" type="button"
                 onclick="loadFollowups('overdue', this)">
 
@@ -101,10 +101,10 @@
             <div class="card">
                 <div class="card-header bg-white d-flex justify-content-between align-items-center">
                     <div>
-                        <h6 class="mb-0" id="followupHeading">Today's Follow-ups</h6>
-                        <small class="text-muted">High priority client calls scheduled for today</small>
+                        <h6 class="mb-0" id="followupHeading"><asp:Literal ID="litFollowupHeading" runat="server" Text="Today's Follow-ups" /></h6>
+                        <small class="text-muted"><asp:Literal ID="litFollowupSubHeading" runat="server" Text="High priority client calls scheduled for today" /></small>
                     </div>
-                    <span class="badge bg-danger-subtle text-danger">3 Pending Calls</span>
+                    <span class="badge bg-danger-subtle text-danger"><asp:Literal ID="litFollowupBadge" runat="server" Text="Pending Calls" /></span>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
@@ -167,16 +167,22 @@
                                                 </span>
                                             </td>
 
-                                            <!-- 7. Actions: View Lead, Update Call -->
+                                            <!-- 7. Actions: View Lead, Update Call (Change allowed only in Today) -->
                                             <td class="text-end">
                                                 <div class="d-inline-flex gap-1 justify-content-end">
                                                     <a href='LeadDetails.aspx?id=<%# Eval("lead_code") %>' class="btn btn-nj-outline btn-sm text-nowrap" title="View Lead Details">
                                                         <i class="bi bi-eye me-1"></i>View Lead
                                                     </a>
-                                                    <button type="button" class="btn btn-nj-primary btn-sm text-nowrap" onclick='openUpdateCallModal("<%# Eval("client_name") %>", "<%# Eval("mobile") %>", "<%# Eval("destination") %>");' title="Update Call Details">
-                                                        <i class="bi bi-telephone-forward me-1"></i>Update Call
-                                                   
-                                                    </button>
+                                                    <asp:PlaceHolder ID="phUpdateCall" runat="server" Visible='<%# IsTodayTab %>'>
+                                                        <asp:LinkButton ID="btnUpdateCall" runat="server"
+                                                            CssClass="btn btn-nj-primary btn-sm text-nowrap"
+                                                            CommandArgument='<%# Eval("lead_code") %>'
+                                                            OnClick="btnUpdateCall_Click"
+                                                            CausesValidation="false"
+                                                            title="Update Call Details">
+                                                            <i class="bi bi-telephone-forward me-1"></i>Update Call
+                                                        </asp:LinkButton>
+                                                    </asp:PlaceHolder>
                                                 </div>
                                             </td>
                                         </tr>
@@ -420,67 +426,98 @@
 
     </div>--%>
 
-        <!-- 4. Simple Update Call Modal -->
-        <div class="modal fade" id="modalUpdateCall" tabindex="-1" aria-labelledby="modalUpdateCallLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+        <!-- Modal for Updating Call Details -->
+        <div class="modal fade" id="updateCallModal" tabindex="-1" aria-labelledby="updateCallModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
                 <div class="modal-content">
+
                     <div class="modal-header border-bottom py-2">
-                        <h6 class="modal-title fw-bold" id="modalUpdateCallLabel">
-                            <i class="bi bi-telephone-forward text-primary me-1"></i>Update Call
-                    </h6>
+                        <h6 class="modal-title fw-bold" id="updateCallModalLabel">
+                            <i class="bi bi-telephone-forward text-success me-1"></i>Update Call
+                        </h6>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+
                     <div class="modal-body">
-                        <!-- Customer Information Banner -->
-                        <div class="p-2 bg-light rounded mb-3 border">
-                            <div class="fw-bold text-dark" id="fupModalCustName">Customer Name</div>
-                            <div class="text-muted small" id="fupModalCustInfo">+91 00000 00000 &bull; Destination</div>
+
+                        <asp:HiddenField ID="hfLeadCode" runat="server" />
+
+                        <div class="mb-3 p-2 bg-light rounded d-flex justify-content-between align-items-center">
+                            <div>
+                                <asp:Label ID="lblModalClientName" runat="server"
+                                    Text="Client" CssClass="fw-semibold small d-block" />
+
+                                <asp:Label ID="lblModalClientPhone" runat="server"
+                                    Text="+91" CssClass="text-muted small" />
+                            </div>
+                            <span class="badge bg-primary-subtle text-primary">Follow-up</span>
                         </div>
 
-                        <!-- 1. Call Outcome -->
                         <div class="mb-3">
-                            <label class="form-label small fw-semibold">Call Outcome <span class="text-danger">*</span></label>
-                            <select class="form-select form-select-sm" id="callOutcomeSelect">
-                                <option value="">-- Select Outcome --</option>
-                                <option value="Connected">Connected</option>
-                                <option value="Interested">Interested</option>
-                                <option value="Call Back Later">Call Back Later</option>
-                                <option value="Busy">Busy</option>
-                                <option value="No Answer">No Answer</option>
-                                <option value="Switched Off">Switched Off</option>
-                                <option value="Not Interested">Not Interested</option>
-                            </select>
+                            <label class="form-label small fw-semibold">
+                                Call Status <span class="text-danger">*</span>
+                            </label>
+
+                            <asp:DropDownList ID="ddlCallStatus" runat="server"
+                                CssClass="form-select form-select-sm">
+                                <asp:ListItem Text="-- Select Status --" Value="" />
+                                <asp:ListItem Text="Answered" Value="Answered" />
+                                <asp:ListItem Text="Not Answered" Value="Not Answered" />
+                                <asp:ListItem Text="Busy" Value="Busy" />
+                                <asp:ListItem Text="Switched Off" Value="Switched Off" />
+                            </asp:DropDownList>
+
+                            <asp:RequiredFieldValidator ID="rfvCallStatus" runat="server"
+                                ControlToValidate="ddlCallStatus"
+                                InitialValue=""
+                                ErrorMessage="Please select call status."
+                                CssClass="text-danger small"
+                                Display="Dynamic"
+                                ValidationGroup="CallUpdate" />
                         </div>
 
-                        <!-- 2. Trip / Lead Status -->
                         <div class="mb-3">
                             <label class="form-label small fw-semibold">Trip / Lead Status</label>
-                            <select class="form-select form-select-sm" id="tripStatusSelect">
-                                <option value="">-- Keep Current Status --</option>
-                                <option value="Interested">Interested</option>
-                                <option value="Pending">Pending</option>
-                                <option value="Confirmed">Trip Confirmed</option>
-                                <option value="Closed">Trip Completed / Closed</option>
-                                <option value="Not Interested">Not Interested</option>
-                            </select>
+                            <asp:DropDownList ID="ddlTripStatus" runat="server"
+                                CssClass="form-select form-select-sm">
+                                <asp:ListItem Text="In Process (Follow-up)" Value="" />
+                                <asp:ListItem Text="Trip Confirmed" Value="Confirmed" />
+                                <asp:ListItem Text="Cancelled" Value="Not Interested" />
+                            </asp:DropDownList>
                         </div>
 
-                        <!-- 3. Call Remarks -->
                         <div class="mb-3">
-                            <label class="form-label small fw-semibold">Call Remarks <span class="text-danger">*</span></label>
-                            <textarea class="form-control form-control-sm" id="callRemarksText" rows="3" placeholder="Key points from the conversation, client response, notes..."></textarea>
+                            <label class="form-label small fw-semibold">Next Follow-up Date & Time</label>
+
+                            <asp:TextBox ID="txtNextFollowUp" runat="server"
+                                TextMode="DateTimeLocal"
+                                CssClass="form-control form-control-sm" />
                         </div>
 
-                        <!-- 3. Next Follow-up Date & Time -->
                         <div class="mb-2">
-                            <label class="form-label small fw-semibold">Next Follow-up Date & Time</label>
-                            <input type="datetime-local" class="form-control form-control-sm" id="nextFollowupInput" />
+                            <label class="form-label small fw-semibold">Call Remarks</label>
+
+                            <asp:TextBox ID="txtCallRemarks" runat="server"
+                                TextMode="MultiLine"
+                                Rows="3"
+                                CssClass="form-control form-control-sm"
+                                placeholder="Enter conversation details, client response, notes..." />
                         </div>
+
                     </div>
+
                     <div class="modal-footer border-top py-2">
-                        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-sm btn-nj-primary" onclick="saveCallRecord();">Save Call</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">
+                            Cancel
+                        </button>
+
+                        <asp:Button ID="btnSaveCallUpdate" runat="server"
+                            Text="Save"
+                            CssClass="btn btn-nj-primary btn-sm"
+                            ValidationGroup="CallUpdate" 
+                            OnClick="btnSaveCallUpdate_Click" />
                     </div>
+
                 </div>
             </div>
         </div>
@@ -501,44 +538,7 @@
             }
 
 
-            function openUpdateCallModal(name, phone, dest) {
-                var nameEl = document.getElementById('fupModalCustName');
-                var infoEl = document.getElementById('fupModalCustInfo');
-                if (nameEl) nameEl.textContent = name;
-                if (infoEl) infoEl.textContent = phone + ' • ' + dest;
 
-                var outcome = document.getElementById('callOutcomeSelect');
-                var tripStatus = document.getElementById('tripStatusSelect');
-                var remarks = document.getElementById('callRemarksText');
-                var nextDate = document.getElementById('nextFollowupInput');
-                if (outcome) outcome.selectedIndex = 0;
-                if (tripStatus) tripStatus.selectedIndex = 0;
-                if (remarks) remarks.value = '';
-                if (nextDate) nextDate.value = '';
-
-                var modalEl = document.getElementById('modalUpdateCall');
-                if (modalEl && typeof bootstrap !== 'undefined') {
-                    var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-                    modal.show();
-                }
-            }
-
-            function saveCallRecord() {
-                var outcome = document.getElementById('callOutcomeSelect');
-                if (!outcome || !outcome.value) {
-                    alert('Please select a Call Outcome.');
-                    if (outcome) outcome.focus();
-                    return;
-                }
-
-                alert('Call details updated successfully (UI Demo)!');
-
-                var modalEl = document.getElementById('modalUpdateCall');
-                if (modalEl && typeof bootstrap !== 'undefined') {
-                    var modal = bootstrap.Modal.getInstance(modalEl);
-                    if (modal) modal.hide();
-                }
-            }
 
             function filterFollowUps() {
                 var search = (document.getElementById('followUpSearch').value || '').toLowerCase().trim();

@@ -6,35 +6,31 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <!-- Category Awareness Greeting Banner -->
-    <div class="card bg-white border mb-4">
-        <div class="card-body p-3 p-md-4">
-            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="nj-avatar bg-primary"
-                        style="width: 52px; height: 52px; font-size: 1.35rem;">
-                        <asp:Literal ID="litDashAvatar" runat="server" Mode="Encode" />
-                    </div>
-
-                    <div>
-                        <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
-                            <h3 class="fw-bold text-dark mb-0 fs-5">Welcome,
-                                <asp:Literal ID="litDashName" runat="server" Mode="Encode" />!
-                            </h3>
-
-                            <span class="badge badge-cat-sales">
-                                <i class="bi bi-briefcase-fill me-1"></i>
-                                <asp:Literal ID="litDashCategory" runat="server" Mode="Encode" />
-                            </span>
-                        </div>
-
-                        <p class="text-muted small mb-0">
-                            <i class="bi bi-geo-alt-fill text-success me-1"></i>
-                            <asp:Literal ID="litDashDescription" runat="server" Mode="Encode" />
-                        </p>
-                    </div>
+    <div class="card bg-white border mb-3">
+        <div class="card-body p-2 p-sm-3">
+            <div class="d-flex align-items-center gap-2 gap-sm-3">
+                <div class="nj-avatar bg-primary flex-shrink-0"
+                    style="width: 44px; height: 44px; font-size: 1.15rem;">
+                    <asp:Literal ID="litDashAvatar" runat="server" Mode="Encode" />
                 </div>
 
+                <div class="flex-grow-1 min-w-0">
+                    <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                        <h4 class="fw-bold text-dark mb-0 fs-6 fs-sm-5 text-truncate">Welcome,
+                            <asp:Literal ID="litDashName" runat="server" Mode="Encode" />!
+                        </h4>
 
+                        <span class="badge badge-cat-sales" style="font-size: 0.72rem;">
+                            <i class="bi bi-briefcase-fill me-1"></i>
+                            <asp:Literal ID="litDashCategory" runat="server" Mode="Encode" />
+                        </span>
+                    </div>
+
+                    <p class="text-muted mb-0" style="font-size: 0.78rem; line-height: 1.3;">
+                        <i class="bi bi-geo-alt-fill text-success me-1"></i>
+                        <asp:Literal ID="litDashDescription" runat="server" Mode="Encode" />
+                    </p>
+                </div>
             </div>
         </div>
     </div>
@@ -444,8 +440,7 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                <span class="badge bg-primary-subtle text-primary">
-                                                    <%# Eval("assigned_employee_name") %>                                                </span>
+                                                <span class='badge <%# Eval("assigned_employee_name") != null && Eval("assigned_employee_name").ToString() == "Self" ? "bg-success-subtle text-success" : "bg-primary-subtle text-primary" %>'><%# Eval("assigned_employee_name") %></span>
                                             </td>
                                             <td>
                                                 <span class='badge <%# Eval("lead_priority") != null && Eval("lead_priority").ToString().ToLower() == "hot" ? "badge-priority-hot" : (Eval("lead_priority") != null && Eval("lead_priority").ToString().ToLower() == "warm" ? "badge-priority-warm" : "badge-priority-cold") %>'>
@@ -529,12 +524,9 @@
                         <label class="form-label small fw-semibold">Trip / Lead Status</label>
                         <asp:DropDownList ID="ddlTripStatus" runat="server"
                             CssClass="form-select form-select-sm">
-                            <asp:ListItem Text="-- Keep Current Status --" Value="" />
-                            <asp:ListItem Text="Interested" Value="Interested" />
-                            <asp:ListItem Text="Pending" Value="Pending" />
+                            <asp:ListItem Text="In Process (Follow-up)" Value="" />
                             <asp:ListItem Text="Trip Confirmed" Value="Confirmed" />
-                            <asp:ListItem Text="Trip Completed / Closed" Value="Closed" />
-                            <asp:ListItem Text="Not Interested" Value="Not Interested" />
+                            <asp:ListItem Text="Cancelled" Value="Not Interested" />
                         </asp:DropDownList>
                     </div>
 

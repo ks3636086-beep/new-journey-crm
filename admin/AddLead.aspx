@@ -78,12 +78,9 @@
                             <label class="form-label">Lead Status <span class="text-danger">*</span></label>
                             <asp:DropDownList ID="ddlLeadStatus" runat="server" CssClass="form-select">
                                 <asp:ListItem Value="">-- Select Status --</asp:ListItem>
-                                <asp:ListItem Value="New">New</asp:ListItem>
-                                <asp:ListItem Value="Interested">Interested</asp:ListItem>
-                                <asp:ListItem Value="Pending">Pending</asp:ListItem>
+                                <asp:ListItem Value="Pending">In Process</asp:ListItem>
                                 <asp:ListItem Value="Confirmed">Confirmed</asp:ListItem>
-                                <asp:ListItem Value="Not Interested">Not Interested</asp:ListItem>
-                                <asp:ListItem Value="Closed">Closed</asp:ListItem>
+                                <asp:ListItem Value="Not Interested">Cancelled</asp:ListItem>
                             </asp:DropDownList>
                             <asp:RequiredFieldValidator ID="rfvLeadStatus" runat="server" ControlToValidate="ddlLeadStatus" InitialValue="" ErrorMessage="Please select lead status." CssClass="text-danger small" Display="Dynamic" />
                         </div>

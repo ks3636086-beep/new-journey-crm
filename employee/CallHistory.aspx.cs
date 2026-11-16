@@ -22,7 +22,7 @@ public partial class CallHistory : System.Web.UI.Page
     {
         if (Session["employee_name"] == null)
         {
-            Response.Redirect("Login.aspx");
+            Response.Redirect("Employee_Login.aspx");
             return;
         }
 

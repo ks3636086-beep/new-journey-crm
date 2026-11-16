@@ -111,6 +111,11 @@ public partial class AssignLeads : System.Web.UI.Page
 
             ob.con.Close();
 
+            // Selection clear karein aur grid ko turant rebind karein taaki Unassign button foran dikh jaye
+            hfSelectedLeadCodes.Value = "";
+            ddlTargetEmployee.SelectedIndex = 0;
+            BindAssignableLeads();
+
             ClientScript.RegisterStartupScript(
                 this.GetType(), "Success",
                 "alert('Leads assigned successfully!');", true
@@ -131,6 +136,16 @@ public partial class AssignLeads : System.Web.UI.Page
         }
     }
 
+    protected void btnServerUnassign_Click(object sender, EventArgs e)
+    {
+        string leadCode = hfUnassignLeadCode.Value;
+        if (!string.IsNullOrEmpty(leadCode))
+        {
+            UnassignLead(leadCode);
+            ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Lead #" + leadCode + " unassigned successfully!');", true);
+        }
+    }
+
     protected void UnassignLead(string leadCode)
     {
         ob.unassign_lead(leadCode);
@@ -138,4 +153,3 @@ public partial class AssignLeads : System.Web.UI.Page
 
     }
 }
-
