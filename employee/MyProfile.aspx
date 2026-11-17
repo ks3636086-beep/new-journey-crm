@@ -8,7 +8,7 @@
     <!-- Page Header -->
     <div class="nj-page-header">
         <div>
-            <h2 class="nj-page-title">Employee Profile & Settings</h2>
+            <h2 class="nj-page-title">Employee Profile</h2>
             <p class="nj-page-subtitle">Personal identity details, assigned operational category, contact information and password management.</p>
         </div>
         <div class="d-flex align-items-center gap-2">

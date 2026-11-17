@@ -28,8 +28,13 @@ public class Master
 
         string query = "SELECT ISNULL(MAX(lead_id), 0) + 1 FROM dbo.tbl_leads";
 
+        bool wasClosed = (con.State == ConnectionState.Closed);
+        if (wasClosed) con.Open();
+
         SqlCommand cmd = new SqlCommand(query, con);
         int num = Convert.ToInt32(cmd.ExecuteScalar());
+
+        if (wasClosed && con.State == ConnectionState.Open) con.Close();
 
         leadcode = "LEAD-" + num.ToString("D4");
 
@@ -68,12 +73,26 @@ public class Master
         cmd.Parameters.AddWithValue("@created_by", created_by);
         cmd.Parameters.AddWithValue("@assigned_employee_id", (object)assigned_employee_id ?? DBNull.Value);
 
+        bool wasClosed = (con.State == ConnectionState.Closed);
+        if (wasClosed) con.Open();
+
         cmd.ExecuteNonQuery();
+
+        if (wasClosed && con.State == ConnectionState.Open) con.Close();
     }
 
     public DataTable get_all_leads()
     {
-        string query = @"SELECT * FROM dbo.tbl_leads ORDER BY lead_id DESC";
+        string query = @"
+        SELECT l.*,
+               CASE 
+                   WHEN l.assigned_employee_id IS NULL OR LTRIM(RTRIM(l.assigned_employee_id)) = '' THEN 'Not Assigned'
+                   WHEN e.employee_name IS NOT NULL THEN e.employee_name
+                   ELSE l.assigned_employee_id
+               END AS assigned_employee_name
+        FROM dbo.tbl_leads l
+        LEFT JOIN dbo.tbl_employees e ON (TRY_CONVERT(INT, l.assigned_employee_id) = e.employee_id OR l.assigned_employee_id = e.employee_name)
+        ORDER BY l.lead_id DESC";
 
         SqlDataAdapter da = new SqlDataAdapter(query, con);
         DataTable dt = new DataTable();
@@ -313,7 +332,12 @@ public class Master
         cmd.Parameters.AddWithValue("@followup_date", followupDate ?? DBNull.Value);
         cmd.Parameters.AddWithValue("@remarks", (object)remarks ?? DBNull.Value);
 
+        bool wasClosed = (con.State == ConnectionState.Closed);
+        if (wasClosed) con.Open();
+
         cmd.ExecuteNonQuery();
+
+        if (wasClosed && con.State == ConnectionState.Open) con.Close();
     }
 
 
@@ -453,13 +477,27 @@ public class Master
 
     public string get_employee_name(string employeeId)
     {
+        string name = "";
         string query = @"SELECT employee_name FROM tbl_employees
                      WHERE employee_id = @id";
 
-        SqlCommand cmd = new SqlCommand(query, con);
-        cmd.Parameters.AddWithValue("@id", employeeId);
+        using (SqlCommand cmd = new SqlCommand(query, con))
+        {
+            cmd.Parameters.AddWithValue("@id", employeeId);
 
-        return Convert.ToString(cmd.ExecuteScalar());
+            bool wasClosed = (con.State == ConnectionState.Closed);
+            if (wasClosed) con.Open();
+
+            object result = cmd.ExecuteScalar();
+            if (result != null && result != DBNull.Value)
+            {
+                name = result.ToString();
+            }
+
+            if (wasClosed && con.State == ConnectionState.Open) con.Close();
+        }
+
+        return name;
     }
 
     public DataTable get_employee_dashboard_metrics(int employeeId)
@@ -546,8 +584,24 @@ ORDER BY followup_date ASC";
 
     public DataTable get_recent_employee_leads(int employeeId)
     {
-        string query = @"SELECT TOP 5 l.lead_code, l.client_name, l.mobile, l.destination, l.created_by, ISNULL(e.employee_name,'Unassigned') AS assigned_employee_name, l.lead_priority, l.lead_status
-FROM dbo.tbl_leads l LEFT JOIN dbo.tbl_employees e ON TRY_CONVERT(INT,l.assigned_employee_id)=e.employee_id WHERE l.created_by=(SELECT employee_name FROM dbo.tbl_employees WHERE employee_id=@employeeId) OR TRY_CONVERT(INT,l.assigned_employee_id)=@employeeId ORDER BY l.created_at DESC";
+        string query = @"SELECT TOP 5 
+            l.lead_code, 
+            l.client_name, 
+            l.mobile, 
+            l.destination, 
+            l.created_by, 
+            CASE 
+                WHEN l.created_by = (SELECT employee_name FROM dbo.tbl_employees WHERE employee_id = @employeeId) 
+                     AND (l.assigned_employee_id IS NULL OR TRY_CONVERT(INT, l.assigned_employee_id) = @employeeId) 
+                     THEN 'Self'
+                ELSE 'Assigned'
+            END AS assigned_employee_name, 
+            l.lead_priority, 
+            l.lead_status
+        FROM dbo.tbl_leads l 
+        WHERE l.created_by = (SELECT employee_name FROM dbo.tbl_employees WHERE employee_id = @employeeId) 
+           OR TRY_CONVERT(INT, l.assigned_employee_id) = @employeeId 
+        ORDER BY l.lead_id DESC";
 
         using (SqlCommand cmd = new SqlCommand(query, con))
         {
@@ -970,5 +1024,77 @@ ORDER BY
     {
         return get_dashboard_count(
             "SELECT COUNT(*) FROM dbo.tbl_leads WHERE lead_status = 'Confirmed' AND travel_date < CAST(GETDATE() AS DATE)");
+    }
+
+    // Admin Profile Methods
+    public DataTable get_admin_profile(int adminId)
+    {
+        DataTable dt = new DataTable();
+        string query = "SELECT * FROM dbo.ecommerce_backend WHERE id = @id";
+        using (SqlCommand cmd = new SqlCommand(query, con))
+        {
+            cmd.Parameters.AddWithValue("@id", adminId);
+            using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+            {
+                da.Fill(dt);
+            }
+        }
+        return dt;
+    }
+
+    public bool update_admin_profile(int adminId, string name, string email, string mobile)
+    {
+        string query = @"UPDATE dbo.ecommerce_backend 
+                         SET backend_name = @name, 
+                             backend_email = @email, 
+                             backend_mobileno = @mobile 
+                         WHERE id = @id";
+        using (SqlCommand cmd = new SqlCommand(query, con))
+        {
+            cmd.Parameters.AddWithValue("@id", adminId);
+            cmd.Parameters.AddWithValue("@name", name);
+            cmd.Parameters.AddWithValue("@email", email);
+            cmd.Parameters.AddWithValue("@mobile", (object)mobile ?? DBNull.Value);
+
+            bool wasClosed = (con.State == ConnectionState.Closed);
+            if (wasClosed) con.Open();
+
+            int rows = cmd.ExecuteNonQuery();
+
+            if (wasClosed && con.State == ConnectionState.Open) con.Close();
+
+            return rows > 0;
+        }
+    }
+
+    public bool update_admin_password(int adminId, string currentPassword, string newPassword)
+    {
+        string checkQuery = "SELECT COUNT(*) FROM dbo.ecommerce_backend WHERE id = @id AND backend_password = @currentPassword";
+        using (SqlCommand cmd = new SqlCommand(checkQuery, con))
+        {
+            cmd.Parameters.AddWithValue("@id", adminId);
+            cmd.Parameters.AddWithValue("@currentPassword", currentPassword);
+
+            bool wasClosed = (con.State == ConnectionState.Closed);
+            if (wasClosed) con.Open();
+
+            int exists = Convert.ToInt32(cmd.ExecuteScalar());
+            if (exists == 0)
+            {
+                if (wasClosed && con.State == ConnectionState.Open) con.Close();
+                return false;
+            }
+
+            string updateQuery = "UPDATE dbo.ecommerce_backend SET backend_password = @newPassword WHERE id = @id";
+            using (SqlCommand updateCmd = new SqlCommand(updateQuery, con))
+            {
+                updateCmd.Parameters.AddWithValue("@id", adminId);
+                updateCmd.Parameters.AddWithValue("@newPassword", newPassword);
+                int rows = updateCmd.ExecuteNonQuery();
+
+                if (wasClosed && con.State == ConnectionState.Open) con.Close();
+                return rows > 0;
+            }
+        }
     }
 }

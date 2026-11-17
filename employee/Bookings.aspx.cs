@@ -6,7 +6,6 @@ using System.Data.SqlClient;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-//using static MasterPage;
 
 public partial class Bookings : System.Web.UI.Page
 {
@@ -46,7 +45,7 @@ public partial class Bookings : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            // Error log ya handle kar sakte hain
+            // Error handling
         }
     }
 
@@ -56,8 +55,19 @@ public partial class Bookings : System.Web.UI.Page
 
         if (string.IsNullOrEmpty(leadCode))
         {
-            ClientScript.RegisterStartupScript(this.GetType(), "msg",
-     "alert('Trip successfully closed!');", true);
+            return;
+        }
+
+        // Server-side validation: Trip cannot be closed before travel date
+        DataTable dtLead = ob.get_lead_by_code(leadCode);
+        if (dtLead.Rows.Count > 0 && dtLead.Rows[0]["travel_date"] != DBNull.Value)
+        {
+            DateTime travelDate = Convert.ToDateTime(dtLead.Rows[0]["travel_date"]);
+            if (travelDate.Date > DateTime.Today)
+            {
+                ShowMessage("Trip cannot be closed before the travel date (" + travelDate.ToString("dd-MMM-yyyy") + ")!", MessageType.Warning);
+                return;
+            }
         }
 
         bool result = ob.close_employee_trip(leadCode);
@@ -73,5 +83,3 @@ public partial class Bookings : System.Web.UI.Page
         }
     }
 }
-
-

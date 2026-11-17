@@ -30,7 +30,7 @@
         <div class="card-body p-3">
             <div class="row g-2 align-items-center">
                 <!-- Search input -->
-                <div class="col-12 col-md-3">
+                <div class="col-7 col-md-7 col-lg-4">
                     <div class="input-group input-group-sm">
                         <span class="input-group-text bg-white border-end-0"><i
                             class="bi bi-search text-muted"></i></span>
@@ -39,8 +39,16 @@
                     </div>
                 </div>
 
+                <!-- Employee Filter (Dynamic DB) -->
+                <div class="col-5 col-md-5 col-lg-2">
+                    <asp:DropDownList ID="filterEmployee" runat="server" ClientIDMode="Static"
+                        CssClass="form-select form-select-sm">
+                        <asp:ListItem Text="All Staff" Value="" />
+                    </asp:DropDownList>
+                </div>
+
                 <!-- Status Filter (In Process, Confirmed, Cancelled, Closed) -->
-                <div class="col-6 col-md-2">
+                <div class="col-5 col-md-5 col-lg-2">
                     <select id="filterStatus" class="form-select form-select-sm">
                         <option value="">All Statuses</option>
                         <option value="in process">In Process</option>
@@ -51,7 +59,7 @@
                 </div>
 
                 <!-- Priority Filter -->
-                <div class="col-6 col-md-2">
+                <div class="col-5 col-md-5 col-lg-2">
                     <select id="filterPriority" class="form-select form-select-sm">
                         <option value="">All Priorities</option>
                         <option value="Hot">Hot (High)</option>
@@ -60,20 +68,13 @@
                     </select>
                 </div>
 
-                <!-- Employee Filter (Dynamic DB) -->
-                <div class="col-6 col-md-3">
-                    <asp:DropDownList ID="filterEmployee" runat="server" ClientIDMode="Static"
-                        CssClass="form-select form-select-sm">
-                        <asp:ListItem Text="All Staff" Value="" />
-                    </asp:DropDownList>
-                </div>
-
                 <!-- Reset Filter Button -->
-                <div class="col-12 col-md-2 text-md-end">
+                <div class="col-2 col-md-2 col-lg-2 text-md-end">
                     <button type="button" class="btn btn-outline-secondary btn-sm w-100"
                         onclick="resetFilters();"
                         title="Reset Filters">
-                        <i class="bi bi-arrow-counterclockwise me-1"></i>Reset
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                        <span class="d-none d-lg-inline ms-1">Reset</span>
                     </button>
                 </div>
             </div>

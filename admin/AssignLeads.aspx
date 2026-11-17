@@ -112,7 +112,7 @@
             <div class="card-header bg-white">
                 <div>
                     <h6 class="mb-0"><i class="bi bi-list-check"></i>Assignable Leads List</h6>
-                    <small class="text-muted">Select leads using checkboxes on the left</small>
+                   
                 </div>
                 <div class="small text-muted">
                     Showing 8 leads

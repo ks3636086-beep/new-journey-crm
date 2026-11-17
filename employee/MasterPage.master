@@ -19,9 +19,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
 
     <!-- Custom Employee Theme CSS (Kept inside employee folder) -->
-    <link href="css/employee-style.css?v=20261112e" rel="stylesheet" />
+    <link href="css/employee-style.css?v=20261117_320" rel="stylesheet" />
 
     <style>
+
         /* ==========================================================================
            Brand Theme: Ocean / Coastal Blue (From Logo Waves)
            Applies forcefully across all pages of the Employee Portal
@@ -166,6 +167,166 @@
             border-color: #0284c7 !important;
             box-shadow: 0 0 0 0.2rem rgba(2, 132, 199, 0.2) !important;
         }
+        /* ==========================================================================
+           320px - 991px Full Responsive Mobile Protection Framework
+           Desktop (> 992px) remains 100% untouched
+           ========================================================================== */
+        @media (max-width: 991.98px) {
+            html, body {
+                width: 100% !important;
+                max-width: 100% !important;
+                overflow-x: hidden !important;
+                position: relative;
+            }
+            form#form1 {
+                width: 100% !important;
+                max-width: 100% !important;
+                overflow-x: hidden !important;
+            }
+            .nj-main-wrapper {
+                margin-left: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                min-width: 0 !important;
+                overflow-x: hidden !important;
+            }
+            .nj-topbar {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0 0.5rem !important;
+                height: 56px !important;
+            }
+            .nj-content-body {
+                width: 100% !important;
+                max-width: 100% !important;
+                min-width: 0 !important;
+                padding: 0.5rem 0.35rem !important;
+                overflow-x: hidden !important;
+                box-sizing: border-box !important;
+            }
+            .nj-footer {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0.5rem !important;
+                font-size: 0.72rem !important;
+                text-align: center;
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+            .container, .container-fluid {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding-left: 0.35rem !important;
+                padding-right: 0.35rem !important;
+                box-sizing: border-box !important;
+            }
+            .row {
+                margin-left: -0.25rem !important;
+                margin-right: -0.25rem !important;
+            }
+            .row > * {
+                padding-left: 0.25rem !important;
+                padding-right: 0.25rem !important;
+                min-width: 0 !important;
+            }
+            .card {
+                max-width: 100% !important;
+                overflow: hidden !important;
+            }
+            .table-responsive {
+                width: 100% !important;
+                max-width: 100% !important;
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+                display: block !important;
+            }
+            .table-responsive > .table {
+                min-width: 540px;
+                margin-bottom: 0 !important;
+            }
+        }
+
+        /* Mobile Phones (Screens < 576px, specifically 320px - 480px) */
+        @media (max-width: 575.98px) {
+            .card {
+                border-radius: 8px !important;
+            }
+            .card-header {
+                padding: 0.45rem 0.6rem !important;
+                gap: 0.35rem;
+            }
+            .card-header h6, .card-header h5 {
+                font-size: 0.8rem !important;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .card-header .btn, .card-header a.btn {
+                font-size: 0.7rem !important;
+                padding: 0.2rem 0.4rem !important;
+                white-space: nowrap !important;
+            }
+            .card-body {
+                padding: 0.5rem !important;
+            }
+
+            /* Stat cards fix on 320px: Clean 2 per row */
+            .col-6 > .card {
+                padding: 0.45rem 0.5rem !important;
+            }
+            .col-6 .card .d-flex.justify-content-between.align-items-start > span.badge {
+                display: none !important; /* Hide badge icon floating outside card boundary on 320px */
+            }
+            .col-6 .card .min-w-0 {
+                width: 100% !important;
+                min-width: 0 !important;
+            }
+            .col-6 .card .min-w-0 h4 {
+                font-size: 1.15rem !important;
+                line-height: 1.2 !important;
+                margin: 0.15rem 0 !important;
+            }
+            .col-6 .card .min-w-0 span.small {
+                font-size: 0.7rem !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                display: block !important;
+            }
+            .col-6 .card .min-w-0 div.small {
+                font-size: 0.68rem !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+            }
+            /* Clean card borders: subtle 1px border + 4px left accent */
+            .card.border-start {
+                border: 1px solid #e2e8f0 !important;
+                border-left: 4px solid #0284c7 !important;
+            }
+            .card.border-start.border-warning {
+                border-left: 4px solid #f59e0b !important;
+            }
+            .card.border-start.border-info {
+                border-left: 4px solid #06b6d4 !important;
+            }
+            /* Admin KPI cards */
+            .nj-stat-card {
+                padding: 0.5rem 0.65rem !important;
+                gap: 0.35rem !important;
+            }
+            .nj-stat-card .stat-value {
+                font-size: 1.2rem !important;
+            }
+            .nj-stat-card .stat-label {
+                font-size: 0.7rem !important;
+            }
+            .nj-stat-card .nj-stat-icon {
+                width: 32px !important;
+                height: 32px !important;
+                font-size: 0.95rem !important;
+            }
+        }
     </style>
 
     <!-- Bootstrap 5.3.3 JS Bundle (in Head so Server Startup Scripts can call bootstrap modals) -->
@@ -210,15 +371,6 @@
                 <ul class="nj-nav-list">
                     <li class="nj-nav-item"><a href="MyProfile.aspx" class="nj-nav-link" id="mob-nav-profile"><i class="bi bi-person-circle"></i><span>My Profile</span></a></li>
                 </ul>
-            </div>
-            <div class="p-3 border-top border-secondary border-opacity-25">
-                <div class="d-flex align-items-center gap-2">
-                    <div class="nj-avatar bg-primary" id="mobAvatar">PS</div>
-                    <div>
-                        <div class="text-white small fw-bold" id="mobEmpName">Priya Sharma</div>
-                        <div class="text-muted" style="font-size: 0.7rem;" id="mobEmpRole">Sales &bull; Field Operations</div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -320,10 +472,7 @@
 
                     <!-- Notifications Dropdown -->
                     <div class="dropdown">
-                        <button class="nj-icon-btn" type="button" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Notifications">
-                            <i class="bi bi-bell"></i>
-                            <span class="badge-dot"></span>
-                        </button>
+                         
                         <div class="dropdown-menu dropdown-menu-end shadow-sm border p-0" style="width: 320px; font-size: 0.85rem;" aria-labelledby="notifDropdown">
                             <div class="p-3 border-bottom d-flex justify-content-between align-items-center bg-light">
                                 <span class="fw-bold text-dark">Notifications (2 Reminders)</span>
@@ -438,7 +587,7 @@
             <!-- Footer -->
             <footer class="nj-footer">
                 <div>
-                    <strong>New Journey Holidays CRM</strong> &bull; Employee Panel &bull; Gorakhpur, Uttar Pradesh
+                    <strong>New Journey Holidays</strong> &bull; Employee Panel &bull; Gorakhpur, Uttar Pradesh
    
                 </div>
                 <div>

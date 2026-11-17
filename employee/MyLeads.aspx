@@ -27,7 +27,7 @@
         <div class="card-body p-3">
             <div class="row g-2 align-items-center">
                 <!-- Search input -->
-                <div class="col-12 col-md-4">
+                <div class="col-7 col-md-7 col-lg-4">
                     <div class="input-group input-group-sm">
                         <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
                         <input type="text" id="leadSearchInput" class="form-control border-start-0" placeholder="Search customer, phone, city..." onkeyup="filterLeads();" />
@@ -35,15 +35,15 @@
                 </div>
 
                 <!-- Date Filter -->
-                <div class="col-6 col-md-3">
+                <div class="col-5 col-md-5 col-lg-2">
                     <div class="input-group input-group-sm">
-                        <span class="input-group-text bg-white border-end-0" title="Follow-up Date"><i class="bi bi-calendar-event text-muted"></i></span>
-                        <input type="date" id="filterDate" class="form-control border-start-0" title="Filter by Follow-up Date" onchange="filterLeads();" />
+                        <span class="input-group-text bg-white border-end-0 d-none d-sm-inline-flex" title="Follow-up Date"><i class="bi bi-calendar-event text-muted"></i></span>
+                        <input type="date" id="filterDate" class="form-control" title="Filter by Follow-up Date" onchange="filterLeads();" />
                     </div>
                 </div>
 
                 <!-- Status Filter (In Process, Confirmed, Cancelled, Closed) -->
-                <div class="col-6 col-md-2">
+                <div class="col-5 col-md-5 col-lg-2">
                     <select id="filterStatus" class="form-select form-select-sm" onchange="filterLeads();">
                         <option value="">All Statuses</option>
                         <option value="in process">In Process</option>
@@ -54,19 +54,20 @@
                 </div>
 
                 <!-- Priority Filter (Hot, Warm, Cold) -->
-                <div class="col-6 col-md-2">
+                <div class="col-5 col-md-5 col-lg-2">
                     <select id="filterPriority" class="form-select form-select-sm" onchange="filterLeads();">
                         <option value="">All Priorities</option>
-                        <option value="Hot">Hot (Urgent &lt; 30d)</option>
-                        <option value="Warm">Warm (1-2 Months)</option>
-                        <option value="Cold">Cold (Long-term)</option>
+                        <option value="Hot">Hot (Urgent)</option>
+                        <option value="Warm">Warm (Medium)</option>
+                        <option value="Cold">Cold (Low)</option>
                     </select>
                 </div>
 
                 <!-- Reset Button -->
-                <div class="col-6 col-md-1 text-md-end">
+                <div class="col-2 col-md-2 col-lg-2 text-md-end">
                     <button type="button" class="btn btn-outline-secondary btn-sm w-100" onclick="resetFilters();" title="Reset Filters">
                         <i class="bi bi-arrow-counterclockwise"></i>
+                        <span class="d-none d-lg-inline ms-1">Reset</span>
                     </button>
                 </div>
             </div>
@@ -171,6 +172,7 @@
                                             CssClass="btn btn-outline-danger btn-sm"
                                             CommandArgument='<%# Eval("lead_code") %>'
                                             CausesValidation="false"
+                                            OnClick="btnDeleteLead_Click"
                                             OnClientClick="return confirm('Are you sure you want to delete this lead?');"
                                             title="Delete Lead">
                                             <i class="bi bi-trash"></i>
@@ -375,120 +377,76 @@
 
     <!-- Mobile-First Responsive Cards View (Visible only on Mobile screens < 768px) -->
     <div class="d-md-none" id="leadsMobileContainer">
-        <!-- Mobile Card 1 -->
-        <div class="card mb-3 lead-mobile-card" data-status="Interested" data-priority="Hot" data-source="Google">
-            <div class="card-body p-3">
-                <div class="d-flex justify-content-between align-items-start mb-2">
-                    <div>
-                        <h6 class="fw-bold text-dark mb-0">Rohit Verma</h6>
-                        <small class="text-muted"><a href="tel:+919876543210" class="text-decoration-none text-dark">+91 98765 43210</a> &bull; Gorakhpur</small>
-                    </div>
-                    <div>
-                        <span class="badge badge-priority-hot"><i class="bi bi-fire me-1"></i>Hot</span>
-                    </div>
-                </div>
+        <asp:Repeater ID="rptMyLeadsMobile" runat="server">
+            <ItemTemplate>
+                <div class="card mb-3 lead-mobile-card" data-status='<%# Eval("lead_status") %>' data-priority='<%# Eval("lead_priority") %>' data-date='<%# Eval("followup_date", "{0:yyyy-MM-dd}") %>'>
+                    <div class="card-body p-3">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <h6 class="fw-bold text-dark mb-0"><%# Eval("client_name") %></h6>
+                                <small class="text-muted">
+                                    <a href='tel:+91<%# Eval("mobile") %>' class="text-decoration-none text-dark">
+                                        <i class="bi bi-telephone text-muted me-1 small"></i><%# Eval("mobile") %>
+                                    </a>
+                                    <%# Eval("city") != null && !string.IsNullOrEmpty(Eval("city").ToString()) ? "&bull; " + Eval("city") : "" %>
+                                </small>
+                            </div>
+                            <div>
+                                <span class='badge <%# Eval("lead_priority") != null && Eval("lead_priority").ToString().ToLower() == "hot" ? "badge-priority-hot" : (Eval("lead_priority") != null && Eval("lead_priority").ToString().ToLower() == "warm" ? "badge-priority-warm" : "badge-priority-cold") %>'>
+                                    <%# Eval("lead_priority") %>
+                                </span>
+                            </div>
+                        </div>
 
-                <div class="p-2 bg-light rounded small mb-2">
-                    <div class="d-flex justify-content-between">
-                        <span class="text-muted">Destination:</span>
-                        <span class="fw-semibold text-dark">Kashmir 5N/6D Deluxe</span>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <span class="text-muted">Travel Date:</span>
-                        <span>15 Nov 2026 (4 Pax)</span>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <span class="text-muted">Lead Owner:</span>
-                        <span class="fw-semibold">Rakesh Yadav (Sales)</span>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <span class="text-muted">Assigned:</span>
-                        <span class="text-primary fw-semibold">Priya Sharma</span>
-                    </div>
-                </div>
+                        <div class="p-2 bg-light rounded small mb-2">
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Lead Code:</span>
+                                <span class="fw-bold text-success">#<%# Eval("lead_code") %></span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Destination:</span>
+                                <span class="fw-semibold text-dark"><%# Eval("destination") %></span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Next Follow-up:</span>
+                                <span><%# Eval("followup_date") == DBNull.Value || Eval("followup_date") == null ? "-" : Eval("followup_date") %></span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Lead Owner:</span>
+                                <span class="fw-semibold"><%# Eval("created_by") %></span>
+                            </div>
+                        </div>
 
-                <div class="d-flex justify-content-between align-items-center">
-                    <span class="badge badge-status-interested">Interested</span>
-                    <a href="LeadDetails.aspx?id=NJ-10301" class="btn btn-nj-primary btn-sm">
-                        <i class="bi bi-eye"></i>View Details
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mobile Card 2 -->
-        <div class="card mb-3 lead-mobile-card" data-status="Confirmed" data-priority="Hot" data-source="Walk-in">
-            <div class="card-body p-3">
-                <div class="d-flex justify-content-between align-items-start mb-2">
-                    <div>
-                        <h6 class="fw-bold text-dark mb-0">Ananya Mishra</h6>
-                        <small class="text-muted"><a href="tel:+919452188321" class="text-decoration-none text-dark">+91 94521 88321</a> &bull; Deoria</small>
-                    </div>
-                    <div>
-                        <span class="badge badge-priority-hot"><i class="bi bi-fire me-1"></i>Hot</span>
-                    </div>
-                </div>
-
-                <div class="p-2 bg-light rounded small mb-2">
-                    <div class="d-flex justify-content-between">
-                        <span class="text-muted">Destination:</span>
-                        <span class="fw-semibold text-dark">Dubai Luxury Tour</span>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <span class="text-muted">Travel Date:</span>
-                        <span>20 Dec 2026 (2 Pax)</span>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <span class="text-muted">Lead Owner:</span>
-                        <span class="text-success fw-semibold">Priya Sharma (You)</span>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class='badge <%# Eval("lead_status") != null && Eval("lead_status").ToString().ToLower() == "confirmed" ? "bg-success-subtle text-success" : (Eval("lead_status") != null && (Eval("lead_status").ToString().ToLower() == "not interested" || Eval("lead_status").ToString().ToLower() == "cancelled") ? "bg-danger-subtle text-danger" : (Eval("lead_status") != null && Eval("lead_status").ToString().ToLower() == "closed" ? "bg-secondary-subtle text-secondary" : "bg-warning-subtle text-warning")) %>'>
+                                <%# Eval("lead_status") != null && Eval("lead_status").ToString().ToLower() == "not interested" ? "Cancelled" : (Eval("lead_status") != null && (Eval("lead_status").ToString().ToLower() == "pending" || Eval("lead_status").ToString().ToLower() == "interested" || Eval("lead_status").ToString().ToLower() == "new") ? "In Process" : Eval("lead_status")) %>
+                            </span>
+                            <div class="d-flex gap-1">
+                                <a href='LeadDetails.aspx?id=<%# Eval("lead_code") %>' class="btn btn-nj-primary btn-sm">
+                                    <i class="bi bi-eye"></i> View Details
+                                </a>
+                                <asp:LinkButton ID="btnEditLeadMobile" runat="server"
+                                    CssClass="btn btn-nj-outline btn-sm"
+                                    CommandArgument='<%# Eval("lead_code") %>'
+                                    OnClick="btnEditLead_Click" CausesValidation="false"
+                                    title="Edit Lead">
+                                    <i class="bi bi-pencil"></i>
+                                </asp:LinkButton>
+                                <asp:LinkButton ID="btnDeleteLeadMobile" runat="server"
+                                    CssClass="btn btn-outline-danger btn-sm"
+                                    CommandArgument='<%# Eval("lead_code") %>'
+                                    CausesValidation="false"
+                                    OnClick="btnDeleteLead_Click"
+                                    OnClientClick="return confirm('Are you sure you want to delete this lead?');"
+                                    title="Delete Lead">
+                                    <i class="bi bi-trash"></i>
+                                </asp:LinkButton>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <div class="d-flex justify-content-between align-items-center">
-                    <span class="badge badge-status-confirmed"><i class="bi bi-check2-circle me-1"></i>Confirmed</span>
-                    <a href="LeadDetails.aspx?id=NJ-10302" class="btn btn-nj-primary btn-sm">
-                        <i class="bi bi-eye"></i>View Details
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mobile Card 3 -->
-        <div class="card mb-3 lead-mobile-card" data-status="New" data-priority="Hot" data-source="Field Visit">
-            <div class="card-body p-3">
-                <div class="d-flex justify-content-between align-items-start mb-2">
-                    <div>
-                        <h6 class="fw-bold text-dark mb-0">Dr. Arvind Kumar</h6>
-                        <small class="text-muted"><a href="tel:+919839012345" class="text-decoration-none text-dark">+91 98390 12345</a> &bull; Gorakhpur</small>
-                    </div>
-                    <div>
-                        <span class="badge badge-priority-hot"><i class="bi bi-fire me-1"></i>Hot</span>
-                    </div>
-                </div>
-
-                <div class="p-2 bg-light rounded small mb-2">
-                    <div class="d-flex justify-content-between">
-                        <span class="text-muted">Destination:</span>
-                        <span class="fw-semibold text-dark">Char Dham Yatra Heli</span>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <span class="text-muted">Travel Date:</span>
-                        <span>05 May 2027 (4 Pax)</span>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <span class="text-muted">Lead Owner:</span>
-                        <span class="text-success fw-semibold">Priya Sharma (You)</span>
-                    </div>
-                </div>
-
-                <div class="d-flex justify-content-between align-items-center">
-                    <span class="badge badge-status-new">New</span>
-                    <a href="LeadDetails.aspx?id=NJ-10306" class="btn btn-nj-primary btn-sm">
-                        <i class="bi bi-eye"></i>View Details
-                    </a>
-                </div>
-            </div>
-        </div>
+            </ItemTemplate>
+        </asp:Repeater>
     </div>
 
     <!-- Empty State -->

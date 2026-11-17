@@ -65,7 +65,7 @@
             <div class="card p-2 px-3 border-0 shadow-sm">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <div class="text-muted small" style="font-size: 0.72rem;">Returned (Close Needed)</div>
+                        <div class="text-muted small" style="font-size: 0.72rem;">Returned</div>
                         <h5 class="fw-bold mb-0 text-danger">
                             <asp:Label ID="lblTotalReturned" runat="server" Text="0"></asp:Label>
                         </h5>

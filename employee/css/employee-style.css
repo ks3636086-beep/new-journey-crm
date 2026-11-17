@@ -831,3 +831,47 @@ a.text-success {
 a.text-success:hover {
     color: #0369a1 !important;
 }
+
+/* Mobile Dashboard & Card Header Responsive Optimization (Phones < 576px) */
+@media (max-width: 575.98px) {
+    .card-header {
+        padding: 0.55rem 0.75rem !important;
+        gap: 0.5rem;
+    }
+    .card-header h6,
+    .card-header h5 {
+        font-size: 0.825rem !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .card-header .btn,
+    .card-header a.btn {
+        font-size: 0.725rem !important;
+        padding: 0.22rem 0.5rem !important;
+        white-space: nowrap !important;
+        line-height: 1.25 !important;
+    }
+
+    /* Follow-up Tabs on Mobile: 1 single row */
+    #followupSectionTabs {
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: 2px;
+    }
+    #followupSectionTabs::-webkit-scrollbar {
+        display: none;
+    }
+    #followupSectionTabs .nav-item {
+        flex-shrink: 0;
+    }
+    #followupSectionTabs .nav-link {
+        font-size: 0.76rem !important;
+        padding: 0.35rem 0.6rem !important;
+        white-space: nowrap !important;
+        gap: 0.35rem !important;
+    }
+}

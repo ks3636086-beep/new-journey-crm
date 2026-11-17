@@ -19,6 +19,9 @@ public partial class MyLeads : System.Web.UI.Page
             return;
         }
 
+        // Prevent double submit on edit modal save
+        btnSaveLeadEdit.Attributes.Add("onclick", "if(typeof(Page_ClientValidate) === 'function' && !Page_ClientValidate()){ return false; } this.disabled = true; this.value = 'Saving...'; " + ClientScript.GetPostBackEventReference(btnSaveLeadEdit, null) + ";");
+
         if (!IsPostBack)
         {
             BindMyLeads();
@@ -34,7 +37,7 @@ public partial class MyLeads : System.Web.UI.Page
 
             string query = @"SELECT lead_code, client_name, mobile, city,
                                 destination, created_by, assigned_employee_id,
-                                lead_status, lead_priority, followup_date
+                                lead_status, lead_priority, followup_date, remarks
                          FROM tbl_leads
                          WHERE (created_by = @employee_name OR TRY_CONVERT(INT, assigned_employee_id) = @employee_id)
                          ORDER BY lead_id DESC";
@@ -51,6 +54,9 @@ public partial class MyLeads : System.Web.UI.Page
 
                     rptMyLeads.DataSource = dt;
                     rptMyLeads.DataBind();
+
+                    rptMyLeadsMobile.DataSource = dt;
+                    rptMyLeadsMobile.DataBind();
                 }
             }
         }
@@ -211,6 +217,53 @@ public partial class MyLeads : System.Web.UI.Page
         {
             if (ob.con.State == ConnectionState.Open)
                 ob.con.Close();
+        }
+    }
+
+    protected void btnDeleteLead_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            LinkButton btn = (LinkButton)sender;
+            string leadCode = btn.CommandArgument;
+
+            if (string.IsNullOrEmpty(leadCode)) return;
+
+            int employeeId = Session["employee_id"] != null ? Convert.ToInt32(Session["employee_id"]) : 0;
+            string employeeName = Session["employee_name"] != null ? Convert.ToString(Session["employee_name"]) : "";
+
+            // Check if lead belongs to this employee
+            string checkQuery = @"SELECT COUNT(*) FROM dbo.tbl_leads 
+                                  WHERE lead_code = @lead_code 
+                                  AND (created_by = @employee_name OR TRY_CONVERT(INT, assigned_employee_id) = @employee_id)";
+
+            using (SqlCommand cmd = new SqlCommand(checkQuery, ob.con))
+            {
+                cmd.Parameters.AddWithValue("@lead_code", leadCode);
+                cmd.Parameters.AddWithValue("@employee_name", employeeName);
+                cmd.Parameters.AddWithValue("@employee_id", employeeId);
+
+                bool wasClosed = (ob.con.State == ConnectionState.Closed);
+                if (wasClosed) ob.con.Open();
+
+                int count = Convert.ToInt32(cmd.ExecuteScalar());
+                if (wasClosed && ob.con.State == ConnectionState.Open) ob.con.Close();
+
+                if (count > 0)
+                {
+                    ob.delete_lead(leadCode);
+                    BindMyLeads();
+                    ClientScript.RegisterStartupScript(this.GetType(), "delSuccess", "alert('Lead deleted successfully!');", true);
+                }
+                else
+                {
+                    ClientScript.RegisterStartupScript(this.GetType(), "delDenied", "alert('Permission denied or lead not found.');", true);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ClientScript.RegisterStartupScript(this.GetType(), "delError", "alert('Error: " + System.Web.HttpUtility.JavaScriptStringEncode(ex.Message) + "');", true);
         }
     }
 }

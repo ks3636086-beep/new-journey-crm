@@ -127,7 +127,7 @@
                                     <td class="text-end">
                                         <button type="button" 
                                             class='btn btn-sm <%# Convert.ToString(Eval("lead_status")) == "Closed" ? "btn-outline-secondary" : "btn-outline-danger" %>'
-                                            onclick="openCloseTripModal('<%# Eval("lead_code") %>', '<%# Eval("client_name") %>', '<%# Eval("mobile") %>', '<%# Eval("destination") %>', '<%# Eval("travel_date", "{0:dd-MMM-yyyy}") %>', '<%# Eval("lead_status") %>');">
+                                            onclick="openCloseTripModal('<%# Eval("lead_code") %>', '<%# Eval("client_name") %>', '<%# Eval("mobile") %>', '<%# Eval("destination") %>', '<%# Eval("travel_date", "{0:dd-MMM-yyyy}") %>', '<%# Eval("lead_status") %>', '<%# Eval("travel_date", "{0:yyyy-MM-dd}") %>');">
                                             <i class='bi <%# Convert.ToString(Eval("lead_status")) == "Closed" ? "bi-lock-fill text-muted" : "bi-check2-circle" %> me-1'></i>
                                             <%# Convert.ToString(Eval("lead_status")) == "Closed" ? "Closed" : "Close Trip" %>
                                         </button>
@@ -191,7 +191,27 @@
                                     <i class="bi bi-clipboard me-1"></i>Copy Link
                                 </button>
                             </div>
-                            <small class="text-muted" style="font-size: 0.72rem;">Close karte waqt yeh link copy karke client ko WhatsApp par review ke liye bhej sakte hain.</small>
+                        </div>
+
+                        <!-- WhatsApp Thank You & Review Request Card -->
+                        <div class="mb-3 p-2 rounded border bg-white">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label class="form-label small fw-semibold text-success mb-0 d-flex align-items-center gap-1">
+                                    <i class="bi bi-whatsapp"></i>Send Thank You &amp; Review on WhatsApp
+                                </label>
+                                <span class="badge bg-success-subtle text-success">WhatsApp</span>
+                            </div>
+                            <p class="text-muted mb-2" style="font-size: 0.72rem; line-height: 1.35;">
+                                Send an appreciation message in English thanking the client for traveling with us, asking about their trip, and sharing the Google review link.
+                            </p>
+                            <div class="d-flex gap-2">
+                                <a id="btnSendWhatsAppReview" href="javascript:void(0);" onclick="sendWhatsAppReviewMsg();" class="btn btn-sm btn-success flex-grow-1 d-inline-flex align-items-center justify-content-center gap-1 text-white fw-semibold">
+                                    <i class="bi bi-whatsapp"></i>Send WhatsApp Message
+                                </a>
+                                <button type="button" class="btn btn-sm btn-outline-success" onclick="copyWhatsAppReviewMsg();" id="btnCopyWaMsg" title="Copy Message Text">
+                                    <i class="bi bi-files me-1"></i>Copy Text
+                                </button>
+                            </div>
                         </div>
 
                         <!-- Trip Status Transition Dropdown (ASP.NET Server Control) -->
@@ -202,14 +222,14 @@
                                 <asp:ListItem Text="Closed" Value="Closed"></asp:ListItem>
                             </asp:DropDownList>
                             <div id="statusLockedAlert" class="alert alert-warning py-1 px-2 small mt-2 d-none" style="font-size: 0.75rem;">
-                                <i class="bi bi-lock-fill text-danger me-1"></i>Trip <strong>Closed</strong> ho chuki hai. Yeh status ab locked hai aur dobara Confirmed nahi ho sakta.
+                                <i class="bi bi-lock-fill text-danger me-1"></i>Trip is <strong>Closed</strong>. This status is now locked and cannot be reverted to Confirmed.
                             </div>
                         </div>
                     </div>
 
                     <div class="modal-footer border-top py-2">
                         <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <asp:Button ID="btnConfirmCloseTrip" runat="server" Text="Confirm & Close Trip" CssClass="btn btn-sm btn-danger px-3 text-white" OnClick="btnConfirmCloseTrip_Click" />
+                        <asp:Button ID="btnConfirmCloseTrip" runat="server" Text="Confirm & Close Trip" CssClass="btn btn-sm btn-danger px-3 text-white" OnClick="btnConfirmCloseTrip_Click" OnClientClick="return validateBeforeClose();" />
                     </div>
                 </div>
             </div>
@@ -274,6 +294,56 @@
                 }, 2000);
             }
 
+            function getWhatsAppReviewText(custName, dest) {
+                var name = (custName && custName !== 'Customer Name') ? custName : 'Valued Customer';
+                var destination = (dest && dest !== 'Destination') ? (' to ' + dest) : '';
+                var gmbLink = (document.getElementById('txtGmbLink') ? document.getElementById('txtGmbLink').value : '') || 'https://share.google/atLVRZlqszRt7Ata3';
+
+                return "Dear " + name + ",\n\n" +
+                       "Thank you for choosing New Journey Holidays for your recent trip" + destination + "! We hope you had a wonderful, comfortable, and memorable experience.\n\n" +
+                       "Your feedback means a lot to our team. Could you please take a moment to share your review and rate us on Google?\n" +
+                       gmbLink + "\n\n" +
+                       "Thank you once again for traveling with us, and we look forward to planning your next journey!\n\n" +
+                       "Warm regards,\n" +
+                       "New Journey Holidays";
+            }
+
+            function sendWhatsAppReviewMsg() {
+                var rawPhone = (document.getElementById('closeCustPhone') ? document.getElementById('closeCustPhone').textContent : '') || '';
+                var cleanPhone = rawPhone.replace(/\D/g, '');
+                if (cleanPhone.length === 10) {
+                    cleanPhone = '91' + cleanPhone;
+                }
+
+                var custName = document.getElementById('closeCustName') ? document.getElementById('closeCustName').textContent : '';
+                var dest = document.getElementById('closeDest') ? document.getElementById('closeDest').textContent : '';
+                var msg = getWhatsAppReviewText(custName, dest);
+
+                var url = 'https://api.whatsapp.com/send?phone=' + encodeURIComponent(cleanPhone) + '&text=' + encodeURIComponent(msg);
+                window.open(url, '_blank');
+            }
+
+            function copyWhatsAppReviewMsg() {
+                var custName = document.getElementById('closeCustName') ? document.getElementById('closeCustName').textContent : '';
+                var dest = document.getElementById('closeDest') ? document.getElementById('closeDest').textContent : '';
+                var msg = getWhatsAppReviewText(custName, dest);
+
+                navigator.clipboard.writeText(msg);
+
+                var btn = document.getElementById('btnCopyWaMsg');
+                if (btn) {
+                    var original = btn.innerHTML;
+                    btn.innerHTML = '<i class="bi bi-check2 me-1"></i>Copied!';
+                    btn.classList.remove('btn-outline-success');
+                    btn.classList.add('btn-success', 'text-white');
+                    setTimeout(function () {
+                        btn.innerHTML = original;
+                        btn.classList.remove('btn-success', 'text-white');
+                        btn.classList.add('btn-outline-success');
+                    }, 2000);
+                }
+            }
+
             function ensureBothOptions(ddl) {
                 var hasConfirmed = false;
                 var hasClosed = false;
@@ -305,7 +375,13 @@
                 ddl.value = 'Closed';
             }
 
-            function openCloseTripModal(leadCode, name, phone, dest, travelDates, currentStatus) {
+            var currentRawTravelDate = '';
+            var currentTravelDatesText = '';
+
+            function openCloseTripModal(leadCode, name, phone, dest, travelDates, currentStatus, rawTravelDate) {
+                currentRawTravelDate = rawTravelDate || '';
+                currentTravelDatesText = travelDates || '';
+
                 var hfLead = document.getElementById('<%= hfCloseLeadCode.ClientID %>');
                 if (hfLead) hfLead.value = leadCode;
 
@@ -351,11 +427,42 @@
 
             function handleModalStatusChange(ddl) {
                 if (ddl.value === 'Closed') {
-                    // As soon as Closed is selected, Confirmed disappears!
+                    if (currentRawTravelDate) {
+                        var today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        var parts = currentRawTravelDate.split('-');
+                        if (parts.length === 3) {
+                            var tDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+                            tDate.setHours(0, 0, 0, 0);
+                            if (tDate > today) {
+                                alert('Trip cannot be closed before the travel date (' + currentTravelDatesText + '). The tour has not completed yet.');
+                                ddl.value = 'Confirmed';
+                                return;
+                            }
+                        }
+                    }
                     removeConfirmedOption(ddl);
                     var alertLocked = document.getElementById('statusLockedAlert');
                     if (alertLocked) alertLocked.classList.remove('d-none');
                 }
+            }
+
+            function validateBeforeClose() {
+                var ddl = document.getElementById('<%= ddlCloseStatus.ClientID %>');
+                if (ddl && ddl.value === 'Closed' && currentRawTravelDate) {
+                    var today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    var parts = currentRawTravelDate.split('-');
+                    if (parts.length === 3) {
+                        var tDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+                        tDate.setHours(0, 0, 0, 0);
+                        if (tDate > today) {
+                            alert('Trip cannot be closed before the travel date (' + currentTravelDatesText + '). The tour has not completed yet.');
+                            return false;
+                        }
+                    }
+                }
+                return true;
             }
 
             // Run filter on initial load so only 'Confirmed' shows by default

@@ -9,15 +9,16 @@ using System.Web.UI.WebControls;
 public partial class Add_Lead : System.Web.UI.Page
 {
     Master ob = new Master();
+
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        // Double-click prevent: Disable button and show saving text on click once client validation passes
+        btnSaveLead.Attributes.Add("onclick", "if(typeof(Page_ClientValidate) === 'function' && !Page_ClientValidate()){ return false; } this.disabled = true; this.value = 'Saving Lead...'; " + ClientScript.GetPostBackEventReference(btnSaveLead, null) + ";");
     }
 
-    //Employee
+    // Employee Add Lead
     protected void btnSaveLead_Click(object sender, EventArgs e)
     {
-
         try
         {
             Page.Validate();
@@ -41,8 +42,11 @@ public partial class Add_Lead : System.Web.UI.Page
                 string.IsNullOrWhiteSpace(txtFollowUpDate.Text) ? (object)DBNull.Value : Convert.ToDateTime(txtFollowUpDate.Text),
                 string.IsNullOrWhiteSpace(txtRemarks.Text) ? null : txtRemarks.Text.Trim(),
                 Convert.ToString(Session["employee_name"]),
-               null
+                Convert.ToString(Session["employee_id"])
             );
+
+            // Clear all input fields after successful save
+            ClearFields();
 
             ClientScript.RegisterStartupScript(this.GetType(), "success",
                 "alert('Lead added successfully!');", true);
@@ -61,6 +65,17 @@ public partial class Add_Lead : System.Web.UI.Page
         }
     }
 
+    private void ClearFields()
+    {
+        txtClientName.Text = string.Empty;
+        txtMobile.Text = string.Empty;
+        txtAltMobile.Text = string.Empty;
+        txtCity.Text = string.Empty;
+        txtDestination.Text = string.Empty;
+        txtTravelDate.Text = string.Empty;
+        ddlLeadStatus.SelectedIndex = 0;
+        ddlLeadPriority.SelectedIndex = 0;
+        txtFollowUpDate.Text = string.Empty;
+        txtRemarks.Text = string.Empty;
+    }
 }
-
-

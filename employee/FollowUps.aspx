@@ -19,7 +19,7 @@
     </div>
 
     <!-- 1. Three Follow-up Section Tabs -->
-    <ul class="nav nav-pills mb-3 gap-2" id="followupSectionTabs" role="tablist">
+    <ul class="nav nav-pills flex-nowrap overflow-x-auto mb-3 gap-1 gap-sm-2 text-nowrap" id="followupSectionTabs" role="tablist" style="scrollbar-width: none;">
 
         <!-- Today's Follow-ups -->
         <li class="nav-item" role="presentation">

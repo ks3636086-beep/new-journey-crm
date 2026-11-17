@@ -45,7 +45,7 @@ public partial class LeadDetails : System.Web.UI.Page
                    created_by, assigned_employee_id
             FROM dbo.tbl_leads
             WHERE lead_code = @lead_code
-            AND (created_by = @created_by OR TRY_CONVERT(INT, assigned_employee_id) = @employee_id)";
+            AND (created_by = @created_by OR TRY_CONVERT(INT, assigned_employee_id) = @employee_id OR assigned_employee_id = @created_by)";
 
         using (SqlCommand cmd = new SqlCommand(query, ob.con))
         {

@@ -24,7 +24,7 @@
             <div class="card mb-4 shadow-sm border">
                 <div class="card-header bg-white py-3">
                     <h6 class="mb-0 fw-bold text-dark">
-                        <i class="bi bi-person text-success me-1"></i>1. Client Contact Details
+                        <i class="bi bi-person text-success me-1"></i>Client Contact Details
                     </h6>
                 </div>
                 <div class="card-body p-4">

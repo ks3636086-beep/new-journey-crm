@@ -15,9 +15,9 @@
     </div>
 
     <!-- 6 Summary KPI Cards -->
-    <div class="row g-3 mb-4">
+    <div class="row g-2 g-md-3 mb-4">
         <!-- 1. Total Leads -->
-        <div class="col-12 col-sm-6 col-xl-2">
+        <div class="col-6 col-xl-3">
             <div class="nj-stat-card">
                 <div>
                     <div class="stat-label">Total Leads</div>
@@ -34,7 +34,7 @@
         </div>
 
         <!-- 2. Confirmed Leads -->
-        <div class="col-12 col-sm-6 col-xl-2">
+        <div class="col-6 col-xl-3">
             <div class="nj-stat-card">
                 <div>
                     <div class="stat-label">Confirmed</div>
@@ -50,7 +50,7 @@
         </div>
 
         <!-- 3. Pending Leads -->
-        <div class="col-12 col-sm-6 col-xl-2">
+        <div class="col-6 col-xl-3">
             <div class="nj-stat-card">
                 <div>
                     <div class="stat-label">Pending Leads</div>
@@ -66,7 +66,7 @@
         </div>
  
         <!-- 5. Total Employees -->
-        <div class="col-12 col-sm-6 col-xl-2">
+        <div class="col-6 col-xl-3">
             <div class="nj-stat-card">
                 <div>
                     <div class="stat-label">Total Staff</div>
@@ -80,8 +80,6 @@
                 </div>
             </div>
         </div>
-
-        
     </div>
 
     <!-- Dashboard Main Grid: Recent Leads -->
