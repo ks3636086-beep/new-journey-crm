@@ -166,7 +166,9 @@
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div class="min-w-0">
                                         <span class="text-muted small d-block text-truncate">My Field Leads</span>
-                                        <h4 class="fw-bold mb-0 text-dark fs-5 fs-sm-4">28</h4>
+                                        <h4 class="fw-bold mb-0 text-dark fs-5 fs-sm-4">
+                                            <asp:Label ID="lblSalesFieldLeads" runat="server" Text="0"></asp:Label>
+                                        </h4>
                                         <div class="text-success small mt-1 text-truncate" style="font-size: 0.72rem;">
                                             <i class="bi bi-award-fill me-1"></i>You are Lead Owner
                                         </div>
@@ -185,7 +187,9 @@
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div class="min-w-0">
                                         <span class="text-muted small d-block text-truncate">My Calls (Month)</span>
-                                        <h4 class="fw-bold mb-0 text-dark fs-5 fs-sm-4">142</h4>
+                                        <h4 class="fw-bold mb-0 text-dark fs-5 fs-sm-4">
+                                            <asp:Label ID="lblSalesMonthlyCalls" runat="server" Text="0"></asp:Label>
+                                        </h4>
                                         <div class="text-primary small mt-1 text-truncate" style="font-size: 0.72rem;">
                                             <i class="bi bi-telephone-check me-1"></i>High Engagement
                                         </div>
@@ -204,9 +208,11 @@
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div class="min-w-0">
                                         <span class="text-muted small d-block text-truncate">My Follow-ups</span>
-                                        <h4 class="fw-bold mb-0 text-dark fs-5 fs-sm-4">7 Scheduled</h4>
+                                        <h4 class="fw-bold mb-0 text-dark fs-5 fs-sm-4">
+                                            <asp:Label ID="lblSalesFollowups" runat="server" Text="0 Scheduled"></asp:Label>
+                                        </h4>
                                         <div class="text-warning small mt-1 text-truncate" style="font-size: 0.72rem;">
-                                            <i class="bi bi-hourglass-split me-1"></i>2 Urgent Today
+                                            <i class="bi bi-hourglass-split me-1"></i><asp:Literal ID="litSalesTodayFollowups" runat="server">0 Urgent Today</asp:Literal>
                                         </div>
                                     </div>
                                     <span
@@ -223,15 +229,19 @@
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div class="min-w-0">
                                         <span class="text-muted small d-block text-truncate">Lead Status Summary</span>
-                                        <h4 class="fw-bold mb-0 text-success fs-5 fs-sm-4">14 Won</h4>
-                                        <div class="text-muted small mt-1 text-truncate" style="font-size: 0.72rem;">35%
-                                            Conversion Ratio</div>
+                                        <h4 class="fw-bold mb-0 text-success fs-5 fs-sm-4">
+                                            <asp:Label ID="lblSalesWonLeads" runat="server" Text="0 Won"></asp:Label>
+                                        </h4>
+                                        <div class="text-muted small mt-1 text-truncate" style="font-size: 0.72rem;">
+                                            <asp:Literal ID="litSalesConversionRate" runat="server">0% Conversion Ratio</asp:Literal>
+                                        </div>
                                     </div>
                                     <span class="badge bg-info-subtle text-info p-1 p-sm-2 fs-6 flex-shrink-0 ms-1"><i
                                             class="bi bi-pie-chart"></i></span>
                                 </div>
-                                <div class="text-muted small mt-2 d-none d-sm-block">14 Confirmed &bull; 8 Interested
-                                    &bull; 6 Pending</div>
+                                <div class="text-muted small mt-2 d-none d-sm-block">
+                                    <asp:Literal ID="litSalesStatusBreakdown" runat="server">0 Confirmed &bull; 0 Active</asp:Literal>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -160,12 +160,7 @@
                                     <small>No records match your search or outcome filter.</small>
                                 </td>
                             </tr>
-                        </tbody>
-                        <div class="fw-semibold text-dark">No call history records found</div>
-                        <small>No records match your search or outcome filter.</small>
-                        </td>
-                        </tr>
-                        </tbody>
+                         
                     </table>
                 </div>
             </div>

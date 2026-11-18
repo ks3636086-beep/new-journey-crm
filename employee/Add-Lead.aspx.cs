@@ -78,4 +78,62 @@ public partial class Add_Lead : System.Web.UI.Page
         txtFollowUpDate.Text = string.Empty;
         txtRemarks.Text = string.Empty;
     }
+
+    protected void btnUploadBulk_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            if (!fuBulkLeads.HasFile)
+            {
+                ClientScript.RegisterStartupScript(this.GetType(), "noFile",
+                    "alert('Please select an Excel (.xlsx) or CSV (.csv) file to upload.');", true);
+                return;
+            }
+
+            string ext = System.IO.Path.GetExtension(fuBulkLeads.FileName).ToLowerInvariant();
+            if (ext != ".csv" && ext != ".xlsx")
+            {
+                ClientScript.RegisterStartupScript(this.GetType(), "invalidExt",
+                    "alert('Invalid file format. Please upload a .csv or .xlsx file.');", true);
+                return;
+            }
+
+            if (fuBulkLeads.PostedFile.ContentLength > 5 * 1024 * 1024)
+            {
+                ClientScript.RegisterStartupScript(this.GetType(), "fileSize",
+                    "alert('File size exceeds the 5 MB limit.');", true);
+                return;
+            }
+
+            string createdBy = Session["employee_name"] != null ? Session["employee_name"].ToString() : "Employee";
+            string assignedEmpId = Session["employee_id"] != null ? Session["employee_id"].ToString() : null;
+
+            BulkImportResult result;
+            using (var stream = fuBulkLeads.PostedFile.InputStream)
+            {
+                result = ob.ImportBulkLeads(stream, fuBulkLeads.FileName, createdBy, assignedEmpId);
+            }
+
+            string summaryMsg = string.Format("Import Summary:\\n- Total rows: {0}\\n- Successfully imported: {1}\\n- Skipped (Duplicates): {2}\\n- Skipped (Invalid data): {3}",
+                result.TotalRows, result.SuccessCount, result.DuplicateCount, result.InvalidCount);
+
+            if (result.ErrorMessages.Count > 0)
+            {
+                var topErrors = result.ErrorMessages.Take(4);
+                summaryMsg += "\\n\\nDetails:\\n" + string.Join("\\n", topErrors);
+                if (result.ErrorMessages.Count > 4)
+                {
+                    summaryMsg += string.Format("\\n...and {0} more rows.", result.ErrorMessages.Count - 4);
+                }
+            }
+
+            ClientScript.RegisterStartupScript(this.GetType(), "importResult",
+                "alert('" + HttpUtility.JavaScriptStringEncode(summaryMsg) + "');", true);
+        }
+        catch (Exception ex)
+        {
+            ClientScript.RegisterStartupScript(this.GetType(), "uploadError",
+                "alert('An unexpected error occurred during import: " + HttpUtility.JavaScriptStringEncode(ex.Message) + "');", true);
+        }
+    }
 }

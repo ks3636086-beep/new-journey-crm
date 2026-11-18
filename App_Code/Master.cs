@@ -1,12 +1,19 @@
 //using Razorpay.Api;
 using System;
 using System.Activities.Statements;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI.WebControls;
+using System.Xml.Linq;
 
 /// <summary>
 /// Summary description for Master
@@ -59,18 +66,18 @@ public class Master
 
         SqlCommand cmd = new SqlCommand(query, con);
 
-        cmd.Parameters.AddWithValue("@lead_code", leadcode);
-        cmd.Parameters.AddWithValue("@client_name", client_name);
-        cmd.Parameters.AddWithValue("@mobile", mobile);
-        cmd.Parameters.AddWithValue("@alternate_mobile", alternate_mobile);
-        cmd.Parameters.AddWithValue("@city", city);
-        cmd.Parameters.AddWithValue("@destination", destination);
-        cmd.Parameters.AddWithValue("@travel_date", travel_date);
-        cmd.Parameters.AddWithValue("@lead_status", lead_status);
-        cmd.Parameters.AddWithValue("@lead_priority", lead_priority);
-        cmd.Parameters.AddWithValue("@followup_date", followup_date);
-        cmd.Parameters.AddWithValue("@remarks", remarks);
-        cmd.Parameters.AddWithValue("@created_by", created_by);
+        cmd.Parameters.AddWithValue("@lead_code", leadcode ?? (object)DBNull.Value);
+        cmd.Parameters.AddWithValue("@client_name", client_name ?? (object)DBNull.Value);
+        cmd.Parameters.AddWithValue("@mobile", mobile ?? (object)DBNull.Value);
+        cmd.Parameters.AddWithValue("@alternate_mobile", string.IsNullOrWhiteSpace(alternate_mobile) ? (object)DBNull.Value : alternate_mobile);
+        cmd.Parameters.AddWithValue("@city", string.IsNullOrWhiteSpace(city) ? (object)DBNull.Value : city);
+        cmd.Parameters.AddWithValue("@destination", string.IsNullOrWhiteSpace(destination) ? (object)DBNull.Value : destination);
+        cmd.Parameters.AddWithValue("@travel_date", travel_date ?? DBNull.Value);
+        cmd.Parameters.AddWithValue("@lead_status", lead_status ?? (object)DBNull.Value);
+        cmd.Parameters.AddWithValue("@lead_priority", lead_priority ?? (object)DBNull.Value);
+        cmd.Parameters.AddWithValue("@followup_date", followup_date ?? DBNull.Value);
+        cmd.Parameters.AddWithValue("@remarks", string.IsNullOrWhiteSpace(remarks) ? (object)DBNull.Value : remarks);
+        cmd.Parameters.AddWithValue("@created_by", (object)created_by ?? DBNull.Value);
         cmd.Parameters.AddWithValue("@assigned_employee_id", (object)assigned_employee_id ?? DBNull.Value);
 
         bool wasClosed = (con.State == ConnectionState.Closed);
@@ -543,6 +550,30 @@ public class Master
          FROM dbo.tbl_leads
          WHERE TRY_CONVERT(INT, assigned_employee_id) = @employeeId
         ) AS AssignedLeads,
+
+        -- Total Scheduled Followups
+        (SELECT COUNT(*)
+         FROM dbo.tbl_leads
+         WHERE (created_by = @employeeName OR TRY_CONVERT(INT, assigned_employee_id) = @employeeId)
+         AND followup_date IS NOT NULL) AS TotalFollowups,
+
+        -- Today Followups
+        (SELECT COUNT(*)
+         FROM dbo.tbl_leads
+         WHERE (created_by = @employeeName OR TRY_CONVERT(INT, assigned_employee_id) = @employeeId)
+         AND CAST(followup_date AS DATE) = CAST(GETDATE() AS DATE)) AS TodayFollowups,
+
+        -- Won / Confirmed Leads
+        (SELECT COUNT(*)
+         FROM dbo.tbl_leads
+         WHERE (created_by = @employeeName OR TRY_CONVERT(INT, assigned_employee_id) = @employeeId)
+         AND lead_status = 'Confirmed') AS WonLeads,
+
+        -- Cancelled Leads
+        (SELECT COUNT(*)
+         FROM dbo.tbl_leads
+         WHERE (created_by = @employeeName OR TRY_CONVERT(INT, assigned_employee_id) = @employeeId)
+         AND lead_status = 'Not Interested') AS CancelledLeads,
 
         -- Monthly Target
         30 AS MonthlyTarget";
@@ -1096,5 +1127,459 @@ ORDER BY
                 return rows > 0;
             }
         }
+    }
+
+    #region Bulk Lead Import Helper Methods
+
+    public BulkImportResult ImportBulkLeads(System.IO.Stream fileStream, string fileName, string createdBy, string assignedEmployeeId)
+    {
+        BulkImportResult result = new BulkImportResult();
+        string ext = System.IO.Path.GetExtension(fileName).ToLowerInvariant();
+
+        List<List<string>> rawRows;
+
+        try
+        {
+            if (ext == ".csv")
+            {
+                rawRows = ParseCsvStream(fileStream);
+            }
+            else if (ext == ".xlsx")
+            {
+                rawRows = ParseXlsxStream(fileStream);
+            }
+            else
+            {
+                result.ErrorMessages.Add("Unsupported file format (" + ext + "). Please upload a valid .csv or .xlsx file.");
+                return result;
+            }
+        }
+        catch (Exception ex)
+        {
+            result.ErrorMessages.Add("Error reading file: " + ex.Message);
+            return result;
+        }
+
+        if (rawRows == null || rawRows.Count == 0)
+        {
+            result.ErrorMessages.Add("Uploaded file contains no data or could not be read.");
+            return result;
+        }
+
+        // Default column indexes if no header is found
+        int nameIdx = 0;
+        int mobileIdx = 1;
+        int altMobileIdx = 2;
+        int cityIdx = 3;
+        int destIdx = 4;
+        int dateIdx = 5;
+        int priorityIdx = 6;
+        int remarksIdx = 7;
+
+        int startIndex = 0;
+        List<string> firstRow = rawRows[0];
+        bool hasHeader = false;
+
+        // Detect column positions by scanning header row keywords
+        for (int i = 0; i < firstRow.Count; i++)
+        {
+            string val = (firstRow[i] ?? "").Trim().ToLowerInvariant();
+            if (val.Contains("name") || val.Contains("client") || val.Contains("customer"))
+            {
+                nameIdx = i;
+                hasHeader = true;
+            }
+            else if (val.Contains("alt") && (val.Contains("mobile") || val.Contains("phone") || val.Contains("contact")))
+            {
+                altMobileIdx = i;
+                hasHeader = true;
+            }
+            else if (val.Contains("mobile") || val.Contains("phone") || val.Contains("contact"))
+            {
+                mobileIdx = i;
+                hasHeader = true;
+            }
+            else if (val.Contains("city") || val.Contains("location"))
+            {
+                cityIdx = i;
+                hasHeader = true;
+            }
+            else if (val.Contains("destination") || val.Contains("place") || val.Contains("tour"))
+            {
+                destIdx = i;
+                hasHeader = true;
+            }
+            else if (val.Contains("date") || val.Contains("travel"))
+            {
+                dateIdx = i;
+                hasHeader = true;
+            }
+            else if (val.Contains("priority"))
+            {
+                priorityIdx = i;
+                hasHeader = true;
+            }
+            else if (val.Contains("remark") || val.Contains("note") || val.Contains("comment"))
+            {
+                remarksIdx = i;
+                hasHeader = true;
+            }
+        }
+
+        if (hasHeader)
+        {
+            startIndex = 1; // Skip header row
+        }
+
+        HashSet<string> seenMobilesInFile = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        bool wasClosed = (con.State == ConnectionState.Closed);
+        if (wasClosed) con.Open();
+
+        try
+        {
+            for (int r = startIndex; r < rawRows.Count; r++)
+            {
+                List<string> row = rawRows[r];
+                if (row == null || row.All(string.IsNullOrWhiteSpace))
+                {
+                    continue; // Skip blank rows
+                }
+
+                result.TotalRows++;
+                int displayRowNumber = r + 1;
+
+                string clientName = GetCellSafe(row, nameIdx);
+                string rawMobile = GetCellSafe(row, mobileIdx);
+                string rawAltMobile = GetCellSafe(row, altMobileIdx);
+                string rawCity = GetCellSafe(row, cityIdx);
+                string rawDest = GetCellSafe(row, destIdx);
+                string rawDate = GetCellSafe(row, dateIdx);
+                string rawPriority = GetCellSafe(row, priorityIdx);
+                string rawRemarks = GetCellSafe(row, remarksIdx);
+
+                // Validation 1: Mandatory Client Name
+                if (string.IsNullOrWhiteSpace(clientName))
+                {
+                    result.InvalidCount++;
+                    result.ErrorMessages.Add("Row " + displayRowNumber + ": Missing Client Name.");
+                    continue;
+                }
+
+                // Validation 2: Mandatory 10-digit Mobile Number
+                string cleanMobile = CleanMobileNumber(rawMobile);
+                if (string.IsNullOrEmpty(cleanMobile) || cleanMobile.Length != 10 || cleanMobile[0] < '6' || cleanMobile[0] > '9')
+                {
+                    result.InvalidCount++;
+                    result.ErrorMessages.Add("Row " + displayRowNumber + " (" + clientName + "): Invalid 10-digit mobile number '" + rawMobile + "'.");
+                    continue;
+                }
+
+                // Validation 3: Duplicate Mobile within the same file
+                if (seenMobilesInFile.Contains(cleanMobile))
+                {
+                    result.DuplicateCount++;
+                    result.ErrorMessages.Add("Row " + displayRowNumber + " (" + clientName + "): Duplicate mobile '" + cleanMobile + "' already present in uploaded file.");
+                    continue;
+                }
+                seenMobilesInFile.Add(cleanMobile);
+
+                // Validation 4: Duplicate Mobile in Database (dbo.tbl_leads)
+                string checkQuery = "SELECT COUNT(1) FROM dbo.tbl_leads WHERE mobile = @mobile";
+                using (SqlCommand checkCmd = new SqlCommand(checkQuery, con))
+                {
+                    checkCmd.Parameters.AddWithValue("@mobile", cleanMobile);
+                    int dbCount = Convert.ToInt32(checkCmd.ExecuteScalar());
+                    if (dbCount > 0)
+                    {
+                        result.DuplicateCount++;
+                        result.ErrorMessages.Add("Row " + displayRowNumber + " (" + clientName + "): Mobile '" + cleanMobile + "' already exists in CRM database.");
+                        continue;
+                    }
+                }
+
+                // Clean alternate mobile
+                string cleanAltMobile = CleanMobileNumber(rawAltMobile);
+                if (cleanAltMobile.Length != 10)
+                {
+                    cleanAltMobile = null;
+                }
+
+                // Default fallbacks for optional text fields
+                string city = string.IsNullOrWhiteSpace(rawCity) ? "Gorakhpur" : (rawCity.Length > 100 ? rawCity.Substring(0, 100) : rawCity);
+                string destination = string.IsNullOrWhiteSpace(rawDest) ? "Not Specified" : (rawDest.Length > 150 ? rawDest.Substring(0, 150) : rawDest);
+
+                // Parse travel date safely
+                object parsedTravelDate = DBNull.Value;
+                if (!string.IsNullOrWhiteSpace(rawDate))
+                {
+                    DateTime dt;
+                    double oaDate;
+                    if (DateTime.TryParse(rawDate, out dt))
+                    {
+                        parsedTravelDate = dt.Date;
+                    }
+                    else if (double.TryParse(rawDate, out oaDate) && oaDate > 30000 && oaDate < 65000)
+                    {
+                        try { parsedTravelDate = DateTime.FromOADate(oaDate).Date; } catch { }
+                    }
+                }
+
+                // Priority parsing
+                string priority = "Warm";
+                if (!string.IsNullOrWhiteSpace(rawPriority))
+                {
+                    string pLower = rawPriority.Trim().ToLowerInvariant();
+                    if (pLower == "hot") priority = "Hot";
+                    else if (pLower == "cold") priority = "Cold";
+                    else if (pLower == "warm") priority = "Warm";
+                }
+
+                // Remarks
+                string remarks = string.IsNullOrWhiteSpace(rawRemarks) ? null : (rawRemarks.Length > 500 ? rawRemarks.Substring(0, 500) : rawRemarks);
+
+                // Insert into Database
+                try
+                {
+                    insert_lead(
+                        clientName.Length > 100 ? clientName.Substring(0, 100) : clientName,
+                        cleanMobile,
+                        cleanAltMobile,
+                        city,
+                        destination,
+                        parsedTravelDate,
+                        "Pending",
+                        priority,
+                        DBNull.Value,
+                        remarks,
+                        createdBy,
+                        assignedEmployeeId
+                    );
+
+                    result.SuccessCount++;
+                }
+                catch (Exception rowEx)
+                {
+                    result.InvalidCount++;
+                    result.ErrorMessages.Add("Row " + displayRowNumber + " (" + clientName + "): " + rowEx.Message);
+                }
+            }
+        }
+        finally
+        {
+            if (wasClosed && con.State == ConnectionState.Open)
+            {
+                con.Close();
+            }
+        }
+
+        return result;
+    }
+
+    private static string GetCellSafe(List<string> row, int index)
+    {
+        if (row != null && index >= 0 && index < row.Count)
+        {
+            return (row[index] ?? "").Trim();
+        }
+        return "";
+    }
+
+    private static string CleanMobileNumber(string mobile)
+    {
+        if (string.IsNullOrWhiteSpace(mobile)) return "";
+        string s = mobile.Trim();
+        if (s.EndsWith(".0"))
+        {
+            s = s.Substring(0, s.Length - 2);
+        }
+        string digits = System.Text.RegularExpressions.Regex.Replace(s, @"[^\d]", "");
+        if (digits.StartsWith("91") && digits.Length == 12)
+        {
+            digits = digits.Substring(2);
+        }
+        else if (digits.StartsWith("0") && digits.Length == 11)
+        {
+            digits = digits.Substring(1);
+        }
+        return digits;
+    }
+
+    private static List<List<string>> ParseCsvStream(System.IO.Stream stream)
+    {
+        var rows = new List<List<string>>();
+        using (var reader = new System.IO.StreamReader(stream, System.Text.Encoding.UTF8, true))
+        {
+            string line;
+            while ((line = reader.ReadLine()) != null)
+            {
+                if (string.IsNullOrWhiteSpace(line)) continue;
+                rows.Add(ParseCsvLine(line));
+            }
+        }
+        return rows;
+    }
+
+    private static List<string> ParseCsvLine(string line)
+    {
+        var fields = new List<string>();
+        bool inQuotes = false;
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+        for (int i = 0; i < line.Length; i++)
+        {
+            char c = line[i];
+            if (c == '\"')
+            {
+                if (inQuotes && i + 1 < line.Length && line[i + 1] == '\"')
+                {
+                    sb.Append('\"');
+                    i++;
+                }
+                else
+                {
+                    inQuotes = !inQuotes;
+                }
+            }
+            else if (c == ',' && !inQuotes)
+            {
+                fields.Add(sb.ToString().Trim());
+                sb.Clear();
+            }
+            else
+            {
+                sb.Append(c);
+            }
+        }
+        fields.Add(sb.ToString().Trim());
+        return fields;
+    }
+
+    private static List<List<string>> ParseXlsxStream(System.IO.Stream stream)
+    {
+        var allRows = new List<List<string>>();
+        using (var archive = new System.IO.Compression.ZipArchive(stream, System.IO.Compression.ZipArchiveMode.Read))
+        {
+            var sharedStrings = new List<string>();
+            var sharedStringEntry = archive.GetEntry("xl/sharedStrings.xml");
+            if (sharedStringEntry != null)
+            {
+                using (var reader = new System.IO.StreamReader(sharedStringEntry.Open(), System.Text.Encoding.UTF8))
+                {
+                    var xdoc = System.Xml.Linq.XDocument.Load(reader);
+                    foreach (var si in xdoc.Descendants())
+                    {
+                        if (si.Name.LocalName == "si")
+                        {
+                            string text = string.Concat(si.Descendants().Where(d => d.Name.LocalName == "t").Select(t => t.Value));
+                            sharedStrings.Add(text);
+                        }
+                    }
+                }
+            }
+
+            var sheetEntry = archive.GetEntry("xl/worksheets/sheet1.xml");
+            if (sheetEntry == null)
+            {
+                foreach (var entry in archive.Entries)
+                {
+                    if (entry.FullName.StartsWith("xl/worksheets/sheet", StringComparison.OrdinalIgnoreCase) && entry.FullName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
+                    {
+                        sheetEntry = entry;
+                        break;
+                    }
+                }
+            }
+
+            if (sheetEntry != null)
+            {
+                using (var reader = new System.IO.StreamReader(sheetEntry.Open(), System.Text.Encoding.UTF8))
+                {
+                    var xdoc = System.Xml.Linq.XDocument.Load(reader);
+                    var rows = xdoc.Descendants().Where(d => d.Name.LocalName == "row");
+                    foreach (var row in rows)
+                    {
+                        var cells = row.Elements().Where(e => e.Name.LocalName == "c");
+                        var rowData = new Dictionary<int, string>();
+
+                        foreach (var cell in cells)
+                        {
+                            string cellRef = (string)cell.Attribute("r") ?? "";
+                            int colIndex = GetColumnIndexFromCellReference(cellRef);
+                            string cellType = (string)cell.Attribute("t") ?? "";
+                            string val = "";
+
+                            var valElem = cell.Elements().FirstOrDefault(e => e.Name.LocalName == "v");
+                            if (valElem != null)
+                            {
+                                val = valElem.Value;
+                                if (cellType == "s")
+                                {
+                                    int sIndex;
+                                    if (int.TryParse(val, out sIndex) && sIndex >= 0 && sIndex < sharedStrings.Count)
+                                    {
+                                        val = sharedStrings[sIndex];
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                var isElem = cell.Elements().FirstOrDefault(e => e.Name.LocalName == "is");
+                                if (isElem != null)
+                                {
+                                    val = string.Concat(isElem.Descendants().Where(d => d.Name.LocalName == "t").Select(t => t.Value));
+                                }
+                            }
+                            rowData[colIndex] = val;
+                        }
+
+                        int maxCol = rowData.Keys.Count > 0 ? rowData.Keys.Max() : -1;
+                        var rowList = new List<string>();
+                        for (int c = 0; c <= maxCol; c++)
+                        {
+                            rowList.Add(rowData.ContainsKey(c) ? rowData[c] : "");
+                        }
+                        if (rowList.Any(s => !string.IsNullOrWhiteSpace(s)))
+                        {
+                            allRows.Add(rowList);
+                        }
+                    }
+                }
+            }
+        }
+        return allRows;
+    }
+
+    private static int GetColumnIndexFromCellReference(string cellRef)
+    {
+        string colLetters = "";
+        foreach (char ch in cellRef)
+        {
+            if (char.IsLetter(ch)) colLetters += char.ToUpperInvariant(ch);
+            else break;
+        }
+        if (string.IsNullOrEmpty(colLetters)) return 0;
+        int col = 0;
+        foreach (char ch in colLetters)
+        {
+            col = (col * 26) + (ch - 'A' + 1);
+        }
+        return col - 1;
+    }
+
+    #endregion
+}
+
+public class BulkImportResult
+{
+    public int TotalRows { get; set; }
+    public int SuccessCount { get; set; }
+    public int DuplicateCount { get; set; }
+    public int InvalidCount { get; set; }
+    public List<string> ErrorMessages { get; set; }
+
+    public BulkImportResult()
+    {
+        ErrorMessages = new List<string>();
     }
 }

@@ -11,6 +11,9 @@
             <p class="nj-page-subtitle">Register a holiday inquiry. Sales employees capture field visits; Calling employees log self-found or inbound leads.</p>
         </div>
         <div class="d-flex align-items-center gap-2">
+            <button type="button" class="btn btn-success btn-sm text-white" data-bs-toggle="modal" data-bs-target="#bulkUploadModal">
+                <i class="bi bi-file-earmark-arrow-up me-1"></i>Bulk Import Leads
+            </button>
             <a href="MyLeads.aspx" class="btn btn-nj-outline btn-sm">
                 <i class="bi bi-arrow-left"></i>Back to My Leads
             </a>
@@ -114,6 +117,42 @@
             <div class="d-flex align-items-center gap-2 mb-4">
                 <asp:Button ID="btnSaveLead" runat="server" Text="Save Lead" CssClass="btn btn-nj-primary px-4" OnClick="btnSaveLead_Click"/>
                 <a href="AllLeads.aspx" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Import Leads Modal -->
+    <div class="modal fade" id="bulkUploadModal" tabindex="-1" aria-labelledby="bulkUploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-light">
+                    <h6 class="modal-title fw-bold" id="bulkUploadModalLabel">
+                        <i class="bi bi-file-earmark-arrow-up text-success me-2"></i>Bulk Import Leads (Excel / CSV)
+                    </h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="alert alert-info py-2 px-3 small mb-3">
+                        <i class="bi bi-info-circle me-1"></i>Select an Excel (<strong>.xlsx</strong>) or <strong>.csv</strong> file containing leads. 
+                        <div class="mt-1">Mandatory fields: <strong>Client Name</strong> and <strong>10-digit Mobile</strong>.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">Choose File (.xlsx or .csv) <span class="text-danger">*</span></label>
+                        <asp:FileUpload ID="fuBulkLeads" runat="server" CssClass="form-control" />
+                    </div>
+
+                    <div class="small text-muted mb-1">
+                        <ul class="ps-3 mb-0" style="font-size: 0.8rem;">
+                            <li>Duplicate mobile numbers will be skipped automatically.</li>
+                            <li>Existing phone numbers in the database are protected.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light py-2">
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <asp:Button ID="btnUploadBulk" runat="server" Text="Upload & Import" CssClass="btn btn-sm btn-success text-white px-3" CausesValidation="false" OnClick="btnUploadBulk_Click" />
+                </div>
             </div>
         </div>
     </div>

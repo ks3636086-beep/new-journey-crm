@@ -49,13 +49,31 @@ public partial class Dashboard : System.Web.UI.Page
             {
                 DataRow row = dt.Rows[0];
 
-                lblMyFieldLeads.Text = row["MyFieldLeads"].ToString();
-                lblActiveLeads.Text = row["ActiveLeads"].ToString();
+                // Calling Specific Metrics
+                lblMyFieldLeads.Text = row["AssignedLeads"].ToString();
+                lblActiveLeads.Text = row["TodayCalls"].ToString();
+                lblMonthlyTarget.Text = row["MonthlyCalls"] + " / " + row["MonthlyTarget"];
+                lblTodayCalls.Text = row["TodayFollowups"] + " Follow-ups";
 
-                lblTodayCalls.Text = row["TodayCalls"] + " Calls";
+                // Sales Specific Metrics (Field Focus)
+                int fieldLeads = Convert.ToInt32(row["MyFieldLeads"]);
+                int monthlyCalls = Convert.ToInt32(row["MonthlyCalls"]);
+                int totalFollowups = Convert.ToInt32(row["TotalFollowups"]);
+                int todayFollowups = Convert.ToInt32(row["TodayFollowups"]);
+                int wonLeads = Convert.ToInt32(row["WonLeads"]);
+                int activeLeads = Convert.ToInt32(row["ActiveLeads"]);
+                int cancelledLeads = Convert.ToInt32(row["CancelledLeads"]);
 
-                lblMonthlyTarget.Text =
-                    row["MonthlyCalls"] + " / " + row["MonthlyTarget"];
+                lblSalesFieldLeads.Text = fieldLeads.ToString();
+                lblSalesMonthlyCalls.Text = monthlyCalls.ToString();
+                lblSalesFollowups.Text = totalFollowups + " Scheduled";
+                litSalesTodayFollowups.Text = todayFollowups + " Urgent Today";
+                lblSalesWonLeads.Text = wonLeads + " Won";
+
+                int totalTracked = wonLeads + activeLeads + cancelledLeads;
+                int convRate = totalTracked > 0 ? (int)Math.Round((double)wonLeads * 100.0 / totalTracked) : 0;
+                litSalesConversionRate.Text = convRate + "% Conversion Ratio";
+                litSalesStatusBreakdown.Text = wonLeads + " Confirmed &bull; " + activeLeads + " Active &bull; " + cancelledLeads + " Cancelled";
             }
         }
         catch (Exception ex)
@@ -93,6 +111,9 @@ public partial class Dashboard : System.Web.UI.Page
             litDashDescription.Text =
                 "Back office calling desk | Client calls | Lead follow-ups";
         }
+
+        ClientScript.RegisterStartupScript(this.GetType(), "syncDashCategory",
+            "localStorage.setItem('nj_employee_category', '" + HttpUtility.JavaScriptStringEncode(category) + "'); applyDashboardCategory('" + HttpUtility.JavaScriptStringEncode(category) + "');", true);
     }
 
     private void BindTodayFollowups()

@@ -66,10 +66,10 @@
                 <h6 class="mb-0"><i class="bi bi-people"></i>Staff Directory</h6>
                 <%--<small class="text-muted">All categories login to the same unified Employee Panel</small>--%>
             </div>
-            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="alert('Exporting staff roster...');">
-                <i class="bi bi-download"></i>Export Roster
-           
-            </button>
+           <a href="https://crmnjholidays.digitalbull.in/employee/Employee_Login.aspx"
+   class="btn btn-outline-secondary btn-sm">
+    See Employee Panel <i class="bi bi-box-arrow-up-right"></i>
+</a>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -89,7 +89,7 @@
                     </thead>
                     <tbody>
                         <asp:Repeater ID="rptEmployees" runat="server">
-                            <ItemTemplate>
+                            <itemtemplate>
                                 <tr>
                                     <td><span class="fw-bold text-success">-<%# Eval("employee_code") %></span></td>
                                     <td>
@@ -127,15 +127,15 @@
                                         <asp:LinkButton ID="btnDeleteEmployee" runat="server"
                                             CssClass="btn btn-outline-danger btn-sm"
                                             CommandArgument='<%# Eval("employee_id") %>'
-                                             OnClick="btnDeleteEmployee_Click"
+                                            OnClick="btnDeleteEmployee_Click"
                                             CausesValidation="false"
                                             OnClientClick="return confirm('Are you sure you want to delete this employee?');"
                                             title="Delete Staff">
-        <i class="bi bi-trash"></i>
-    </asp:LinkButton>
+                                            <i class="bi bi-trash"></i>
+                                        </asp:LinkButton>
                                     </td>
                                 </tr>
-                            </ItemTemplate>
+                            </itemtemplate>
                         </asp:Repeater>
                     </tbody>
                 </table>
